@@ -1,0 +1,49 @@
+[package]
+name = "foundry-block-explorers"
+authors = ["Foundry Maintainers"]
+readme = "README.md"
+description = "Bindings for Etherscan.io and other block explorer APIs"
+keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[package.metadata.playground]
+all-features = true
+
+[dependencies]
+ethers-core = { version = "2", default-features = false }
+
+foundry-compilers = { version = "0.1", optional = true }
+
+reqwest = { version = "0.11.19", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1.37"
+semver = "1.0"
+
+[dev-dependencies]
+foundry-compilers = { version = "0.1" }
+
+tempfile = "3.8"
+tokio = { version = "1.32", features = ["macros", "rt-multi-thread", "time"] }
+serial_test = "2.0.0"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "fmt"] }
+
+[features]
+default = ["rustls"]
+rustls = ["reqwest/rustls-tls"]
+openssl = ["reqwest/native-tls"]
+
+foundry-compilers = ["dep:foundry-compilers"]
+compilers-full = ["foundry-compilers?/full"]
+compilers-tests = ["foundry-compilers?/tests"]
+
+[patch.crates-io]
+foundry-compilers = { git = "https://github.com/foundry-rs/compilers" }
