@@ -31,7 +31,10 @@ impl Client {
         let query = self.create_query(
             "block",
             "getblocknobytime",
-            HashMap::from([("timestamp", timestamp.to_string()), ("closest", closest.to_string())]),
+            HashMap::from([
+                ("timestamp", timestamp.to_string()),
+                ("closest", closest.to_string()),
+            ]),
         );
         let response: Response<String> = self.get_json(&query).await?;
 

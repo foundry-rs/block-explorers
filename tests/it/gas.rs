@@ -17,7 +17,10 @@ async fn gas_estimate_success() {
 #[serial]
 async fn gas_estimate_error() {
     run_with_client(Chain::Mainnet, |client| async move {
-        let err = client.gas_estimate(7123189371829732819379218u128.into()).await.unwrap_err();
+        let err = client
+            .gas_estimate(7123189371829732819379218u128.into())
+            .await
+            .unwrap_err();
 
         assert!(matches!(err, EtherscanError::GasEstimationFailed));
     })
