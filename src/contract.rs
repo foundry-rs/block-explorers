@@ -11,9 +11,6 @@ use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
 
-#[cfg(feature = "foundry-compilers")]
-use foundry_compilers::{artifacts::Settings, EvmVersion, Project, ProjectBuilder, SolcConfig};
-
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub enum SourceCodeLanguage {
     #[default]
@@ -58,12 +55,16 @@ pub enum SourceCodeMetadata {
 impl SourceCodeMetadata {
     pub fn source_code(&self) -> String {
         match self {
-            Self::Metadata { sources, .. } => {
-                sources.values().map(|s| s.content.clone()).collect::<Vec<_>>().join("\n")
-            }
-            Self::Sources(sources) => {
-                sources.values().map(|s| s.content.clone()).collect::<Vec<_>>().join("\n")
-            }
+            Self::Metadata { sources, .. } => sources
+                .values()
+                .map(|s| s.content.clone())
+                .collect::<Vec<_>>()
+                .join("\n"),
+            Self::Sources(sources) => sources
+                .values()
+                .map(|s| s.content.clone())
+                .collect::<Vec<_>>()
+                .join("\n"),
             Self::SourceCode(s) => s.clone(),
         }
     }
@@ -210,7 +211,8 @@ impl Metadata {
             Err(e) => {
                 let v = v.replace('a', "-alpha.");
                 let v = v.replace('b', "-beta.");
-                v.parse().map_err(|_| EtherscanError::Unknown(format!("bad compiler version: {e}")))
+                v.parse()
+                    .map_err(|_| EtherscanError::Unknown(format!("bad compiler version: {e}")))
             }
             Ok(v) => Ok(v),
         }
@@ -228,14 +230,19 @@ impl Metadata {
             .into_iter()
             .map(|(path, entry)| {
                 let path = root.join(path);
-                SourceTreeEntry { path, contents: entry.content }
+                SourceTreeEntry {
+                    path,
+                    contents: entry.content,
+                }
             })
             .collect()
     }
 
     /// Returns the source tree of this contract's sources.
     pub fn source_tree(&self) -> SourceTree {
-        SourceTree { entries: self.source_entries() }
+        SourceTree {
+            entries: self.source_entries(),
+        }
     }
 
     /// Returns the contract's compiler settings.
@@ -307,12 +314,22 @@ impl ContractMetadata {
 
     /// Returns the combined source code of all contracts.
     pub fn source_code(&self) -> String {
-        self.items.iter().map(|c| c.source_code()).collect::<Vec<_>>().join("\n")
+        self.items
+            .iter()
+            .map(|c| c.source_code())
+            .collect::<Vec<_>>()
+            .join("\n")
     }
 
     /// Returns the combined [SourceTree] of all contracts.
     pub fn source_tree(&self) -> SourceTree {
-        SourceTree { entries: self.items.iter().flat_map(|item| item.source_entries()).collect() }
+        SourceTree {
+            entries: self
+                .items
+                .iter()
+                .flat_map(|item| item.source_entries())
+                .collect(),
+        }
     }
 }
 
@@ -336,7 +353,7 @@ impl Client {
                 return match src {
                     Some(src) => Ok(src),
                     None => Err(EtherscanError::ContractCodeNotVerified(address)),
-                }
+                };
             }
         }
 
@@ -347,26 +364,28 @@ impl Client {
             Some(result) => result,
             None => {
                 if resp.message.contains("Contract source code not verified") {
-                    return Err(EtherscanError::ContractCodeNotVerified(address))
+                    return Err(EtherscanError::ContractCodeNotVerified(address));
                 }
                 return Err(EtherscanError::EmptyResult {
                     message: resp.message,
                     status: resp.status,
-                })
+                });
             }
         };
 
         if result.starts_with("Max rate limit reached") {
-            return Err(EtherscanError::RateLimitExceeded)
+            return Err(EtherscanError::RateLimitExceeded);
         }
 
-        if result.starts_with("Contract source code not verified") ||
-            resp.message.starts_with("Contract source code not verified")
+        if result.starts_with("Contract source code not verified")
+            || resp
+                .message
+                .starts_with("Contract source code not verified")
         {
             if let Some(ref cache) = self.cache {
                 cache.set_abi(address, None);
             }
-            return Err(EtherscanError::ContractCodeNotVerified(address))
+            return Err(EtherscanError::ContractCodeNotVerified(address));
         }
         let abi = serde_json::from_str(&result)?;
 
@@ -397,12 +416,15 @@ impl Client {
                 return match src {
                     Some(src) => Ok(src),
                     None => Err(EtherscanError::ContractCodeNotVerified(address)),
-                }
+                };
             }
         }
 
-        let query =
-            self.create_query("contract", "getsourcecode", HashMap::from([("address", address)]));
+        let query = self.create_query(
+            "contract",
+            "getsourcecode",
+            HashMap::from([("address", address)]),
+        );
         let response = self.get(&query).await?;
 
         // Source code is not verified
@@ -410,7 +432,7 @@ impl Client {
             if let Some(ref cache) = self.cache {
                 cache.set_source(address, None);
             }
-            return Err(EtherscanError::ContractCodeNotVerified(address))
+            return Err(EtherscanError::ContractCodeNotVerified(address));
         }
 
         let response: Response<ContractMetadata> = self.sanitize_response(response)?;

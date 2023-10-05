@@ -93,7 +93,9 @@ mod tests {
         // https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xDef1C0ded9bec7F1a1670819833240f027b25EfF
         let json = r#"{"address":"0x4af649ffde640ceb34b1afaba3e0bb8e9698cb01"}"#;
         let de: Test = serde_json::from_str(json).unwrap();
-        let expected = "0x4af649ffde640ceb34b1afaba3e0bb8e9698cb01".parse().unwrap();
+        let expected = "0x4af649ffde640ceb34b1afaba3e0bb8e9698cb01"
+            .parse()
+            .unwrap();
         assert_eq!(de.address, Some(expected));
     }
 
@@ -112,9 +114,15 @@ mod tests {
             "source_code": { "language": "Solidity", "sources": { "Contract": { "content": "source code text" } } }
         }"#;
         let de: Test = serde_json::from_str(json).unwrap();
-        assert!(matches!(de.source_code.language().unwrap(), SourceCodeLanguage::Solidity));
+        assert!(matches!(
+            de.source_code.language().unwrap(),
+            SourceCodeLanguage::Solidity
+        ));
         assert_eq!(de.source_code.sources().len(), 1);
-        assert_eq!(de.source_code.sources().get("Contract").unwrap().content, src);
+        assert_eq!(
+            de.source_code.sources().get("Contract").unwrap().content,
+            src
+        );
         #[cfg(feature = "ethers-solc")]
         assert!(de.source_code.settings().unwrap().is_none());
 
@@ -123,9 +131,15 @@ mod tests {
             "source_code": "{{ \"language\": \"Solidity\", \"sources\": { \"Contract\": { \"content\": \"source code text\" } } }}"
         }"#;
         let de: Test = serde_json::from_str(json).unwrap();
-        assert!(matches!(de.source_code.language().unwrap(), SourceCodeLanguage::Solidity));
+        assert!(matches!(
+            de.source_code.language().unwrap(),
+            SourceCodeLanguage::Solidity
+        ));
         assert_eq!(de.source_code.sources().len(), 1);
-        assert_eq!(de.source_code.sources().get("Contract").unwrap().content, src);
+        assert_eq!(
+            de.source_code.sources().get("Contract").unwrap().content,
+            src
+        );
         #[cfg(feature = "ethers-solc")]
         assert!(de.source_code.settings().unwrap().is_none());
 

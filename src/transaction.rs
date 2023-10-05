@@ -29,7 +29,9 @@ impl Client {
         if response.result.is_error == "0" {
             Ok(())
         } else {
-            Err(EtherscanError::ExecutionFailed(response.result.err_description))
+            Err(EtherscanError::ExecutionFailed(
+                response.result.err_description,
+            ))
         }
     }
 

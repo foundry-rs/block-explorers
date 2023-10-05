@@ -46,9 +46,9 @@ where
 
     match StringOrInt::deserialize(deserializer)? {
         StringOrInt::Number(i) => Ok(U256::from(i) * WEI_PER_GWEI),
-        StringOrInt::String(s) => {
-            parse_units(s, "gwei").map(Into::into).map_err(serde::de::Error::custom)
-        }
+        StringOrInt::String(s) => parse_units(s, "gwei")
+            .map(Into::into)
+            .map_err(serde::de::Error::custom),
     }
 }
 
@@ -154,7 +154,10 @@ mod tests {
         }"#;
         let gas_oracle: Response<GasOracle> = serde_json::from_str(v).unwrap();
         assert_eq!(gas_oracle.message, "OK");
-        assert_eq!(gas_oracle.result.propose_gas_price, parse_units(22, "gwei").unwrap().into());
+        assert_eq!(
+            gas_oracle.result.propose_gas_price,
+            parse_units(22, "gwei").unwrap().into()
+        );
 
         // remove quotes around integers
         let v = r#"{
@@ -171,6 +174,9 @@ mod tests {
         }"#;
         let gas_oracle: Response<GasOracle> = serde_json::from_str(v).unwrap();
         assert_eq!(gas_oracle.message, "OK");
-        assert_eq!(gas_oracle.result.propose_gas_price, parse_units(22, "gwei").unwrap().into());
+        assert_eq!(
+            gas_oracle.result.propose_gas_price,
+            parse_units(22, "gwei").unwrap().into()
+        );
     }
 }
