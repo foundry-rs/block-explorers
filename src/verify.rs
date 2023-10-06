@@ -1,5 +1,5 @@
 use crate::{Client, Response, Result};
-use ethers_core::types::Address;
+use alloy_primitives::Address;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

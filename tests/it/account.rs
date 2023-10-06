@@ -1,5 +1,9 @@
 use crate::*;
-use foundry_block_explorers::account::{InternalTxQueryOption, TokenQueryOption};
+use alloy_primitives::{U256, U64};
+use foundry_block_explorers::{
+    account::{InternalTxQueryOption, TokenQueryOption},
+    block_number::BlockNumber,
+};
 use serial_test::serial;
 
 #[tokio::test]
@@ -109,9 +113,9 @@ async fn get_erc20_transfer_events_success() {
             .await
             .unwrap();
         let tx = txs.get(0).unwrap();
-        assert_eq!(tx.gas_used, 93657u64.into());
-        assert_eq!(tx.nonce, 10u64.into());
-        assert_eq!(tx.block_number, 2228258u64.into());
+        assert_eq!(tx.gas_used, U256::from(93657u64));
+        assert_eq!(tx.nonce, U256::from(10u64));
+        assert_eq!(tx.block_number, BlockNumber::Number(U64::from(2228258u64)));
     })
     .await
 }

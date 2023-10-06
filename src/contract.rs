@@ -1,12 +1,12 @@
 use crate::{
+    serde_helpers::deserialize_stringified_u64,
     source_tree::{SourceTree, SourceTreeEntry},
     utils::{deserialize_address_opt, deserialize_source_code},
     Client, EtherscanError, Response, Result,
 };
-use ethers_core::{
-    abi::{Abi, Address, RawAbi},
-    types::{serde_helpers::deserialize_stringified_u64, Bytes},
-};
+use alloy_json_abi::JsonAbi as Abi;
+use alloy_primitives::{Address, Bytes};
+use ethers_core::abi::RawAbi;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};

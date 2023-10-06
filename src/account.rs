@@ -1,8 +1,13 @@
-use crate::{Client, EtherscanError, Query, Response, Result};
-use ethers_core::{
-    abi::Address,
-    types::{serde_helpers::*, BlockNumber, Bytes, H256, U256},
+use crate::{
+    block_number::BlockNumber,
+    serde_helpers::{
+        deserialize_stringified_block_number, deserialize_stringified_numeric,
+        deserialize_stringified_numeric_opt, deserialize_stringified_u64,
+        deserialize_stringified_u64_opt,
+    },
+    Client, EtherscanError, Query, Response, Result,
 };
+use alloy_primitives::{Address, Bytes, B256, U256};
 use serde::{Deserialize, Serialize};
 use std::{
     borrow::Cow,
@@ -143,7 +148,7 @@ pub struct NormalTransaction {
     pub block_number: BlockNumber,
     pub time_stamp: String,
     #[serde(with = "genesis_string")]
-    pub hash: GenesisOption<H256>,
+    pub hash: GenesisOption<B256>,
     #[serde(with = "json_string")]
     pub nonce: Option<U256>,
     #[serde(with = "json_string")]
@@ -183,7 +188,7 @@ pub struct InternalTransaction {
     #[serde(deserialize_with = "deserialize_stringified_block_number")]
     pub block_number: BlockNumber,
     pub time_stamp: String,
-    pub hash: H256,
+    pub hash: B256,
     pub from: Address,
     #[serde(with = "genesis_string")]
     pub to: GenesisOption<Address>,
@@ -211,10 +216,10 @@ pub struct ERC20TokenTransferEvent {
     #[serde(deserialize_with = "deserialize_stringified_block_number")]
     pub block_number: BlockNumber,
     pub time_stamp: String,
-    pub hash: H256,
+    pub hash: B256,
     #[serde(deserialize_with = "deserialize_stringified_numeric")]
     pub nonce: U256,
-    pub block_hash: H256,
+    pub block_hash: B256,
     pub from: Address,
     pub contract_address: Address,
     pub to: Option<Address>,
@@ -246,10 +251,10 @@ pub struct ERC721TokenTransferEvent {
     #[serde(deserialize_with = "deserialize_stringified_block_number")]
     pub block_number: BlockNumber,
     pub time_stamp: String,
-    pub hash: H256,
+    pub hash: B256,
     #[serde(deserialize_with = "deserialize_stringified_numeric")]
     pub nonce: U256,
-    pub block_hash: H256,
+    pub block_hash: B256,
     pub from: Address,
     pub contract_address: Address,
     pub to: Option<Address>,
@@ -281,10 +286,10 @@ pub struct ERC1155TokenTransferEvent {
     #[serde(deserialize_with = "deserialize_stringified_block_number")]
     pub block_number: BlockNumber,
     pub time_stamp: String,
-    pub hash: H256,
+    pub hash: B256,
     #[serde(deserialize_with = "deserialize_stringified_numeric")]
     pub nonce: U256,
-    pub block_hash: H256,
+    pub block_hash: B256,
     pub from: Address,
     pub contract_address: Address,
     pub to: Option<Address>,
@@ -404,7 +409,7 @@ impl From<TxListParams> for HashMap<&'static str, String> {
 #[derive(Clone, Debug)]
 pub enum InternalTxQueryOption {
     ByAddress(Address),
-    ByTransactionHash(H256),
+    ByTransactionHash(B256),
     ByBlockRange,
 }
 
@@ -494,7 +499,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use ethers_core::types::Address;
+    /// # use alloy_primitives::Address;
     /// # async fn foo(client: foundry_block_explorers::Client) -> Result<(), Box<dyn std::error::Error>> {
     /// let addresses = [
     ///     "0x3E3c00494d0b306a0739E480DBB5DB91FFb5d4CB".parse::<Address>()?,

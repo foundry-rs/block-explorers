@@ -3,12 +3,11 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use crate::errors::{is_blocked_by_cloudflare_response, is_cloudflare_security_challenge};
+use alloy_json_abi::JsonAbi as Abi;
+use alloy_primitives::{Address, B256};
 use contract::ContractMetadata;
 use errors::EtherscanError;
-use ethers_core::{
-    abi::{Abi, Address},
-    types::{Chain, H256},
-};
+use ethers_core::types::Chain;
 use reqwest::{header, IntoUrl, Url};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{
@@ -20,12 +19,15 @@ use std::{
 use tracing::{error, trace};
 
 pub mod account;
+pub mod block_number;
 pub mod blocks;
 pub mod contract;
 pub mod errors;
 pub mod gas;
+pub mod serde_helpers;
 pub mod source_tree;
 mod transaction;
+pub mod units;
 pub mod utils;
 pub mod verify;
 
@@ -155,7 +157,7 @@ impl Client {
     }
 
     /// Return the URL for the given transaction hash
-    pub fn transaction_url(&self, tx_hash: H256) -> String {
+    pub fn transaction_url(&self, tx_hash: B256) -> String {
         format!("{}tx/{tx_hash:?}", self.etherscan_url)
     }
 
@@ -382,7 +384,7 @@ impl Cache {
         Self { root, ttl }
     }
 
-    fn get_abi(&self, address: Address) -> Option<Option<ethers_core::abi::Abi>> {
+    fn get_abi(&self, address: Address) -> Option<Option<alloy_json_abi::JsonAbi>> {
         self.get("abi", address)
     }
 
@@ -489,7 +491,8 @@ fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
 #[cfg(test)]
 mod tests {
     use crate::{Client, EtherscanError, ResponseData};
-    use ethers_core::types::{Address, Chain, H256};
+    use alloy_primitives::{Address, B256};
+    use ethers_core::types::Chain;
 
     // <https://github.com/foundry-rs/foundry/issues/4406>
     #[test]
@@ -524,7 +527,7 @@ mod tests {
     #[test]
     fn stringifies_address_url() {
         let etherscan = Client::new(Chain::Mainnet, "").unwrap();
-        let addr: Address = Address::zero();
+        let addr: Address = Address::ZERO;
         let address_url: String = etherscan.address_url(addr);
         assert_eq!(
             address_url,
@@ -535,7 +538,7 @@ mod tests {
     #[test]
     fn stringifies_transaction_url() {
         let etherscan = Client::new(Chain::Mainnet, "").unwrap();
-        let tx_hash = H256::zero();
+        let tx_hash = B256::ZERO;
         let tx_url: String = etherscan.transaction_url(tx_hash);
         assert_eq!(tx_url, format!("https://etherscan.io/tx/{tx_hash:?}"));
     }
@@ -543,7 +546,7 @@ mod tests {
     #[test]
     fn stringifies_token_url() {
         let etherscan = Client::new(Chain::Mainnet, "").unwrap();
-        let token_hash = Address::zero();
+        let token_hash = Address::ZERO;
         let token_url: String = etherscan.token_url(token_hash);
         assert_eq!(
             token_url,

@@ -28,6 +28,9 @@ thiserror = "1.0"
 tracing = "0.1.37"
 semver = "1.0"
 
+alloy-primitives = { version = "0.4", default-features = false, features = ["std", "serde"]}
+alloy-json-abi = { version = "0.4", default-features = false, features = ["std", "serde_json"] }
+
 [dev-dependencies]
 foundry-compilers = { version = "0.1" }
 
