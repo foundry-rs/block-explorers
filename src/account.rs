@@ -499,7 +499,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// # use ethers_core::types::Address;
+    /// # use alloy_primitives::Address;
     /// # async fn foo(client: foundry_block_explorers::Client) -> Result<(), Box<dyn std::error::Error>> {
     /// let addresses = [
     ///     "0x3E3c00494d0b306a0739E480DBB5DB91FFb5d4CB".parse::<Address>()?,

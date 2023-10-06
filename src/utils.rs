@@ -166,23 +166,6 @@ pub enum ConversionError {
 }
 
 /// Multiplies the provided amount with 10^{units} provided.
-///
-/// ```
-/// use ethers_core::{types::U256, utils::parse_units};
-/// let amount_in_eth = U256::from_dec_str("15230001000000000000").unwrap();
-/// let amount_in_gwei = U256::from_dec_str("15230001000").unwrap();
-/// let amount_in_wei = U256::from_dec_str("15230001000").unwrap();
-/// assert_eq!(amount_in_eth, parse_units("15.230001000000000000", "ether").unwrap().into());
-/// assert_eq!(amount_in_gwei, parse_units("15.230001000000000000", "gwei").unwrap().into());
-/// assert_eq!(amount_in_wei, parse_units("15230001000", "wei").unwrap().into());
-/// ```
-/// Example of trying to parse decimal WEI, which should fail, as WEI is the smallest
-/// ETH denominator. 1 ETH = 10^18 WEI.
-/// ```should_panic
-/// use ethers_core::{types::U256, utils::parse_units};
-/// let amount_in_wei = U256::from_dec_str("15230001000").unwrap();
-/// assert_eq!(amount_in_wei, parse_units("15.230001000000000000", "wei").unwrap().into());
-/// ```
 pub fn parse_units<K, S>(amount: S, units: K) -> Result<ParseUnits, ConversionError>
 where
     S: ToString,

@@ -3,8 +3,8 @@ use ethers_core::types::Chain;
 use foundry_block_explorers::contract::SourceCodeMetadata;
 use serial_test::serial;
 
-/// Abi of [0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413](https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413).
-const DAO_ABI: &str = include!("../../test-data/the_dao_abi.expr");
+/// Abi of [0x00000000219ab540356cBB839Cbe05303d7705Fa](https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0x00000000219ab540356cBB839Cbe05303d7705Fa).
+const DEPOSIT_CONTRACT_ABI: &str = include!("../../test-data/deposit_contract.expr");
 
 #[tokio::test]
 #[serial]
@@ -28,13 +28,13 @@ async fn can_fetch_contract_abi() {
     run_with_client(Chain::Mainnet, |client| async move {
         let abi = client
             .contract_abi(
-                "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413"
+                "0x00000000219ab540356cBB839Cbe05303d7705Fa"
                     .parse()
                     .unwrap(),
             )
             .await
             .unwrap();
-        assert_eq!(abi, serde_json::from_str(DAO_ABI).unwrap());
+        assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
     })
     .await;
 }
@@ -45,7 +45,7 @@ async fn can_fetch_contract_source_code() {
     run_with_client(Chain::Mainnet, |client| async move {
         let meta = client
             .contract_source_code(
-                "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413"
+                "0x00000000219ab540356cBB839Cbe05303d7705Fa"
                     .parse()
                     .unwrap(),
             )
@@ -59,7 +59,10 @@ async fn can_fetch_contract_source_code() {
             SourceCodeMetadata::SourceCode(_)
         ));
         assert_eq!(item.source_code.sources().len(), 1);
-        assert_eq!(item.abi().unwrap(), serde_json::from_str(DAO_ABI).unwrap());
+        assert_eq!(
+            item.abi().unwrap(),
+            serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap()
+        );
     })
     .await
 }
@@ -85,7 +88,7 @@ async fn can_fetch_contract_source_tree_for_singleton_contract() {
     run_with_client(Chain::Mainnet, |client| async move {
         let meta = client
             .contract_source_code(
-                "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413"
+                "0x00000000219ab540356cBB839Cbe05303d7705Fa"
                     .parse()
                     .unwrap(),
             )
@@ -99,7 +102,10 @@ async fn can_fetch_contract_source_tree_for_singleton_contract() {
             SourceCodeMetadata::SourceCode(_)
         ));
         assert_eq!(item.source_code.sources().len(), 1);
-        assert_eq!(item.abi().unwrap(), serde_json::from_str(DAO_ABI).unwrap());
+        assert_eq!(
+            item.abi().unwrap(),
+            serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap()
+        );
     })
     .await
 }
