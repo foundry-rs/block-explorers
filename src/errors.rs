@@ -1,4 +1,5 @@
-use ethers_core::types::{Address, Chain};
+use alloy_primitives::Address;
+use ethers_core::types::Chain;
 use std::env::VarError;
 
 #[derive(Debug, thiserror::Error)]

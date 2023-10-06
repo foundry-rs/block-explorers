@@ -1,5 +1,5 @@
 use crate::*;
-use ethers_core::types::BlockNumber;
+use foundry_block_explorers::block_number::BlockNumber;
 use serial_test::serial;
 
 #[tokio::test]

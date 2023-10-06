@@ -1,5 +1,6 @@
+use crate::utils::parse_units;
 use crate::{Client, EtherscanError, Response, Result};
-use ethers_core::{types::U256, utils::parse_units};
+use alloy_primitives::U256;
 use serde::{de, Deserialize, Deserializer};
 use std::{collections::HashMap, str::FromStr};
 
@@ -45,7 +46,7 @@ where
     }
 
     match StringOrInt::deserialize(deserializer)? {
-        StringOrInt::Number(i) => Ok(U256::from(i) * WEI_PER_GWEI),
+        StringOrInt::Number(i) => Ok(U256::from(i) * U256::from(WEI_PER_GWEI)),
         StringOrInt::String(s) => parse_units(s, "gwei")
             .map(Into::into)
             .map_err(serde::de::Error::custom),

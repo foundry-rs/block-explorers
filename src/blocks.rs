@@ -1,5 +1,4 @@
-use crate::{Client, EtherscanError, Response, Result};
-use ethers_core::types::BlockNumber;
+use crate::{block_number::BlockNumber, Client, EtherscanError, Response, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
