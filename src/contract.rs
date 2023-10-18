@@ -11,6 +11,9 @@ use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
 
+#[cfg(feature = "foundry-compilers")]
+use foundry_compilers::{artifacts::Settings, EvmVersion, Project, ProjectBuilder, SolcConfig};
+
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub enum SourceCodeLanguage {
     #[default]
