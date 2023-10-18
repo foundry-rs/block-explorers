@@ -85,7 +85,7 @@ impl SourceCodeMetadata {
         }
     }
 
-    #[cfg(feature = "ethers-solc")]
+    #[cfg(feature = "foundry-compilers")]
     pub fn settings(&self) -> Result<Option<Settings>> {
         match self {
             Self::Metadata { settings, .. } => match settings {
@@ -103,7 +103,7 @@ impl SourceCodeMetadata {
         }
     }
 
-    #[cfg(not(feature = "ethers-solc"))]
+    #[cfg(not(feature = "foundry-compilers"))]
     pub fn settings(&self) -> Option<&serde_json::Value> {
         match self {
             Self::Metadata { settings, .. } => settings.as_ref(),
@@ -246,7 +246,7 @@ impl Metadata {
     }
 
     /// Returns the contract's compiler settings.
-    #[cfg(feature = "ethers-solc")]
+    #[cfg(feature = "foundry-compilers")]
     pub fn settings(&self) -> Result<Settings> {
         let mut settings = self.source_code.settings()?.unwrap_or_default();
 
@@ -261,7 +261,7 @@ impl Metadata {
     }
 
     /// Creates a Solc [ProjectBuilder] with this contract's settings.
-    #[cfg(feature = "ethers-solc")]
+    #[cfg(feature = "foundry-compilers")]
     pub fn project_builder(&self) -> Result<ProjectBuilder> {
         let solc_config = SolcConfig::builder().settings(self.settings()?).build();
 
@@ -269,7 +269,7 @@ impl Metadata {
     }
 
     /// Parses the EVM version.
-    #[cfg(feature = "ethers-solc")]
+    #[cfg(feature = "foundry-compilers")]
     pub fn evm_version(&self) -> Result<Option<EvmVersion>> {
         match self.evm_version.as_str() {
             "" | "Default" => {
