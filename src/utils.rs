@@ -277,7 +277,7 @@ mod tests {
             de.source_code.sources().get("Contract").unwrap().content,
             src
         );
-        #[cfg(feature = "ethers-solc")]
+        #[cfg(feature = "foundry-compilers")]
         assert!(de.source_code.settings().unwrap().is_none());
 
         // Stringified JSON
@@ -294,7 +294,7 @@ mod tests {
             de.source_code.sources().get("Contract").unwrap().content,
             src
         );
-        #[cfg(feature = "ethers-solc")]
+        #[cfg(feature = "foundry-compilers")]
         assert!(de.source_code.settings().unwrap().is_none());
 
         let json = r#"{"source_code": "source code text"}"#;
