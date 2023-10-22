@@ -112,7 +112,7 @@ async fn get_erc20_transfer_events_success() {
             )
             .await
             .unwrap();
-        let tx = txs.get(0).unwrap();
+        let tx = txs.first().unwrap();
         assert_eq!(tx.gas_used, U256::from(93657u64));
         assert_eq!(tx.nonce, U256::from(10u64));
         assert_eq!(tx.block_number, BlockNumber::Number(U64::from(2228258u64)));
