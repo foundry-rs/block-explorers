@@ -2,6 +2,7 @@
 name = "foundry-block-explorers"
 authors = ["Foundry Maintainers"]
 readme = "README.md"
+license = "MIT OR Apache-2.0"
 description = "Bindings for Etherscan.io and other block explorer APIs"
 keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
 version = "0.1.0"
