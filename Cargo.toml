@@ -50,4 +50,5 @@ compilers-full = ["foundry-compilers?/full"]
 compilers-tests = ["foundry-compilers?/tests"]
 
 [patch.crates-io]
+ethers-core = { git = "https://github.com/gakonst/ethers-rs" }
 foundry-compilers = { git = "https://github.com/foundry-rs/compilers" }
