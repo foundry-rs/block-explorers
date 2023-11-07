@@ -41,9 +41,9 @@ mod genesis_string {
         let json = match value {
             GenesisOption::None => Cow::from(""),
             GenesisOption::Genesis => Cow::from("GENESIS"),
-            GenesisOption::Some(value) => serde_json::to_string(value)
-                .map_err(S::Error::custom)?
-                .into(),
+            GenesisOption::Some(value) => {
+                serde_json::to_string(value).map_err(S::Error::custom)?.into()
+            }
         };
         serializer.serialize_str(&json)
     }
@@ -83,9 +83,7 @@ mod json_string {
     {
         let json = match value {
             Option::None => Cow::from(""),
-            Option::Some(value) => serde_json::to_string(value)
-                .map_err(S::Error::custom)?
-                .into(),
+            Option::Some(value) => serde_json::to_string(value).map_err(S::Error::custom)?.into(),
         };
         serializer.serialize_str(&json)
     }
@@ -371,25 +369,13 @@ pub struct TxListParams {
 
 impl TxListParams {
     pub fn new(start_block: u64, end_block: u64, page: u64, offset: u64, sort: Sort) -> Self {
-        Self {
-            start_block,
-            end_block,
-            page,
-            offset,
-            sort,
-        }
+        Self { start_block, end_block, page, offset, sort }
     }
 }
 
 impl Default for TxListParams {
     fn default() -> Self {
-        Self {
-            start_block: 0,
-            end_block: 99999999,
-            page: 0,
-            offset: 10000,
-            sort: Sort::Asc,
-        }
+        Self { start_block: 0, end_block: 99999999, page: 0, offset: 10000, sort: Sort::Asc }
     }
 }
 
@@ -486,10 +472,7 @@ impl Client {
 
         match response.status.as_str() {
             "0" => Err(EtherscanError::BalanceFailed),
-            "1" => Ok(AccountBalance {
-                account: *address,
-                balance: response.result,
-            }),
+            "1" => Ok(AccountBalance { account: *address, balance: response.result }),
             err => Err(EtherscanError::BadStatusCode(err.to_string())),
         }
     }
@@ -515,11 +498,7 @@ impl Client {
         tag: Option<Tag>,
     ) -> Result<Vec<AccountBalance>> {
         let tag_str = tag.unwrap_or_default().to_string();
-        let addrs = addresses
-            .iter()
-            .map(|x| format!("{x:?}"))
-            .collect::<Vec<String>>()
-            .join(",");
+        let addrs = addresses.iter().map(|x| format!("{x:?}")).collect::<Vec<String>>().join(",");
         let query: Query<HashMap<&str, &str>> = self.create_query(
             "account",
             "balancemulti",

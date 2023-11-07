@@ -21,11 +21,7 @@ mod version;
 async fn check_wrong_etherscan_api_key() {
     let client = Client::new(Chain::Mainnet, "ABCDEFG").unwrap();
     let resp = client
-        .contract_source_code(
-            "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413"
-                .parse()
-                .unwrap(),
-        )
+        .contract_source_code("0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413".parse().unwrap())
         .await
         .unwrap_err();
 
@@ -41,10 +37,9 @@ where
     init_tracing();
     let (client, duration) = match Client::new_from_env(chain) {
         Ok(c) => (c, rate_limit(chain, true)),
-        Err(_) => (
-            Client::builder().chain(chain).unwrap().build().unwrap(),
-            rate_limit(chain, false),
-        ),
+        Err(_) => {
+            (Client::builder().chain(chain).unwrap().build().unwrap(), rate_limit(chain, false))
+        }
     };
     run_at_least_duration(duration, f(client)).await
 }

@@ -17,14 +17,24 @@ env:
 
 jobs:
     etherscan-tests:
-        name: etherscan tests
-        runs-on: ubuntu-latest
+        name: etherscan tests (${{ matrix.os }}) (${{ matrix.rust }})
+        runs-on: ${{ matrix.os}}
         timeout-minutes: 30
+        strategy:
+            fail-fast: false
+            matrix:
+                os: ["ubuntu-latest"]
+                rust: ["stable", "1.66"] # MSRV
+                exclude:
+                    - rust: "1.66" # MSRV
         concurrency: etherscan-tests-${{ github.head_ref || github.run_id }}
         steps:
             - uses: actions/checkout@v3
             - uses: dtolnay/rust-toolchain@stable
             - uses: Swatinem/rust-cache@v2
+            - name: build
+              if: ${{ matrix.rust == '1.66' }} # MSRV
+              run: cargo build
             # Don't use cargo-nextest since all the tests have to be run sequentially
             - name: live tests
               run: cargo test --test it
