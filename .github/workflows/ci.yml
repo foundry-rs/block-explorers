@@ -17,7 +17,7 @@ env:
 
 jobs:
     etherscan-tests:
-        name: etherscan tests (${{ matrix.os }})
+        name: etherscan tests (${{ matrix.os }}) (${{ matrix.rust }})
         runs-on: ${{ matrix.os}}
         timeout-minutes: 30
         strategy:
@@ -33,7 +33,7 @@ jobs:
             - uses: dtolnay/rust-toolchain@stable
             - uses: Swatinem/rust-cache@v2
             - name: build
-              if: ${{ matrix.rust == '1.65' }} # MSRV
+              if: ${{ matrix.rust == '1.66' }} # MSRV
               run: cargo build
             # Don't use cargo-nextest since all the tests have to be run sequentially
             - name: live tests
