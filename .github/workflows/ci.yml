@@ -32,6 +32,9 @@ jobs:
             - uses: actions/checkout@v3
             - uses: dtolnay/rust-toolchain@stable
             - uses: Swatinem/rust-cache@v2
+            - name: build
+              if: ${{ matrix.rust == '1.65' }} # MSRV
+              run: cargo build
             # Don't use cargo-nextest since all the tests have to be run sequentially
             - name: live tests
               run: cargo test --test it
