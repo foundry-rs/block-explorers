@@ -78,10 +78,7 @@ impl Client {
 
     /// Create a new client with the correct endpoints based on the chain and provided API key
     pub fn new(chain: Chain, api_key: impl Into<String>) -> Result<Self> {
-        Client::builder()
-            .with_api_key(api_key)
-            .chain(chain)?
-            .build()
+        Client::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
     /// Create a new client with the correct endpoints based on the chain and API key
@@ -94,17 +91,17 @@ impl Client {
                 .map_err(Into::into),
 
             // Backwards compatibility, ideally these should return an error.
-            Chain::Gnosis
-            | Chain::Chiado
-            | Chain::Sepolia
-            | Chain::Rsk
-            | Chain::Sokol
-            | Chain::Poa
-            | Chain::Oasis
-            | Chain::Emerald
-            | Chain::EmeraldTestnet
-            | Chain::Evmos
-            | Chain::EvmosTestnet => Ok(String::new()),
+            Chain::Gnosis |
+            Chain::Chiado |
+            Chain::Sepolia |
+            Chain::Rsk |
+            Chain::Sokol |
+            Chain::Poa |
+            Chain::Oasis |
+            Chain::Emerald |
+            Chain::EmeraldTestnet |
+            Chain::Evmos |
+            Chain::EvmosTestnet => Ok(String::new()),
             Chain::AnvilHardhat | Chain::Dev => Err(EtherscanError::LocalNetworksNotSupported),
 
             _ => chain
@@ -131,10 +128,7 @@ impl Client {
 
     /// Sets the root to the cache dir and the ttl to use
     pub fn set_cache(&mut self, root: impl Into<PathBuf>, ttl: Duration) -> &mut Self {
-        self.cache = Some(Cache {
-            root: root.into(),
-            ttl,
-        });
+        self.cache = Some(Cache { root: root.into(), ttl });
         self
     }
 
@@ -224,11 +218,7 @@ impl Client {
         })?;
 
         match res {
-            ResponseData::Error {
-                result,
-                message,
-                status,
-            } => {
+            ResponseData::Error { result, message, status } => {
                 if let Some(ref result) = result {
                     if result.starts_with("Max rate limit reached") {
                         return Err(EtherscanError::RateLimitExceeded);
@@ -236,11 +226,7 @@ impl Client {
                         return Err(EtherscanError::InvalidApiKey);
                     }
                 }
-                Err(EtherscanError::ErrorResponse {
-                    status,
-                    message,
-                    result,
-                })
+                Err(EtherscanError::ErrorResponse { status, message, result })
             }
             ResponseData::Success(res) => Ok(res),
         }
@@ -294,8 +280,7 @@ impl ClientBuilder {
             .etherscan_urls()
             .map(|(api, base)| urls(api, base))
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
-        self.with_api_url(etherscan_api_url?)?
-            .with_url(etherscan_url?)
+        self.with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
 
     /// Configures the etherscan url
@@ -344,13 +329,7 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder {
-            client,
-            api_key,
-            etherscan_api_url,
-            etherscan_url,
-            cache,
-        } = self;
+        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache } = self;
 
         let client = Client {
             client: client.unwrap_or_default(),
@@ -402,9 +381,7 @@ impl Cache {
 
     fn set<T: Serialize>(&self, prefix: &str, address: Address, item: T) {
         let path = self.root.join(prefix).join(format!("{address:?}.json"));
-        let writer = std::fs::File::create(path)
-            .ok()
-            .map(std::io::BufWriter::new);
+        let writer = std::fs::File::create(path).ok().map(std::io::BufWriter::new);
         if let Some(mut writer) = writer {
             let _ = serde_json::to_writer(
                 &mut writer,
@@ -451,11 +428,7 @@ pub struct Response<T> {
 #[serde(untagged)]
 pub enum ResponseData<T> {
     Success(Response<T>),
-    Error {
-        status: String,
-        message: String,
-        result: Option<String>,
-    },
+    Error { status: String, message: String, result: Option<String> },
 }
 
 /// The type that gets serialized as query
@@ -505,15 +478,9 @@ mod tests {
     #[test]
     fn test_api_paths() {
         let client = Client::new(Chain::Goerli, "").unwrap();
-        assert_eq!(
-            client.etherscan_api_url.as_str(),
-            "https://api-goerli.etherscan.io/api/"
-        );
+        assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api/");
 
-        assert_eq!(
-            client.block_url(100),
-            "https://goerli.etherscan.io/block/100"
-        );
+        assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
     }
 
     #[test]
@@ -529,10 +496,7 @@ mod tests {
         let etherscan = Client::new(Chain::Mainnet, "").unwrap();
         let addr: Address = Address::ZERO;
         let address_url: String = etherscan.address_url(addr);
-        assert_eq!(
-            address_url,
-            format!("https://etherscan.io/address/{addr:?}")
-        );
+        assert_eq!(address_url, format!("https://etherscan.io/address/{addr:?}"));
     }
 
     #[test]
@@ -548,10 +512,7 @@ mod tests {
         let etherscan = Client::new(Chain::Mainnet, "").unwrap();
         let token_hash = Address::ZERO;
         let token_url: String = etherscan.token_url(token_hash);
-        assert_eq!(
-            token_url,
-            format!("https://etherscan.io/token/{token_hash:?}")
-        );
+        assert_eq!(token_url, format!("https://etherscan.io/token/{token_hash:?}"));
     }
 
     #[test]

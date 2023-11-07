@@ -105,10 +105,7 @@ impl FromStr for BlockNumber {
             // hex
             n if n.starts_with("0x") => n.parse().map(Self::Number).map_err(|e| e.to_string()),
             // decimal
-            n => n
-                .parse::<u64>()
-                .map(|n| Self::Number(U64::from(n)))
-                .map_err(|e| e.to_string()),
+            n => n.parse::<u64>().map(|n| Self::Number(U64::from(n))).map_err(|e| e.to_string()),
         }
     }
 }

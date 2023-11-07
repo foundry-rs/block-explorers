@@ -43,10 +43,7 @@ fn sanitize_path(path: &Path) -> PathBuf {
         .collect::<PathBuf>();
 
     // Force absolute paths to be relative
-    sanitized
-        .strip_prefix("/")
-        .map(PathBuf::from)
-        .unwrap_or(sanitized)
+    sanitized.strip_prefix("/").map(PathBuf::from).unwrap_or(sanitized)
 }
 
 #[cfg(test)]
@@ -61,14 +58,8 @@ mod tests {
         let tempdir = tempfile::tempdir().unwrap();
         let st = SourceTree {
             entries: vec![
-                SourceTreeEntry {
-                    path: PathBuf::from("a/a.sol"),
-                    contents: String::from("Test"),
-                },
-                SourceTreeEntry {
-                    path: PathBuf::from("b/b"),
-                    contents: String::from("Test 2"),
-                },
+                SourceTreeEntry { path: PathBuf::from("a/a.sol"), contents: String::from("Test") },
+                SourceTreeEntry { path: PathBuf::from("b/b"), contents: String::from("Test 2") },
             ],
         };
         st.write_to(tempdir.path()).unwrap();
@@ -101,11 +92,8 @@ mod tests {
         };
         st.write_to(tempdir.path()).unwrap();
         let written_paths = read_dir(tempdir.path()).unwrap();
-        let paths: Vec<PathBuf> = written_paths
-            .into_iter()
-            .filter_map(|x| x.ok())
-            .map(|x| x.path())
-            .collect();
+        let paths: Vec<PathBuf> =
+            written_paths.into_iter().filter_map(|x| x.ok()).map(|x| x.path()).collect();
         assert_eq!(paths.len(), 3);
         assert!(paths.contains(&tempdir.path().join("a")));
         assert!(paths.contains(&tempdir.path().join("b")));
