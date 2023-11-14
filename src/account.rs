@@ -30,7 +30,7 @@ mod genesis_string {
         Deserializer, Serializer,
     };
 
-    pub fn serialize<T, S>(
+    pub(crate) fn serialize<T, S>(
         value: &GenesisOption<T>,
         serializer: S,
     ) -> std::result::Result<S::Ok, S::Error>
@@ -48,7 +48,7 @@ mod genesis_string {
         serializer.serialize_str(&json)
     }
 
-    pub fn deserialize<'de, T, D>(
+    pub(crate) fn deserialize<'de, T, D>(
         deserializer: D,
     ) -> std::result::Result<GenesisOption<T>, D::Error>
     where
@@ -76,7 +76,10 @@ mod json_string {
         Deserializer, Serializer,
     };
 
-    pub fn serialize<T, S>(value: &Option<T>, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    pub(crate) fn serialize<T, S>(
+        value: &Option<T>,
+        serializer: S,
+    ) -> std::result::Result<S::Ok, S::Error>
     where
         T: Serialize,
         S: Serializer,
@@ -88,7 +91,9 @@ mod json_string {
         serializer.serialize_str(&json)
     }
 
-    pub fn deserialize<'de, T, D>(deserializer: D) -> std::result::Result<Option<T>, D::Error>
+    pub(crate) fn deserialize<'de, T, D>(
+        deserializer: D,
+    ) -> std::result::Result<Option<T>, D::Error>
     where
         T: DeserializeOwned,
         D: Deserializer<'de>,
@@ -393,6 +398,7 @@ impl From<TxListParams> for HashMap<&'static str, String> {
 
 /// Options for querying internal transactions
 #[derive(Clone, Debug)]
+#[allow(missing_copy_implementations)]
 pub enum InternalTxQueryOption {
     ByAddress(Address),
     ByTransactionHash(B256),
@@ -401,6 +407,7 @@ pub enum InternalTxQueryOption {
 
 /// Options for querying ERC20 or ERC721 token transfers
 #[derive(Clone, Debug)]
+#[allow(missing_copy_implementations)]
 pub enum TokenQueryOption {
     ByAddress(Address),
     ByContract(Address),
@@ -499,7 +506,7 @@ impl Client {
     ) -> Result<Vec<AccountBalance>> {
         let tag_str = tag.unwrap_or_default().to_string();
         let addrs = addresses.iter().map(|x| format!("{x:?}")).collect::<Vec<String>>().join(",");
-        let query: Query<HashMap<&str, &str>> = self.create_query(
+        let query: Query<'_, HashMap<&str, &str>> = self.create_query(
             "account",
             "balancemulti",
             HashMap::from([("address", addrs.as_ref()), ("tag", tag_str.as_ref())]),

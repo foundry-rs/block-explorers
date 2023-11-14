@@ -14,7 +14,7 @@ use std::{collections::HashMap, path::Path};
 #[cfg(feature = "foundry-compilers")]
 use foundry_compilers::{artifacts::Settings, EvmVersion, Project, ProjectBuilder, SolcConfig};
 
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Default, Serialize, Deserialize)]
 pub enum SourceCodeLanguage {
     #[default]
     Solidity,
@@ -58,10 +58,7 @@ pub enum SourceCodeMetadata {
 impl SourceCodeMetadata {
     pub fn source_code(&self) -> String {
         match self {
-            Self::Metadata { sources, .. } => {
-                sources.values().map(|s| s.content.clone()).collect::<Vec<_>>().join("\n")
-            }
-            Self::Sources(sources) => {
+            Self::Metadata { sources, .. } | Self::Sources(sources) => {
                 sources.values().map(|s| s.content.clone()).collect::<Vec<_>>().join("\n")
             }
             Self::SourceCode(s) => s.clone(),
@@ -70,7 +67,7 @@ impl SourceCodeMetadata {
 
     pub fn language(&self) -> Option<SourceCodeLanguage> {
         match self {
-            Self::Metadata { language, .. } => language.clone(),
+            Self::Metadata { language, .. } => *language,
             Self::Sources(_) => None,
             Self::SourceCode(_) => None,
         }
