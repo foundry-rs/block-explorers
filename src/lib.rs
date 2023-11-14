@@ -1,6 +1,15 @@
 #![doc = include_str!("../README.md")]
-#![deny(unsafe_code, rustdoc::broken_intra_doc_links)]
-#![cfg_attr(docsrs, feature(doc_cfg))]
+#![warn(
+    missing_copy_implementations,
+    missing_debug_implementations,
+    // TODO:
+    // missing_docs,
+    unreachable_pub,
+    rustdoc::all
+)]
+#![cfg_attr(not(test), warn(unused_crate_dependencies))]
+#![deny(unused_must_use, rust_2018_idioms)]
+#![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 
 use crate::errors::{is_blocked_by_cloudflare_response, is_cloudflare_security_challenge};
 use alloy_json_abi::JsonAbi as Abi;
@@ -237,7 +246,7 @@ impl Client {
         module: &'static str,
         action: &'static str,
         other: T,
-    ) -> Query<T> {
+    ) -> Query<'_, T> {
         Query {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),

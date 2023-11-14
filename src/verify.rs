@@ -127,6 +127,7 @@ impl VerifyContract {
 
 /// Arguments for verifying a proxy contract
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(missing_copy_implementations)]
 pub struct VerifyProxyContract {
     /// Proxy contract's address
     pub address: Address,

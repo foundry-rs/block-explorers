@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[allow(missing_copy_implementations)]
 pub struct BlockNumberByTimestamp {
     pub timestamp: u64,
     pub block_number: BlockNumber,
