@@ -4,9 +4,8 @@ use crate::{
     utils::{deserialize_address_opt, deserialize_source_code},
     Client, EtherscanError, Response, Result,
 };
-use alloy_json_abi::JsonAbi as Abi;
+use alloy_json_abi::JsonAbi;
 use alloy_primitives::{Address, Bytes};
-use ethers_core::abi::RawAbi;
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
@@ -191,14 +190,9 @@ impl Metadata {
         self.source_code.sources()
     }
 
-    /// Parses the Abi String as an [RawAbi] struct.
-    pub fn raw_abi(&self) -> Result<RawAbi> {
-        Ok(serde_json::from_str(&self.abi)?)
-    }
-
-    /// Parses the Abi String as an [Abi] struct.
-    pub fn abi(&self) -> Result<Abi> {
-        Ok(serde_json::from_str(&self.abi)?)
+    /// Parses the ABI string into a [`JsonAbi`] struct.
+    pub fn abi(&self) -> Result<JsonAbi> {
+        serde_json::from_str(&self.abi).map_err(Into::into)
     }
 
     /// Parses the compiler version.
@@ -296,13 +290,8 @@ impl IntoIterator for ContractMetadata {
 
 impl ContractMetadata {
     /// Returns the ABI of all contracts.
-    pub fn abis(&self) -> Result<Vec<Abi>> {
+    pub fn abis(&self) -> Result<Vec<JsonAbi>> {
         self.items.iter().map(|c| c.abi()).collect()
-    }
-
-    /// Returns the raw ABI of all contracts.
-    pub fn raw_abis(&self) -> Result<Vec<RawAbi>> {
-        self.items.iter().map(|c| c.raw_abi()).collect()
     }
 
     /// Returns the combined source code of all contracts.
@@ -327,7 +316,7 @@ impl Client {
     /// let abi = client.contract_abi(address).await?;
     /// # Ok(()) }
     /// ```
-    pub async fn contract_abi(&self, address: Address) -> Result<Abi> {
+    pub async fn contract_abi(&self, address: Address) -> Result<JsonAbi> {
         // apply caching
         if let Some(ref cache) = self.cache {
             // If this is None, then we have a cache miss

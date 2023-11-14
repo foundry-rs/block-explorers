@@ -3,7 +3,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 use crate::errors::{is_blocked_by_cloudflare_response, is_cloudflare_security_challenge};
-use alloy_json_abi::JsonAbi as Abi;
+use alloy_json_abi::JsonAbi;
 use alloy_primitives::{Address, B256};
 use contract::ContractMetadata;
 use errors::EtherscanError;
@@ -363,11 +363,11 @@ impl Cache {
         Self { root, ttl }
     }
 
-    fn get_abi(&self, address: Address) -> Option<Option<alloy_json_abi::JsonAbi>> {
+    fn get_abi(&self, address: Address) -> Option<Option<JsonAbi>> {
         self.get("abi", address)
     }
 
-    fn set_abi(&self, address: Address, abi: Option<&Abi>) {
+    fn set_abi(&self, address: Address, abi: Option<&JsonAbi>) {
         self.set("abi", address, abi)
     }
 
