@@ -12,11 +12,11 @@
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 
 use crate::errors::{is_blocked_by_cloudflare_response, is_cloudflare_security_challenge};
+use alloy_chains::{Chain, ChainKind, NamedChain};
 use alloy_json_abi::JsonAbi;
 use alloy_primitives::{Address, B256};
 use contract::ContractMetadata;
 use errors::EtherscanError;
-use ethers_core::types::Chain;
 use reqwest::{header, IntoUrl, Url};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{
@@ -65,9 +65,9 @@ impl Client {
     /// # Example
     ///
     /// ```rust
-    /// use ethers_core::types::Chain;
+    /// use alloy_chains::Chain;
     /// use foundry_block_explorers::Client;
-    /// let client = Client::builder().with_api_key("<API KEY>").chain(Chain::Mainnet).unwrap().build().unwrap();
+    /// let client = Client::builder().with_api_key("<API KEY>").chain(NamedChain::mainnet()).unwrap().build().unwrap();
     /// ```
     pub fn builder() -> ClientBuilder {
         ClientBuilder::default()
@@ -93,30 +93,35 @@ impl Client {
     /// Create a new client with the correct endpoints based on the chain and API key
     /// from the default environment variable defined in [`Chain`].
     pub fn new_from_env(chain: Chain) -> Result<Self> {
-        let api_key = match chain {
-            // Extra aliases
-            Chain::Fantom | Chain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
-                .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
-                .map_err(Into::into),
+        let api_key = match chain.kind() {
+            ChainKind::Named(named) => match named {
+                // Extra aliases
+                NamedChain::Fantom | NamedChain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
+                    .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
+                    .map_err(Into::into),
 
-            // Backwards compatibility, ideally these should return an error.
-            Chain::Gnosis |
-            Chain::Chiado |
-            Chain::Sepolia |
-            Chain::Rsk |
-            Chain::Sokol |
-            Chain::Poa |
-            Chain::Oasis |
-            Chain::Emerald |
-            Chain::EmeraldTestnet |
-            Chain::Evmos |
-            Chain::EvmosTestnet => Ok(String::new()),
-            Chain::AnvilHardhat | Chain::Dev => Err(EtherscanError::LocalNetworksNotSupported),
+                // Backwards compatibility, ideally these should return an error.
+                NamedChain::Gnosis |
+                NamedChain::Chiado |
+                NamedChain::Sepolia |
+                NamedChain::Rsk |
+                NamedChain::Sokol |
+                NamedChain::Poa |
+                NamedChain::Oasis |
+                NamedChain::Emerald |
+                NamedChain::EmeraldTestnet |
+                NamedChain::Evmos |
+                NamedChain::EvmosTestnet => Ok(String::new()),
+                NamedChain::AnvilHardhat | NamedChain::Dev => {
+                    Err(EtherscanError::LocalNetworksNotSupported)
+                }
 
-            _ => chain
-                .etherscan_api_key_name()
-                .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
-                .and_then(|key_name| std::env::var(key_name).map_err(Into::into)),
+                _ => named
+                    .etherscan_api_key_name()
+                    .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
+                    .and_then(|key_name| std::env::var(key_name).map_err(Into::into)),
+            },
+            ChainKind::Id(_) => Err(EtherscanError::ChainNotSupported(chain)),
         }?;
         Self::new(chain, api_key)
     }
@@ -280,14 +285,15 @@ impl ClientBuilder {
     /// Fails if the chain is not supported by etherscan
     pub fn chain(self, chain: Chain) -> Result<Self> {
         fn urls(
-            api: impl IntoUrl,
-            url: impl IntoUrl,
+            (api, url): (impl IntoUrl, impl IntoUrl),
         ) -> (reqwest::Result<Url>, reqwest::Result<Url>) {
             (api.into_url(), url.into_url())
         }
         let (etherscan_api_url, etherscan_url) = chain
+            .named()
+            .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?
             .etherscan_urls()
-            .map(|(api, base)| urls(api, base))
+            .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
         self.with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
@@ -473,8 +479,8 @@ fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
 #[cfg(test)]
 mod tests {
     use crate::{Client, EtherscanError, ResponseData};
+    use alloy_chains::Chain;
     use alloy_primitives::{Address, B256};
-    use ethers_core::types::Chain;
 
     // <https://github.com/foundry-rs/foundry/issues/4406>
     #[test]
@@ -486,7 +492,7 @@ mod tests {
 
     #[test]
     fn test_api_paths() {
-        let client = Client::new(Chain::Goerli, "").unwrap();
+        let client = Client::new(Chain::goerli(), "").unwrap();
         assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api/");
 
         assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
@@ -494,7 +500,7 @@ mod tests {
 
     #[test]
     fn stringifies_block_url() {
-        let etherscan = Client::new(Chain::Mainnet, "").unwrap();
+        let etherscan = Client::new(Chain::mainnet(), "").unwrap();
         let block: u64 = 1;
         let block_url: String = etherscan.block_url(block);
         assert_eq!(block_url, format!("https://etherscan.io/block/{block}"));
@@ -502,7 +508,7 @@ mod tests {
 
     #[test]
     fn stringifies_address_url() {
-        let etherscan = Client::new(Chain::Mainnet, "").unwrap();
+        let etherscan = Client::new(Chain::mainnet(), "").unwrap();
         let addr: Address = Address::ZERO;
         let address_url: String = etherscan.address_url(addr);
         assert_eq!(address_url, format!("https://etherscan.io/address/{addr:?}"));
@@ -510,7 +516,7 @@ mod tests {
 
     #[test]
     fn stringifies_transaction_url() {
-        let etherscan = Client::new(Chain::Mainnet, "").unwrap();
+        let etherscan = Client::new(Chain::mainnet(), "").unwrap();
         let tx_hash = B256::ZERO;
         let tx_url: String = etherscan.transaction_url(tx_hash);
         assert_eq!(tx_url, format!("https://etherscan.io/tx/{tx_hash:?}"));
@@ -518,7 +524,7 @@ mod tests {
 
     #[test]
     fn stringifies_token_url() {
-        let etherscan = Client::new(Chain::Mainnet, "").unwrap();
+        let etherscan = Client::new(Chain::mainnet(), "").unwrap();
         let token_hash = Address::ZERO;
         let token_url: String = etherscan.token_url(token_hash);
         assert_eq!(token_url, format!("https://etherscan.io/token/{token_hash:?}"));
@@ -526,7 +532,7 @@ mod tests {
 
     #[test]
     fn local_networks_not_supported() {
-        let err = Client::new_from_env(Chain::Dev).unwrap_err();
+        let err = Client::new_from_env(Chain::dev()).unwrap_err();
         assert!(matches!(err, EtherscanError::LocalNetworksNotSupported));
     }
 }

@@ -1,12 +1,12 @@
 use crate::*;
+use alloy_chains::Chain;
 use alloy_primitives::U256;
-use ethers_core::types::Chain;
 use serial_test::serial;
 
 #[tokio::test]
 #[serial]
 async fn gas_estimate_success() {
-    run_with_client(Chain::Mainnet, |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let result = client.gas_estimate(U256::from(2000000000u32)).await;
 
         result.unwrap();
@@ -17,7 +17,7 @@ async fn gas_estimate_success() {
 #[tokio::test]
 #[serial]
 async fn gas_estimate_error() {
-    run_with_client(Chain::Mainnet, |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let err = client.gas_estimate(U256::from(7123189371829732819379218u128)).await.unwrap_err();
 
         assert!(matches!(err, EtherscanError::GasEstimationFailed));
@@ -28,7 +28,7 @@ async fn gas_estimate_error() {
 #[tokio::test]
 #[serial]
 async fn gas_oracle_success() {
-    run_with_client(Chain::Mainnet, |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let result = client.gas_oracle().await;
 
         assert!(result.is_ok());
