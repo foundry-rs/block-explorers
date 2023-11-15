@@ -346,8 +346,8 @@ impl Client {
             return Err(EtherscanError::RateLimitExceeded);
         }
 
-        if result.starts_with("Contract source code not verified") ||
-            resp.message.starts_with("Contract source code not verified")
+        if result.starts_with("Contract source code not verified")
+            || resp.message.starts_with("Contract source code not verified")
         {
             if let Some(ref cache) = self.cache {
                 cache.set_abi(address, None);
