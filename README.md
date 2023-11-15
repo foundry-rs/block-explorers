@@ -31,7 +31,7 @@ release.
 ## Examples
 
 ```rust,no_run
-use ethers_core::types::Chain;
+use alloy_chains::Chain;
 use foundry_block_explorers::Client;
 
 async fn foo() -> Result<(), Box<dyn std::error::Error>> {

@@ -1,5 +1,5 @@
 use crate::*;
-use ethers_core::types::Chain;
+use alloy_chains::Chain;
 use foundry_block_explorers::verify::VerifyContract;
 use foundry_compilers::{Project, ProjectPathsConfig};
 use serial_test::serial;
@@ -28,7 +28,7 @@ async fn can_flatten_and_verify_contract() {
             .optimization(true)
             .runs(200);
 
-    run_with_client(Chain::Mainnet, |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let resp = client
             .submit_contract_verification(&contract)
             .await

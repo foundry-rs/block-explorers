@@ -8,8 +8,6 @@ keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
@@ -18,9 +16,11 @@ rustdoc-args = ["--cfg", "docsrs"]
 all-features = true
 
 [dependencies]
-ethers-core = { version = "2", default-features = false }
-
 foundry-compilers = { version = "0.1", optional = true }
+
+alloy-chains = "0.1"
+alloy-json-abi = { version = "0.4", default-features = false, features = ["std", "serde_json"] }
+alloy-primitives = { version = "0.4", default-features = false, features = ["std", "serde"] }
 
 reqwest = { version = "0.11.19", default-features = false, features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -29,12 +29,7 @@ thiserror = "1.0"
 tracing = "0.1.37"
 semver = "1.0"
 
-alloy-primitives = { version = "0.4", default-features = false, features = ["std", "serde"]}
-alloy-json-abi = { version = "0.4", default-features = false, features = ["std", "serde_json"] }
-
 [dev-dependencies]
-foundry-compilers = { version = "0.1" }
-
 tempfile = "3.8"
 tokio = { version = "1.32", features = ["macros", "rt-multi-thread", "time"] }
 serial_test = "2.0.0"
@@ -48,6 +43,3 @@ openssl = ["reqwest/native-tls"]
 foundry-compilers = ["dep:foundry-compilers"]
 compilers-full = ["foundry-compilers?/full"]
 compilers-tests = ["foundry-compilers?/tests"]
-
-[patch.crates-io]
-ethers-core = { git = "https://github.com/gakonst/ethers-rs", rev = "841ff8c47980798fbb47991e047f8481b1d5eb39" }
