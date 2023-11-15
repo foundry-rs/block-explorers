@@ -67,7 +67,12 @@ impl Client {
     /// ```rust
     /// use alloy_chains::Chain;
     /// use foundry_block_explorers::Client;
-    /// let client = Client::builder().with_api_key("<API KEY>").chain(NamedChain::mainnet()).unwrap().build().unwrap();
+    /// let client = Client::builder()
+    ///     .with_api_key("<API KEY>")
+    ///     .chain(NamedChain::mainnet())
+    ///     .unwrap()
+    ///     .build()
+    ///     .unwrap();
     /// ```
     pub fn builder() -> ClientBuilder {
         ClientBuilder::default()
@@ -101,17 +106,17 @@ impl Client {
                     .map_err(Into::into),
 
                 // Backwards compatibility, ideally these should return an error.
-                NamedChain::Gnosis |
-                NamedChain::Chiado |
-                NamedChain::Sepolia |
-                NamedChain::Rsk |
-                NamedChain::Sokol |
-                NamedChain::Poa |
-                NamedChain::Oasis |
-                NamedChain::Emerald |
-                NamedChain::EmeraldTestnet |
-                NamedChain::Evmos |
-                NamedChain::EvmosTestnet => Ok(String::new()),
+                NamedChain::Gnosis
+                | NamedChain::Chiado
+                | NamedChain::Sepolia
+                | NamedChain::Rsk
+                | NamedChain::Sokol
+                | NamedChain::Poa
+                | NamedChain::Oasis
+                | NamedChain::Emerald
+                | NamedChain::EmeraldTestnet
+                | NamedChain::Evmos
+                | NamedChain::EvmosTestnet => Ok(String::new()),
                 NamedChain::AnvilHardhat | NamedChain::Dev => {
                     Err(EtherscanError::LocalNetworksNotSupported)
                 }
