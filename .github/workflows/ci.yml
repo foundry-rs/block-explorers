@@ -1,92 +1,100 @@
 name: CI
 
 on:
-    push:
-        branches: [main]
-    pull_request:
+  push:
+    branches: [main]
+  pull_request:
 
 # Yeah I know it's bad practice to have API keys, this is a read-only API key
 # so that we do not get rate limited by Etherscan (and it's free to generate as
 # many as you want)
 env:
-    ETHERSCAN_API_KEY: "I5BXNZYP5GEDWFINGVEZKYIVU2695NPQZB"
-    GOERLI_PRIVATE_KEY: "fa4a1a79e869a96fcb42727f75e3232d6865a82ea675bb95de967a7fe6a773b2"
-    GETH_BUILD: "1.11.2-73b01f40"
-    SOLC_VERSION: "0.8.20"
-    CARGO_TERM_COLOR: always
+  CARGO_TERM_COLOR: always
+  ETHERSCAN_API_KEY: "I5BXNZYP5GEDWFINGVEZKYIVU2695NPQZB"
+  GOERLI_PRIVATE_KEY: "fa4a1a79e869a96fcb42727f75e3232d6865a82ea675bb95de967a7fe6a773b2"
 
 jobs:
-    etherscan-tests:
-        name: etherscan tests (${{ matrix.os }}) (${{ matrix.rust }})
-        runs-on: ${{ matrix.os}}
-        timeout-minutes: 30
-        strategy:
-            fail-fast: false
-            matrix:
-                os: ["ubuntu-latest"]
-                rust: ["stable", "1.66"] # MSRV
-                exclude:
-                    - rust: "1.66" # MSRV
-        concurrency: etherscan-tests-${{ github.head_ref || github.run_id }}
-        steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@stable
-            - uses: Swatinem/rust-cache@v2
-            - name: build
-              if: ${{ matrix.rust == '1.66' }} # MSRV
-              run: cargo build
-            # Don't use cargo-nextest since all the tests have to be run sequentially
-            - name: live tests
-              run: cargo test --test it
+  test:
+    name: test (${{ matrix.os }}) (${{ matrix.rust }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        rust: ["stable", "1.65"] # MSRV
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # Only run tests on latest stable and above
+      - name: build
+        if: ${{ matrix.rust == '1.65' }} # MSRV
+        run: cargo build --workspace
+      # Don't use cargo-nextest since all the tests have to be run sequentially
+      - name: test
+        if: ${{ matrix.rust != '1.65' }} # MSRV
+        run: cargo test --workspace
 
-    feature-checks:
-        name: feature checks
-        runs-on: ubuntu-latest
-        timeout-minutes: 45
-        steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@stable
-            - uses: taiki-e/install-action@cargo-hack
-            - uses: Swatinem/rust-cache@v2
-            - name: cargo hack
-              run: cargo hack check --feature-powerset --depth 1 --all-targets
+  wasm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: check
+        run: cargo check --workspace --target wasm32-unknown-unknown
 
-    clippy:
-        name: clippy
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@clippy
-            - uses: Swatinem/rust-cache@v2
-            - name: clippy
-              run: cargo clippy --workspace --all-features --all-targets
-              env:
-                  RUSTFLAGS: "-D warnings"
+  feature-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: taiki-e/install-action@cargo-hack
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - name: cargo hack
+        run: cargo hack check --feature-powerset --depth 2 --all-targets
 
-    docs:
-        name: docs
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@nightly
-              with:
-                  components: rust-docs
-            - uses: Swatinem/rust-cache@v2
-            - name: doc
-              run: cargo doc --workspace --all-features --no-deps --document-private-items
-              env:
-                  RUSTDOCFLAGS: "--cfg docsrs -D warnings"
+  clippy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - run: cargo clippy --workspace --all-targets --all-features
+        env:
+          RUSTFLAGS: -Dwarnings
 
-    fmt:
-        name: fmt
-        runs-on: ubuntu-latest
-        timeout-minutes: 30
-        steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@nightly
-              with:
-                  components: rustfmt
-            - name: fmt --check
-              run: cargo fmt --all --check
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+      - run: cargo doc --workspace --all-features --no-deps --document-private-items
+        env:
+          RUSTDOCFLAGS: "--cfg docsrs -D warnings"
+
+  fmt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+      - run: cargo fmt --all --check

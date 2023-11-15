@@ -11,6 +11,9 @@
 #![deny(unused_must_use, rust_2018_idioms)]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 
+#[macro_use]
+extern crate tracing;
+
 use crate::errors::{is_blocked_by_cloudflare_response, is_cloudflare_security_challenge};
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use alloy_json_abi::JsonAbi;
@@ -25,7 +28,6 @@ use std::{
     path::PathBuf,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tracing::{error, trace};
 
 pub mod account;
 pub mod block_number;
@@ -69,7 +71,7 @@ impl Client {
     /// use foundry_block_explorers::Client;
     /// let client = Client::builder()
     ///     .with_api_key("<API KEY>")
-    ///     .chain(NamedChain::mainnet())
+    ///     .chain(Chain::mainnet())
     ///     .unwrap()
     ///     .build()
     ///     .unwrap();
