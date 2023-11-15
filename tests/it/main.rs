@@ -41,7 +41,7 @@ fn rate_limit(chain: Chain, key: bool) -> Duration {
         (_, true) => Duration::from_millis(250),
 
         // Rate limit without an API key is 1 call every 5 seconds.
-        // (Chain::Mainnet, false) => Duration::from_millis(5100),
+        // (ChainKind::Named(NamedChain::Mainnet), false) => Duration::from_millis(5100),
         (ChainKind::Named(NamedChain::Mainnet), false) => panic!("ETHERSCAN_API_KEY is not set"),
 
         // Ignore other chains since we don't have more than 1 test with each.
