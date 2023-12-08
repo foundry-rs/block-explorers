@@ -218,7 +218,12 @@ impl Metadata {
         self.sources()
             .into_iter()
             .map(|(path, entry)| {
-                let path = root.join(path);
+                // This is relevant because the etherscan [Metadata](crate::contract::Metadata) can
+                // contain absolute paths (supported by standard-json-input). See also: <https://github.com/foundry-rs/foundry/issues/6541>
+                // for example, we want to ensure "/contracts/SimpleToken.sol" is mapped to
+                // `<root_dir>/contracts/SimpleToken.sol`.
+                let sanitized_path = crate::source_tree::sanitize_path(path);
+                let path = root.join(sanitized_path);
                 SourceTreeEntry { path, contents: entry.content }
             })
             .collect()
