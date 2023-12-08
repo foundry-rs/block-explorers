@@ -36,8 +36,9 @@ impl SourceTree {
 }
 
 /// Remove any components in a smart contract source path that could cause a directory traversal.
-fn sanitize_path(path: &Path) -> PathBuf {
-    let sanitized = Path::new(path)
+pub(crate) fn sanitize_path(path: impl AsRef<Path>) -> PathBuf {
+    let sanitized = path
+        .as_ref()
         .components()
         .filter(|x| x.as_os_str() != Component::ParentDir.as_os_str())
         .collect::<PathBuf>();
