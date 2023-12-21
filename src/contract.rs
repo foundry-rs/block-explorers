@@ -1,5 +1,5 @@
 use crate::{
-    serde_helpers::deserialize_stringified_u64,
+    serde_helpers::{deserialize_stringified_bool_or_u64, deserialize_stringified_u64},
     source_tree::{SourceTree, SourceTreeEntry},
     utils::{deserialize_address_opt, deserialize_source_code},
     Client, EtherscanError, Response, Result,
@@ -128,14 +128,15 @@ pub struct Metadata {
     pub compiler_version: String,
 
     /// Whether the optimizer was used. This value should only be 0 or 1.
-    #[serde(deserialize_with = "deserialize_stringified_u64")]
+    #[serde(deserialize_with = "deserialize_stringified_bool_or_u64")]
     pub optimization_used: u64,
 
     /// The number of optimizations performed.
-    #[serde(deserialize_with = "deserialize_stringified_u64")]
+    #[serde(deserialize_with = "deserialize_stringified_u64", alias = "OptimizationRuns")]
     pub runs: u64,
 
     /// The constructor arguments the contract was deployed with.
+    #[serde(default)]
     pub constructor_arguments: Bytes,
 
     /// The version of the EVM the contract was deployed in. Can be either a variant of EvmVersion
@@ -144,13 +145,15 @@ pub struct Metadata {
     pub evm_version: String,
 
     // ?
+    #[serde(default)]
     pub library: String,
 
     /// The license of the contract.
+    #[serde(default)]
     pub license_type: String,
 
     /// Whether this contract is a proxy. This value should only be 0 or 1.
-    #[serde(deserialize_with = "deserialize_stringified_u64")]
+    #[serde(deserialize_with = "deserialize_stringified_bool_or_u64", alias = "IsProxy")]
     pub proxy: u64,
 
     /// If this contract is a proxy, the address of its implementation.
@@ -162,6 +165,7 @@ pub struct Metadata {
     pub implementation: Option<Address>,
 
     /// The swarm source of the contract.
+    #[serde(default)]
     pub swarm_source: String,
 }
 
