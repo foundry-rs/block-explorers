@@ -46,6 +46,34 @@ impl TryFrom<StringifiedNumeric> for U64 {
     }
 }
 
+
+#[derive(Deserialize)]
+#[serde(untagged)]
+enum BoolOrU64 {
+    #[serde(deserialize_with = "deserialize_stringified_u64")]
+    U64(u64),
+    Bool(String),
+}
+
+
+/// Supports parsing either a u64 or a boolean (which will then be converted to u64) 
+/// Implemented to binary fields such as "OptimizationUsed" which are formatted either as 0/1 or
+/// "true/"false" by different block explorers (e.g. etherscan vs blockscout)
+pub fn deserialize_stringified_bool_or_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let num = BoolOrU64::deserialize(deserializer)?;
+    match num {
+        BoolOrU64::Bool(b) => {
+            let b = b.parse::<bool>().map_err(serde::de::Error::custom)?;
+            let u = if b { 1 } else { 0 };
+            Ok(u)
+        }
+        BoolOrU64::U64(u) => Ok(u),
+    }
+}
+
 /// Supports parsing u64
 ///
 /// See <https://github.com/gakonst/ethers-rs/issues/1507>
