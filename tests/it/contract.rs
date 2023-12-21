@@ -34,7 +34,14 @@ async fn can_fetch_contract_abi() {
 #[tokio::test]
 #[serial]
 async fn can_fetch_contract_source_code_from_blockscout() {
-    let client = Client::builder().with_url("https://eth.blockscout.com").unwrap().with_api_url("https://eth.blockscout.com/api").unwrap().with_api_key("test").build().unwrap();
+    let client = Client::builder()
+        .with_url("https://eth.blockscout.com")
+        .unwrap()
+        .with_api_url("https://eth.blockscout.com/api")
+        .unwrap()
+        .with_api_key("test")
+        .build()
+        .unwrap();
     let meta = client
         .contract_source_code("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
         .await
