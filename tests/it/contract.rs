@@ -33,7 +33,7 @@ async fn can_fetch_contract_abi() {
 
 #[tokio::test]
 #[serial]
-async fn can_fetch_contract_source_code_from_blockscout() {
+async fn can_fetch_deposit_contract_source_code_from_blockscout() {
     let client = Client::builder()
         .with_url("https://eth.blockscout.com")
         .unwrap()
@@ -52,6 +52,28 @@ async fn can_fetch_contract_source_code_from_blockscout() {
     assert!(matches!(item.source_code, SourceCodeMetadata::SourceCode(_)));
     assert_eq!(item.source_code.sources().len(), 1);
     assert_eq!(item.abi().unwrap(), serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+}
+
+#[tokio::test]
+#[serial]
+async fn can_fetch_other_contract_source_code_from_blockscout() {
+    let client = Client::builder()
+        .with_url("https://eth.blockscout.com")
+        .unwrap()
+        .with_api_url("https://eth.blockscout.com/api")
+        .unwrap()
+        .with_api_key("test")
+        .build()
+        .unwrap();
+    let meta = client
+        .contract_source_code("0xDef1C0ded9bec7F1a1670819833240f027b25EfF".parse().unwrap())
+        .await
+        .unwrap();
+
+    assert_eq!(meta.items.len(), 1);
+    let item = &meta.items[0];
+    assert!(matches!(item.source_code, SourceCodeMetadata::SourceCode(_)));
+    assert_eq!(item.source_code.sources().len(), 1);
 }
 
 #[tokio::test]
