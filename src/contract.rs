@@ -435,7 +435,7 @@ impl Client {
         );
 
         let response = self.get(&query).await?;
-        
+
         // Address is not a contract or contract wasn't indexed yet
         if response.contains("No data found") {
             return Err(EtherscanError::ContractNotFound(address));
