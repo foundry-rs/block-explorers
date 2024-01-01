@@ -5,7 +5,7 @@ use crate::{
     Client, EtherscanError, Response, Result,
 };
 use alloy_json_abi::JsonAbi;
-use alloy_primitives::{Address, Bytes};
+use alloy_primitives::{Address, Bytes, B256};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
@@ -311,6 +311,15 @@ impl ContractMetadata {
     }
 }
 
+#[derive(Clone, Copy, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ContractCreationData {
+    pub contract_address: Address,
+    pub contract_creator: Address,
+    #[serde(rename = "txHash")]
+    pub transaction_hash: B256,
+}
+
 impl Client {
     /// Fetches a verified contract's ABI.
     ///
@@ -416,5 +425,30 @@ impl Client {
         }
 
         Ok(result)
+    }
+
+    pub async fn contract_creation_data(&self, address: Address) -> Result<ContractCreationData> {
+        let query = self.create_query(
+            "contract",
+            "getcontractcreation",
+            HashMap::from([("contractaddresses", address)]),
+        );
+
+        let response = self.get(&query).await?;
+        
+        // Address is not a contract or contract wasn't indexed yet
+        if response.contains("No data found") {
+            return Err(EtherscanError::ContractNotFound(address));
+        }
+
+        let response: Response<Vec<ContractCreationData>> = self.sanitize_response(response)?;
+
+        // We are expecting API to return exactly one result.
+        let data = response.result.first().ok_or(EtherscanError::EmptyResult {
+            message: response.message,
+            status: response.status,
+        })?;
+
+        Ok(*data)
     }
 }

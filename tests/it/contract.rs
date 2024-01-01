@@ -136,3 +136,15 @@ async fn can_fetch_contract_source_tree_for_plain_source_code_mapping() {
     })
     .await
 }
+
+#[tokio::test]
+#[serial]
+async fn can_fetch_contract_creation_data() {
+    run_with_client(Chain::mainnet(), |client| async move {
+        client
+            .contract_creation_data("0xdac17f958d2ee523a2206206994597c13d831ec7".parse().unwrap())
+            .await
+            .unwrap();
+    })
+    .await
+}
