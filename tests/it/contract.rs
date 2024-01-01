@@ -148,3 +148,15 @@ async fn can_fetch_contract_creation_data() {
     })
     .await
 }
+
+#[tokio::test]
+#[serial]
+async fn error_when_creation_data_for_eoa() {
+    init_tracing();
+    run_with_client(Chain::mainnet(), |client| async move {
+        let addr = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045".parse().unwrap();
+        let err = client.contract_creation_data(addr).await.unwrap_err();
+        assert!(matches!(err, EtherscanError::ContractNotFound(_)));
+    })
+    .await
+}
