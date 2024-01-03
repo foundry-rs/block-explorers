@@ -132,7 +132,7 @@ pub struct Metadata {
     pub optimization_used: u64,
 
     /// The number of optimizations performed.
-    #[serde(deserialize_with = "deserialize_stringified_u64", alias = "OptimizationRuns")]
+    #[serde(deserialize_with = "deserialize_stringified_u64", alias = "OptimizationRuns", default)]
     pub runs: u64,
 
     /// The constructor arguments the contract was deployed with.
