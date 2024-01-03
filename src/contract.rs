@@ -443,7 +443,7 @@ impl Client {
 
         let response: Response<Vec<ContractCreationData>> = self.sanitize_response(response)?;
 
-        // We are expecting API to return exactly one result.
+        // We are expecting the API to return exactly one result.
         let data = response.result.first().ok_or(EtherscanError::EmptyResult {
             message: response.message,
             status: response.status,
