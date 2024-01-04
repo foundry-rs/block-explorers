@@ -50,6 +50,8 @@ pub enum EtherscanError {
     CloudFlareSecurityChallenge,
     #[error("Received `Page not found` response. API server is likely down")]
     PageNotFound,
+    #[error("Contract was not found: {0}")]
+    ContractNotFound(Address),
 }
 
 /// etherscan/polyscan is protected by cloudflare, which can lead to html responses like `Sorry, you have been blocked` See also <https://community.cloudflare.com/t/sorry-you-have-been-blocked/110790>
