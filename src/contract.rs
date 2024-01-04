@@ -311,11 +311,19 @@ impl ContractMetadata {
     }
 }
 
+/// Contract creation data.
 #[derive(Clone, Copy, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ContractCreationData {
+    /// The contract's address.
     pub contract_address: Address,
+
+    /// The contract's deployer address.
+    /// NOTE: This field contains the address of an EOA that initiated the creation transaction.
+    /// For contracts deployed by other contracts, the direct deployer address may vary.
     pub contract_creator: Address,
+
+    /// The hash of the contract creation transaction.
     #[serde(rename = "txHash")]
     pub transaction_hash: B256,
 }
@@ -427,6 +435,18 @@ impl Client {
         Ok(result)
     }
 
+    /// Fetches a contract's creation transaction hash and deployer address.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// # async fn foo(client: foundry_block_explorers::Client) -> Result<(), Box<dyn std::error::Error>> {
+    /// let address = "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413".parse()?;
+    /// let creation_data = client.contract_creation_data(address).await?;
+    /// let deployment_tx = creation_data.transaction_hash;
+    /// let deployer = creation_data.contract_creator;
+    /// # Ok(()) }
+    /// ``
     pub async fn contract_creation_data(&self, address: Address) -> Result<ContractCreationData> {
         let query = self.create_query(
             "contract",
