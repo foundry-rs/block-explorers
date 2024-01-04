@@ -446,7 +446,7 @@ impl Client {
     /// let deployment_tx = creation_data.transaction_hash;
     /// let deployer = creation_data.contract_creator;
     /// # Ok(()) }
-    /// ``
+    /// ```
     pub async fn contract_creation_data(&self, address: Address) -> Result<ContractCreationData> {
         let query = self.create_query(
             "contract",
