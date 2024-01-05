@@ -163,22 +163,22 @@ impl Client {
 
     /// Return the URL for the given block number
     pub fn block_url(&self, block: u64) -> String {
-        format!("{}block/{block}", self.etherscan_url)
+        self.etherscan_url.join(&format!("block/{block}")).unwrap().to_string()
     }
 
     /// Return the URL for the given address
     pub fn address_url(&self, address: Address) -> String {
-        format!("{}address/{address:?}", self.etherscan_url)
+        self.etherscan_url.join(&format!("address/{address:?}")).unwrap().to_string()
     }
 
     /// Return the URL for the given transaction hash
     pub fn transaction_url(&self, tx_hash: B256) -> String {
-        format!("{}tx/{tx_hash:?}", self.etherscan_url)
+        self.etherscan_url.join(&format!("tx/{tx_hash:?}")).unwrap().to_string()
     }
 
     /// Return the URL for the given token hash
     pub fn token_url(&self, token_hash: Address) -> String {
-        format!("{}token/{token_hash:?}", self.etherscan_url)
+        self.etherscan_url.join(&format!("token/{token_hash:?}")).unwrap().to_string()
     }
 
     /// Execute an GET request with parameters.
@@ -311,7 +311,7 @@ impl ClientBuilder {
     ///
     /// Fails if the `etherscan_url` is not a valid `Url`
     pub fn with_url(mut self, etherscan_url: impl IntoUrl) -> Result<Self> {
-        self.etherscan_url = Some(ensure_url(etherscan_url)?);
+        self.etherscan_url = Some(into_url(etherscan_url)?);
         Ok(self)
     }
 
@@ -327,7 +327,7 @@ impl ClientBuilder {
     ///
     /// Fails if the `etherscan_api_url` is not a valid `Url`
     pub fn with_api_url(mut self, etherscan_api_url: impl IntoUrl) -> Result<Self> {
-        self.etherscan_api_url = Some(ensure_url(etherscan_api_url)?);
+        self.etherscan_api_url = Some(into_url(etherscan_api_url)?);
         Ok(self)
     }
 
@@ -464,18 +464,6 @@ struct Query<'a, T: Serialize> {
     other: T,
 }
 
-/// Ensures that the url is well formatted to be used by the Client's functions that join paths.
-fn ensure_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
-    let url_str = url.as_str();
-
-    // ensure URL ends with `/`
-    if url_str.ends_with('/') {
-        url.into_url()
-    } else {
-        into_url(format!("{url_str}/"))
-    }
-}
-
 /// This is a hack to work around `IntoUrl`'s sealed private functions, which can't be called
 /// normally.
 #[inline]
@@ -500,7 +488,7 @@ mod tests {
     #[test]
     fn test_api_paths() {
         let client = Client::new(Chain::goerli(), "").unwrap();
-        assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api/");
+        assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api");
 
         assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
     }
