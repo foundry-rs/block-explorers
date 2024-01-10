@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.3](https://github.com/foundry-rs/compilers/releases/tag/v0.1.3) - 2024-01-05
+
+### Miscellaneous Tasks
+
+- Update cliff link
+- Add CHANGELOG.md scripts ([#26](https://github.com/foundry-rs/compilers/issues/26))
+
+## [0.1.3](https://github.com/foundry-rs/block-explorers/releases/tag/v0.1.3) - 2024-01-05
 
 ### Bug Fixes
 
@@ -21,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix deserialization error resulting from Blockscout omitting "OptimizationRuns" field when optimization was not used ([#23](https://github.com/foundry-rs/compilers/issues/23))
 - Fix deserialization failure when fetching contract source_code from blockscout ([#22](https://github.com/foundry-rs/compilers/issues/22))
 
-## [0.1.2](https://github.com/foundry-rs/compilers/releases/tag/v0.1.2) - 2023-12-08
+## [0.1.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.1.2) - 2023-12-08
 
 ### Bug Fixes
 
@@ -31,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 0.1.2 ([#20](https://github.com/foundry-rs/compilers/issues/20))
 
-## [0.1.1](https://github.com/foundry-rs/compilers/releases/tag/v0.1.1) - 2023-11-23
+## [0.1.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.1.1) - 2023-11-23
 
 ### Dependencies
 
@@ -42,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Release 0.1.1
 - [meta] Add CODEOWNERS
 
-## [0.1.0](https://github.com/foundry-rs/compilers/releases/tag/v0.1.0) - 2023-11-15
+## [0.1.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.1.0) - 2023-11-15
 
 ### Bug Fixes
 
