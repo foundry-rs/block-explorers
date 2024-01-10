@@ -9,6 +9,7 @@ description = "Bindings for Etherscan.io and other block explorer APIs"
 keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
 homepage = "https://github.com/foundry-rs/block-explorers"
 repository = "https://github.com/foundry-rs/block-explorers"
+exclude = [".github/", "sccripts/", "test-data/"]
 
 [package.metadata.docs.rs]
 all-features = true
