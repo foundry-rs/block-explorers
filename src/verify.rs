@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 /// Arguments for verifying contracts
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[must_use]
 pub struct VerifyContract {
     #[serde(rename = "contractaddress")]
     pub address: Address,
@@ -42,6 +43,9 @@ pub struct VerifyContract {
     /// applicable when codeformat=solidity-single-file
     #[serde(rename = "evmversion", skip_serializing_if = "Option::is_none")]
     pub evm_version: Option<String>,
+    /// Use `--via-ir`.
+    #[serde(rename = "viaIR", skip_serializing_if = "Option::is_none")]
+    pub via_ir: Option<bool>,
     #[serde(flatten)]
     pub other: HashMap<String, String>,
 }
@@ -64,17 +68,16 @@ impl VerifyContract {
             constructor_arguments: None,
             blockscout_constructor_arguments: None,
             evm_version: None,
+            via_ir: None,
             other: Default::default(),
         }
     }
 
-    #[must_use]
     pub fn runs(mut self, runs: u32) -> Self {
         self.runs = Some(format!("{runs}"));
         self
     }
 
-    #[must_use]
     pub fn optimization(self, optimization: bool) -> Self {
         if optimization {
             self.optimized()
@@ -83,31 +86,31 @@ impl VerifyContract {
         }
     }
 
-    #[must_use]
     pub fn optimized(mut self) -> Self {
         self.optimization_used = Some("1".to_string());
         self
     }
 
-    #[must_use]
     pub fn not_optimized(mut self) -> Self {
         self.optimization_used = Some("0".to_string());
         self
     }
 
-    #[must_use]
     pub fn code_format(mut self, code_format: CodeFormat) -> Self {
         self.code_format = code_format;
         self
     }
 
-    #[must_use]
     pub fn evm_version(mut self, evm_version: impl Into<String>) -> Self {
         self.evm_version = Some(evm_version.into());
         self
     }
 
-    #[must_use]
+    pub fn via_ir(mut self, via_ir: bool) -> Self {
+        self.via_ir = Some(via_ir);
+        self
+    }
+
     pub fn constructor_arguments(
         mut self,
         constructor_arguments: Option<impl Into<String>>,
