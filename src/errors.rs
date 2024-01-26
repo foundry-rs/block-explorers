@@ -22,8 +22,8 @@ pub enum EtherscanError {
     EnvVarNotFound(#[from] VarError),
     #[error(transparent)]
     Reqwest(#[from] reqwest::Error),
-    #[error(transparent)]
-    Serde(#[from] serde_json::Error),
+    #[error("Failed to deserialize content: {error}\n{content}")]
+    Serde { error: serde_json::Error, content: String },
     #[error("Contract source code not verified: {0}")]
     ContractCodeNotVerified(Address),
     #[error("Response result is unexpectedly empty: status={status}, message={message}")]
