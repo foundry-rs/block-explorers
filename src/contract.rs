@@ -88,7 +88,11 @@ impl SourceCodeMetadata {
                     if value.is_null() {
                         Ok(None)
                     } else {
-                        Ok(Some(serde_json::from_value(value.to_owned())?))
+                        let settings =
+                            serde_json::from_value(value.to_owned()).map_err(|error| {
+                                EtherscanError::Serde { error, content: value.to_string() }
+                            })?;
+                        Ok(Some(settings))
                     }
                 }
                 None => Ok(None),
@@ -193,7 +197,8 @@ impl Metadata {
 
     /// Parses the ABI string into a [`JsonAbi`] struct.
     pub fn abi(&self) -> Result<JsonAbi> {
-        serde_json::from_str(&self.abi).map_err(Into::into)
+        serde_json::from_str(&self.abi)
+            .map_err(|error| EtherscanError::Serde { error, content: self.abi.clone() })
     }
 
     /// Parses the compiler version.
@@ -380,7 +385,8 @@ impl Client {
             }
             return Err(EtherscanError::ContractCodeNotVerified(address));
         }
-        let abi = serde_json::from_str(&result)?;
+        let abi = serde_json::from_str(&result)
+            .map_err(|error| EtherscanError::Serde { error, content: result })?;
 
         if let Some(ref cache) = self.cache {
             cache.set_abi(address, Some(&abi));

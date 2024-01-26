@@ -225,8 +225,8 @@ impl Client {
     /// Perform sanity checks on a response and deserialize it into a [Response].
     fn sanitize_response<T: DeserializeOwned>(&self, res: impl AsRef<str>) -> Result<Response<T>> {
         let res = res.as_ref();
-        let res: ResponseData<T> = serde_json::from_str(res).map_err(|err| {
-            error!(target: "etherscan", ?res, "Failed to deserialize response: {}", err);
+        let res: ResponseData<T> = serde_json::from_str(res).map_err(|error| {
+            error!(target: "etherscan", ?res, "Failed to deserialize response: {}", error);
             if res == "Page not found" {
                 EtherscanError::PageNotFound
             } else if is_blocked_by_cloudflare_response(res) {
@@ -234,7 +234,7 @@ impl Client {
             } else if is_cloudflare_security_challenge(res) {
                 EtherscanError::CloudFlareSecurityChallenge
             } else {
-                EtherscanError::Serde(err)
+                EtherscanError::Serde { error, content: res.to_string() }
             }
         })?;
 
