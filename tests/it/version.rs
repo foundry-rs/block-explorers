@@ -1,5 +1,4 @@
-use crate::*;
-use foundry_block_explorers::utils::lookup_compiler_version;
+use foundry_block_explorers::{errors::EtherscanError, utils::lookup_compiler_version};
 use semver::{BuildMetadata, Prerelease, Version};
 
 #[tokio::test]
