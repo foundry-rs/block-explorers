@@ -1,10 +1,7 @@
 use crate::block_number::BlockNumber;
 use alloy_primitives::{U256, U64};
 use serde::{Deserialize, Deserializer};
-use std::{
-    convert::{TryFrom, TryInto},
-    str::FromStr,
-};
+use std::str::FromStr;
 
 /// Helper type to parse numeric strings, `u64` and `U256`
 #[derive(Deserialize, Debug, Clone)]
