@@ -23,7 +23,10 @@ impl SourceTree {
         for entry in &self.entries {
             let mut sanitized_path = sanitize_path(&entry.path);
             if sanitized_path.extension().is_none() {
-                sanitized_path.set_extension("sol");
+                let with_extension = sanitized_path.with_extension("sol");
+                if !self.entries.iter().any(|e| e.path == with_extension) {
+                    sanitized_path = with_extension;
+                }
             }
             let joined = dir.join(sanitized_path);
             if let Some(parent) = joined.parent() {
