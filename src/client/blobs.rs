@@ -95,7 +95,7 @@ impl BlobScanClient {
         let url = format!("{}/blobs/{}", self.base_url, id);
         let response = self.client.get(url).send().await?;
 
-        // Check the status code of the response, parsing errors if necessary.
+        
         match response.status().is_success() {
             true => {
                 let blob = response.json::<BlobId>().await?;
