@@ -164,7 +164,7 @@ impl Client {
         &self,
         contract: &VerifyContract,
     ) -> Result<Response<String>> {
-        let body = self.create_query("contract", "verifysourcecode", contract);
+        let body = self.create_query("contract", "verifysourcecode", self.chain_id, contract);
         self.post_form(&body).await
     }
 
@@ -177,6 +177,7 @@ impl Client {
         let body = self.create_query(
             "contract",
             "checkverifystatus",
+            self.chain_id,
             HashMap::from([("guid", guid.as_ref())]),
         );
         self.post_form(&body).await
@@ -187,7 +188,7 @@ impl Client {
         &self,
         contract: &VerifyProxyContract,
     ) -> Result<Response<String>> {
-        let body = self.create_query("contract", "verifyproxycontract", contract);
+        let body = self.create_query("contract", "verifyproxycontract", self.chain_id, contract);
         self.post_form(&body).await
     }
 
@@ -200,6 +201,7 @@ impl Client {
         let body = self.create_query(
             "contract",
             "checkproxyverification",
+            self.chain_id,
             HashMap::from([("guid", guid.as_ref())]),
         );
         self.post_form(&body).await

@@ -473,6 +473,7 @@ impl Client {
         let query = self.create_query(
             "account",
             "balance",
+            self.chain_id,
             HashMap::from([("address", &addr_str), ("tag", &tag_str)]),
         );
         let response: Response<String> = self.get_json(&query).await?;
@@ -509,6 +510,7 @@ impl Client {
         let query: Query<'_, HashMap<&str, &str>> = self.create_query(
             "account",
             "balancemulti",
+            self.chain_id,
             HashMap::from([("address", addrs.as_ref()), ("tag", tag_str.as_ref())]),
         );
         let response: Response<Vec<AccountBalance>> = self.get_json(&query).await?;
@@ -537,7 +539,7 @@ impl Client {
     ) -> Result<Vec<NormalTransaction>> {
         let mut tx_params: HashMap<&str, String> = params.unwrap_or_default().into();
         tx_params.insert("address", format!("{address:?}"));
-        let query = self.create_query("account", "txlist", tx_params);
+        let query = self.create_query("account", "txlist", self.chain_id, tx_params);
         let response: Response<Vec<NormalTransaction>> = self.get_json(&query).await?;
 
         Ok(response.result)
@@ -572,7 +574,7 @@ impl Client {
             }
             _ => {}
         }
-        let query = self.create_query("account", "txlistinternal", tx_params);
+        let query = self.create_query("account", "txlistinternal", self.chain_id, tx_params);
         let response: Response<Vec<InternalTransaction>> = self.get_json(&query).await?;
 
         Ok(response.result)
@@ -598,7 +600,7 @@ impl Client {
         params: Option<TxListParams>,
     ) -> Result<Vec<ERC20TokenTransferEvent>> {
         let params = event_query_option.into_params(params.unwrap_or_default());
-        let query = self.create_query("account", "tokentx", params);
+        let query = self.create_query("account", "tokentx", self.chain_id, params);
         let response: Response<Vec<ERC20TokenTransferEvent>> = self.get_json(&query).await?;
 
         Ok(response.result)
@@ -624,7 +626,7 @@ impl Client {
         params: Option<TxListParams>,
     ) -> Result<Vec<ERC721TokenTransferEvent>> {
         let params = event_query_option.into_params(params.unwrap_or_default());
-        let query = self.create_query("account", "tokennfttx", params);
+        let query = self.create_query("account", "tokennfttx", self.chain_id, params);
         let response: Response<Vec<ERC721TokenTransferEvent>> = self.get_json(&query).await?;
 
         Ok(response.result)
@@ -651,7 +653,7 @@ impl Client {
         params: Option<TxListParams>,
     ) -> Result<Vec<ERC1155TokenTransferEvent>> {
         let params = event_query_option.into_params(params.unwrap_or_default());
-        let query = self.create_query("account", "token1155tx", params);
+        let query = self.create_query("account", "token1155tx", self.chain_id, params);
         let response: Response<Vec<ERC1155TokenTransferEvent>> = self.get_json(&query).await?;
 
         Ok(response.result)
@@ -680,7 +682,7 @@ impl Client {
             params.insert("page", page.to_string());
             params.insert("offset", offset.to_string());
         }
-        let query = self.create_query("account", "getminedblocks", params);
+        let query = self.create_query("account", "getminedblocks", self.chain_id, params);
         let response: Response<Vec<MinedBlock>> = self.get_json(&query).await?;
 
         Ok(response.result)

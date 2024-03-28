@@ -22,6 +22,7 @@ impl Client {
         let query = self.create_query(
             "transaction",
             "getstatus",
+            self.chain_id,
             HashMap::from([("txhash", tx_hash.as_ref())]),
         );
         let response: Response<ContractExecutionStatus> = self.get_json(&query).await?;
@@ -38,6 +39,7 @@ impl Client {
         let query = self.create_query(
             "transaction",
             "gettxreceiptstatus",
+            self.chain_id,
             HashMap::from([("txhash", tx_hash.as_ref())]),
         );
         let response: Response<TransactionReceiptStatus> = self.get_json(&query).await?;

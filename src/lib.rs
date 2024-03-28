@@ -57,6 +57,8 @@ pub struct Client {
     etherscan_url: Url,
     /// Path to where ABI files should be cached
     cache: Option<Cache>,
+    /// Chain ID
+    chain_id: Option<u64>,
 }
 
 impl Client {
@@ -257,12 +259,14 @@ impl Client {
         &self,
         module: &'static str,
         action: &'static str,
+        chain_id: Option<u64>,
         other: T,
     ) -> Query<'_, T> {
         Query {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),
             action: Cow::Borrowed(action),
+            chain_id: chain_id.unwrap_or(1),
             other,
         }
     }
@@ -280,6 +284,8 @@ pub struct ClientBuilder {
     etherscan_url: Option<Url>,
     /// Path to where ABI files should be cached
     cache: Option<Cache>,
+    /// Chain ID
+    chain_id: Option<u64>,
 }
 
 // === impl ClientBuilder ===
@@ -302,7 +308,8 @@ impl ClientBuilder {
             .etherscan_urls()
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
-        self.with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
+
+        self.with_chain_id(chain.id()).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
 
     /// Configures the etherscan url
@@ -343,6 +350,12 @@ impl ClientBuilder {
         self
     }
 
+    /// Configures the chain id for etherscan verification
+    pub fn with_chain_id(mut self, chain_id: u64) -> Self {
+        self.chain_id = Some(chain_id);
+        self
+    }
+
     /// Returns a Client that uses this ClientBuilder configuration.
     ///
     /// # Errors
@@ -351,7 +364,8 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache } = self;
+        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache, chain_id } =
+            self;
 
         let client = Client {
             client: client.unwrap_or_default(),
@@ -361,6 +375,7 @@ impl ClientBuilder {
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,
+            chain_id,
         };
         Ok(client)
     }
@@ -460,6 +475,7 @@ struct Query<'a, T: Serialize> {
     apikey: Option<Cow<'a, str>>,
     module: Cow<'a, str>,
     action: Cow<'a, str>,
+    chain_id: u64,
     #[serde(flatten)]
     other: T,
 }
