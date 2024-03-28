@@ -122,7 +122,7 @@ impl VerifyContract {
                 .trim_start_matches("0x")
                 .to_string()
         });
-        self.constructor_arguments = constructor_args.clone();
+        self.constructor_arguments.clone_from(&constructor_args);
         self.blockscout_constructor_arguments = constructor_args;
         self
     }
