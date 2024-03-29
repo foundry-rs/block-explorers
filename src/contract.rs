@@ -357,12 +357,7 @@ impl Client {
             }
         }
 
-        let query = self.create_query(
-            "contract",
-            "getabi",
-            self.chain_id,
-            HashMap::from([("address", address)]),
-        );
+        let query = self.create_query("contract", "getabi", HashMap::from([("address", address)]));
         let resp: Response<Option<String>> = self.get_json(&query).await?;
 
         let result = match resp.result {
@@ -424,12 +419,8 @@ impl Client {
             }
         }
 
-        let query = self.create_query(
-            "contract",
-            "getsourcecode",
-            self.chain_id,
-            HashMap::from([("address", address)]),
-        );
+        let query =
+            self.create_query("contract", "getsourcecode", HashMap::from([("address", address)]));
         let response = self.get(&query).await?;
 
         // Source code is not verified
@@ -466,7 +457,6 @@ impl Client {
         let query = self.create_query(
             "contract",
             "getcontractcreation",
-            self.chain_id,
             HashMap::from([("contractaddresses", address)]),
         );
 

@@ -89,7 +89,6 @@ impl Client {
         let query = self.create_query(
             "gastracker",
             "gasestimate",
-            self.chain_id,
             HashMap::from([("gasprice", gas_price.to_string())]),
         );
         let response: Response<String> = self.get_json(&query).await?;
@@ -107,8 +106,7 @@ impl Client {
     /// - New field `suggestBaseFee`, the baseFee of the next pending block
     /// - New field `gasUsedRatio`, to estimate how busy the network is
     pub async fn gas_oracle(&self) -> Result<GasOracle> {
-        let query =
-            self.create_query("gastracker", "gasoracle", self.chain_id, serde_json::Value::Null);
+        let query = self.create_query("gastracker", "gasoracle", serde_json::Value::Null);
         let response: Response<GasOracle> = self.get_json(&query).await?;
 
         Ok(response.result)

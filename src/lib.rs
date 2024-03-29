@@ -259,14 +259,13 @@ impl Client {
         &self,
         module: &'static str,
         action: &'static str,
-        chain_id: Option<u64>,
         other: T,
     ) -> Query<'_, T> {
         Query {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),
             action: Cow::Borrowed(action),
-            chain_id,
+            chain_id: self.chain_id,
             other,
         }
     }
@@ -293,6 +292,8 @@ pub struct ClientBuilder {
 impl ClientBuilder {
     /// Configures the etherscan url and api url for the given chain
     ///
+    /// Note: This method also sets the chain_id for etherscan multichain verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
+    ///
     /// # Errors
     ///
     /// Fails if the chain is not supported by etherscan
@@ -309,7 +310,7 @@ impl ClientBuilder {
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
 
-        self.with_chain_id(chain.id()).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
+        self.with_chain_id(chain).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
 
     /// Configures the etherscan url
@@ -350,10 +351,15 @@ impl ClientBuilder {
         self
     }
 
-    /// Configures the chain id for etherscan verification
-    pub fn with_chain_id(mut self, chain_id: u64) -> Self {
-        self.chain_id = Some(chain_id);
+    /// Configures the chain id for etherscan verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
+    pub fn with_chain_id(mut self, chain: Chain) -> Self {
+        self.chain_id = Some(chain.id());
         self
+    }
+
+    /// Returns the chain the client is built on.
+    pub fn get_chain(&self) -> Option<Chain> {
+        self.chain_id.map(Chain::from_id)
     }
 
     /// Returns a Client that uses this ClientBuilder configuration.
