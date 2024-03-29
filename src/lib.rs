@@ -57,6 +57,8 @@ pub struct Client {
     etherscan_url: Url,
     /// Path to where ABI files should be cached
     cache: Option<Cache>,
+    /// Chain ID
+    chain_id: Option<u64>,
 }
 
 impl Client {
@@ -263,6 +265,7 @@ impl Client {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),
             action: Cow::Borrowed(action),
+            chain_id: self.chain_id,
             other,
         }
     }
@@ -280,12 +283,16 @@ pub struct ClientBuilder {
     etherscan_url: Option<Url>,
     /// Path to where ABI files should be cached
     cache: Option<Cache>,
+    /// Chain ID
+    chain_id: Option<u64>,
 }
 
 // === impl ClientBuilder ===
 
 impl ClientBuilder {
     /// Configures the etherscan url and api url for the given chain
+    ///
+    /// Note: This method also sets the chain_id for etherscan multichain verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
     ///
     /// # Errors
     ///
@@ -302,7 +309,8 @@ impl ClientBuilder {
             .etherscan_urls()
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
-        self.with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
+
+        self.with_chain_id(chain).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
 
     /// Configures the etherscan url
@@ -343,6 +351,17 @@ impl ClientBuilder {
         self
     }
 
+    /// Configures the chain id for etherscan verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
+    pub fn with_chain_id(mut self, chain: Chain) -> Self {
+        self.chain_id = Some(chain.id());
+        self
+    }
+
+    /// Returns the chain the client is built on.
+    pub fn get_chain(&self) -> Option<Chain> {
+        self.chain_id.map(Chain::from_id)
+    }
+
     /// Returns a Client that uses this ClientBuilder configuration.
     ///
     /// # Errors
@@ -351,7 +370,8 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache } = self;
+        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache, chain_id } =
+            self;
 
         let client = Client {
             client: client.unwrap_or_default(),
@@ -361,6 +381,7 @@ impl ClientBuilder {
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,
+            chain_id,
         };
         Ok(client)
     }
@@ -460,6 +481,8 @@ struct Query<'a, T: Serialize> {
     apikey: Option<Cow<'a, str>>,
     module: Cow<'a, str>,
     action: Cow<'a, str>,
+    #[serde(rename = "chainId", skip_serializing_if = "Option::is_none")]
+    chain_id: Option<u64>,
     #[serde(flatten)]
     other: T,
 }
