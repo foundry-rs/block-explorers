@@ -444,18 +444,21 @@ impl Cache {
 
     fn get<T: DeserializeOwned>(&self, prefix: &str, address: Address) -> Option<T> {
         let path = self.root.join(prefix).join(format!("{address:?}.json"));
+
         let Ok(contents) = std::fs::read_to_string(path) else {
             return None;
         };
+
         let Ok(inner) = serde_json::from_str::<CacheEnvelope<T>>(&contents) else {
             return None;
         };
-        // If this does not return None then we have passed the expiry
+
+        // Return the data if it hasn't expired, otherwise return None
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("system time is before unix epoch")
-            .checked_sub(Duration::from_secs(inner.expiry))
-            .map(|_| inner.data)
+            .lt(&Duration::from_secs(inner.expiry))
+            .then(|| inner.data)
     }
 }
 
