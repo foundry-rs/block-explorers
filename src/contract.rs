@@ -389,6 +389,8 @@ impl Client {
             .map_err(|error| EtherscanError::Serde { error, content: result })?;
 
         if let Some(ref cache) = self.cache {
+            trace!(target: "contract", "Caching ABI for contract {}", address);
+
             cache.set_abi(address, Some(&abi));
         }
 
