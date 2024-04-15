@@ -468,11 +468,15 @@ impl Cache {
             return None;
         };
 
-        // Return the data if it hasn't expired, otherwise return None
+        // Check if the cache item is still valid.
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("system time is before unix epoch")
+            // Check if the current time is less than the expiry time
+            // to determine if the cache item is still valid.
             .lt(&Duration::from_secs(inner.expiry))
+            // If the cache item is still valid, return the data.
+            // Otherwise, return None.
             .then_some(inner.data)
     }
 }
