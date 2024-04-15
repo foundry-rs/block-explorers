@@ -388,16 +388,31 @@ impl ClientBuilder {
 }
 
 /// A wrapper around an Etherscan cache object with an expiry
+/// time for each item.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct CacheEnvelope<T> {
+    // The expiry time is the time the cache item was created + the cache TTL.
+    // The cache item is considered expired if the current time is greater than the expiry time.
     expiry: u64,
+    // The cached data.
     data: T,
 }
 
-/// Simple cache for etherscan requests
+/// Simple cache for Etherscan requests.
+///
+/// The cache is stored at the defined `root` with the following structure:
+///
+/// - $root/abi/$address.json
+/// - $root/sources/$address.json
+///
+/// Each cache item is stored as a JSON file with the following structure:
+///
+/// - { "expiry": $expiry, "data": $data }
 #[derive(Clone, Debug)]
 struct Cache {
+    // Path to the cache directory root.
     root: PathBuf,
+    // Time to live for each cache item.
     ttl: Duration,
 }
 
