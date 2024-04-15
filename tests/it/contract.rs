@@ -1,4 +1,4 @@
-use crate::{init_tracing, run_with_client};
+use crate::{init_tracing, run_with_client, run_with_client_cached};
 use alloy_chains::{Chain, NamedChain};
 use foundry_block_explorers::{contract::SourceCodeMetadata, errors::EtherscanError, Client};
 use serial_test::serial;
@@ -27,6 +27,51 @@ async fn can_fetch_contract_abi() {
             .await
             .unwrap();
         assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+    })
+    .await;
+}
+
+#[tokio::test]
+#[serial]
+async fn can_fetch_and_cache_contract_abi() {
+    async fn fetch_abi(client: &Client, addr: &str) {
+        let abi = client.contract_abi(addr.parse().unwrap()).await.unwrap();
+        assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+    }
+
+    run_with_client_cached(Chain::mainnet(), |client| async move {
+        // Fetch the abi and cache it.
+        fetch_abi(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
+
+        // Repeated calls on the cached abi should not trigger a new request.
+        for _ in 0..10 {
+            fetch_abi(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
+        }
+    })
+    .await;
+}
+
+#[tokio::test]
+#[serial]
+async fn can_fetch_and_cache_contract_source_code() {
+    async fn fetch_source_code(client: &Client, addr: &str) {
+        let meta = client.contract_source_code(addr.parse().unwrap()).await.unwrap();
+        assert_eq!(meta.items.len(), 1);
+
+        let item = &meta.items[0];
+        assert!(matches!(item.source_code, SourceCodeMetadata::SourceCode(_)));
+        assert_eq!(item.source_code.sources().len(), 1);
+        assert_eq!(item.abi().unwrap(), serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+    }
+
+    run_with_client_cached(Chain::mainnet(), |client| async move {
+        // Fetch the source code and cache it.
+        fetch_source_code(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
+
+        // Repeated calls on the cached source code should not trigger a new request.
+        for _ in 0..10 {
+            fetch_source_code(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
+        }
     })
     .await;
 }

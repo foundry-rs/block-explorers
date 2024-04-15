@@ -388,16 +388,31 @@ impl ClientBuilder {
 }
 
 /// A wrapper around an Etherscan cache object with an expiry
+/// time for each item.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct CacheEnvelope<T> {
+    // The expiry time is the time the cache item was created + the cache TTL.
+    // The cache item is considered expired if the current time is greater than the expiry time.
     expiry: u64,
+    // The cached data.
     data: T,
 }
 
-/// Simple cache for etherscan requests
+/// Simple cache for Etherscan requests.
+///
+/// The cache is stored at the defined `root` with the following structure:
+///
+/// - $root/abi/$address.json
+/// - $root/sources/$address.json
+///
+/// Each cache item is stored as a JSON file with the following structure:
+///
+/// - { "expiry": $expiry, "data": $data }
 #[derive(Clone, Debug)]
 struct Cache {
+    // Path to the cache directory root.
     root: PathBuf,
+    // Time to live for each cache item.
     ttl: Duration,
 }
 
@@ -444,18 +459,25 @@ impl Cache {
 
     fn get<T: DeserializeOwned>(&self, prefix: &str, address: Address) -> Option<T> {
         let path = self.root.join(prefix).join(format!("{address:?}.json"));
+
         let Ok(contents) = std::fs::read_to_string(path) else {
             return None;
         };
+
         let Ok(inner) = serde_json::from_str::<CacheEnvelope<T>>(&contents) else {
             return None;
         };
-        // If this does not return None then we have passed the expiry
+
+        // Check if the cache item is still valid.
         SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .expect("system time is before unix epoch")
-            .checked_sub(Duration::from_secs(inner.expiry))
-            .map(|_| inner.data)
+            // Check if the current time is less than the expiry time
+            // to determine if the cache item is still valid.
+            .lt(&Duration::from_secs(inner.expiry))
+            // If the cache item is still valid, return the data.
+            // Otherwise, return None.
+            .then_some(inner.data)
     }
 }
 

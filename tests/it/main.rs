@@ -6,6 +6,7 @@ use alloy_chains::{Chain, ChainKind, NamedChain};
 use foundry_block_explorers::{errors::EtherscanError, Client};
 use std::{
     future::Future,
+    path::PathBuf,
     time::{Duration, Instant},
 };
 
@@ -26,6 +27,28 @@ where
 {
     init_tracing();
     let (client, duration) = match Client::new_from_env(chain) {
+        Ok(c) => (c, rate_limit(chain, true)),
+        Err(_) => {
+            (Client::builder().chain(chain).unwrap().build().unwrap(), rate_limit(chain, false))
+        }
+    };
+    run_at_least_duration(duration, f(client)).await
+}
+
+/// Calls the function with a new cached Etherscan Client.
+pub async fn run_with_client_cached<F, Fut, T>(chain: Chain, f: F) -> T
+where
+    F: FnOnce(Client) -> Fut,
+    Fut: Future<Output = T>,
+{
+    init_tracing();
+    let cache_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test-data/cache");
+    let (client, duration) = match Client::builder()
+        .chain(chain)
+        .unwrap()
+        .with_cache(Some(cache_path), Duration::from_secs(24 * 60 * 60))
+        .build()
+    {
         Ok(c) => (c, rate_limit(chain, true)),
         Err(_) => {
             (Client::builder().chain(chain).unwrap().build().unwrap(), rate_limit(chain, false))
