@@ -34,21 +34,18 @@ async fn can_fetch_contract_abi() {
 #[tokio::test]
 #[serial]
 async fn can_fetch_and_cache_contract_abi() {
+    async fn fetch_abi(client: &Client, addr: &str) {
+        let abi = client.contract_abi(addr.parse().unwrap()).await.unwrap();
+        assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+    }
+
     run_with_client_cached(Chain::mainnet(), |client| async move {
         // Fetch the abi and cache it.
-        let abi = client
-            .contract_abi("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
-            .await
-            .unwrap();
-        assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+        fetch_abi(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
 
         // Repeated calls on the cached abi should not trigger a new request.
         for _ in 0..10 {
-            let cached_abi = client
-                .contract_abi("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
-                .await
-                .unwrap();
-            assert_eq!(cached_abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+            fetch_abi(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
         }
     })
     .await;
@@ -57,32 +54,23 @@ async fn can_fetch_and_cache_contract_abi() {
 #[tokio::test]
 #[serial]
 async fn can_fetch_and_cache_contract_source_code() {
-    run_with_client_cached(Chain::mainnet(), |client| async move {
-        // Fetch the source code and cache it.
-        let meta = client
-            .contract_source_code("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
-            .await
-            .unwrap();
+    async fn fetch_source_code(client: &Client, addr: &str) {
+        let meta = client.contract_source_code(addr.parse().unwrap()).await.unwrap();
         assert_eq!(meta.items.len(), 1);
+
         let item = &meta.items[0];
         assert!(matches!(item.source_code, SourceCodeMetadata::SourceCode(_)));
         assert_eq!(item.source_code.sources().len(), 1);
         assert_eq!(item.abi().unwrap(), serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
+    }
+
+    run_with_client_cached(Chain::mainnet(), |client| async move {
+        // Fetch the source code and cache it.
+        fetch_source_code(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
 
         // Repeated calls on the cached source code should not trigger a new request.
         for _ in 0..10 {
-            let cached_meta = client
-                .contract_source_code("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
-                .await
-                .unwrap();
-            assert_eq!(cached_meta.items.len(), 1);
-            let cached_item = &cached_meta.items[0];
-            assert!(matches!(cached_item.source_code, SourceCodeMetadata::SourceCode(_)));
-            assert_eq!(cached_item.source_code.sources().len(), 1);
-            assert_eq!(
-                cached_item.abi().unwrap(),
-                serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap()
-            );
+            fetch_source_code(&client, "0x00000000219ab540356cBB839Cbe05303d7705Fa").await;
         }
     })
     .await;
