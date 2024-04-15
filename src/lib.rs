@@ -458,7 +458,7 @@ impl Cache {
             .duration_since(UNIX_EPOCH)
             .expect("system time is before unix epoch")
             .lt(&Duration::from_secs(inner.expiry))
-            .then(|| inner.data)
+            .then_some(inner.data)
     }
 }
 
