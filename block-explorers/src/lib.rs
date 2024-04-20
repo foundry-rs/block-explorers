@@ -1,4 +1,4 @@
-#![doc = include_str!("../README.md")]
+#![doc = include_str!("../../README.md")]
 #![warn(
     missing_copy_implementations,
     missing_debug_implementations,

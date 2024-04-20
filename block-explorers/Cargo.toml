@@ -1,0 +1,47 @@
+[package]
+name = "foundry-block-explorers"
+version = "0.2.6"
+edition = "2021"
+rust-version = "1.65"
+authors = ["Foundry Contributors"]
+license = "MIT OR Apache-2.0"
+description = "Bindings for Etherscan.io and other block explorer APIs"
+keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
+homepage = "https://github.com/foundry-rs/block-explorers"
+repository = "https://github.com/foundry-rs/block-explorers"
+exclude = [".github/", "scripts/", "test-data/"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[package.metadata.playground]
+all-features = true
+
+[dependencies]
+alloy-chains = "0.1"
+alloy-json-abi = { version = "0.7", default-features = false, features = ["std", "serde_json"] }
+alloy-primitives = { version = "0.7", default-features = false, features = ["std", "serde"] }
+
+reqwest = { version = "0.12", default-features = false, features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1.37"
+semver = "1.0"
+
+foundry-compilers = { version = "0.3", optional = true }
+
+[dev-dependencies]
+tempfile = "3.8"
+tokio = { version = "1.32", features = ["macros", "rt-multi-thread", "time"] }
+serial_test = "3.0.0"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "fmt"] }
+
+[features]
+default = ["rustls"]
+rustls = ["reqwest/rustls-tls"]
+openssl = ["reqwest/native-tls"]
+
+foundry-compilers = ["dep:foundry-compilers"]
+compilers-full = ["foundry-compilers?/full"]
