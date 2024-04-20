@@ -10,6 +10,7 @@ keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
 homepage = "https://github.com/foundry-rs/block-explorers"
 repository = "https://github.com/foundry-rs/block-explorers"
 exclude = [".github/", "scripts/", "test-data/"]
+readme = "README.md"
 
 [package.metadata.docs.rs]
 all-features = true
