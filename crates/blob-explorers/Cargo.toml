@@ -12,9 +12,9 @@ readme = "README.md"
 alloy-chains.workspace = true
 alloy-primitives = { workspace = true, default-features = false, features = ["std", "serde"] }
 
-alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
-alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy" }
+alloy-serde = { git = "https://github.com/alloy-rs/alloy" }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy" }
 
 reqwest = { workspace = true, features = ["json"] }
 serde = { workspace = true, features = ["derive"] }
