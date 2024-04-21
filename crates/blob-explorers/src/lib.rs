@@ -11,6 +11,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 
 use alloy_chains::{Chain, ChainKind, NamedChain};
+use alloy_primitives::B256;
 use alloy_rpc_types::BlockHashOrNumber;
 pub use request::*;
 pub use response::*;
@@ -127,6 +128,41 @@ impl Client {
         &self.client
     }
 
+    async fn get_transaction<T: DeserializeOwned>(
+        &self,
+        hash: B256,
+        query: GetTransactionQuery,
+    ) -> reqwest::Result<T> {
+        self.client
+            .get(&format!("{}transactions/{}", self.baseurl, hash))
+            .header(reqwest::header::ACCEPT, "application/json")
+            .query(&query)
+            .send()
+            .await?
+            .json()
+            .await
+    }
+
+    /// Retrieves the __full__ transaction details for given block transaction hash.
+    ///
+    /// This
+    ///
+    /// Sends a `GET` request to `/transactions/{hash}`
+    pub async fn transaction(&self, tx_hash: B256) -> reqwest::Result<TransactionDetails> {
+        self.get_transaction(tx_hash, Default::default()).await
+    }
+
+    /// Retrieves the specific transaction details for given transaction hash.
+    ///
+    /// Sends a `GET` request to `/transactions/{hash}`
+    pub async fn transaction_with_query(
+        &self,
+        tx_hash: B256,
+        query: GetTransactionQuery,
+    ) -> reqwest::Result<TransactionDetails> {
+        self.get_transaction(tx_hash, query).await
+    }
+
     async fn get_block<T: DeserializeOwned>(
         &self,
         block: BlockHashOrNumber,
@@ -150,7 +186,7 @@ impl Client {
     pub async fn block(
         &self,
         block: BlockHashOrNumber,
-    ) -> reqwest::Result<BlockDetails<FullTransactionDetails>> {
+    ) -> reqwest::Result<BlockResponse<FullTransactionDetails>> {
         self.get_block(block, GetBlockQuery::default()).await
     }
 
@@ -161,7 +197,7 @@ impl Client {
         &self,
         block: BlockHashOrNumber,
         query: GetBlockQuery,
-    ) -> reqwest::Result<BlockDetails<SelectedTransactionDetails>> {
+    ) -> reqwest::Result<BlockResponse<SelectedTransactionDetails>> {
         self.get_block(block, query).await
     }
 }
@@ -176,5 +212,14 @@ mod tests {
         let client = Client::holesky();
 
         let _block = client.block(block.parse().unwrap()).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn get_single_transaction() {
+        let tx = "0xd4f136048a56b9b62c9cdca0ce0dbb224295fd0e0170dbbc78891d132f639d60";
+        let client = Client::holesky();
+
+        let tx = client.transaction(tx.parse().unwrap()).await.unwrap();
+        dbg!(&tx);
     }
 }

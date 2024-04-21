@@ -8,6 +8,7 @@ use serde::{ser::SerializeStruct, Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct GetBlockQuery {
     /// What kind of block to fetch.
+    // TODO flatten this into fields
     pub expand: BlockExpansion,
     /// What kind of block to fetch.
     pub kind: BlockKind,
@@ -169,7 +170,7 @@ impl Default for BlockExpansion {
 ///
 /// By default all fields are requested.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct TransactionExpansion {
+pub struct GetTransactionQuery {
     /// Include the block in the response
     pub block: bool,
     /// Include the blob in the response
@@ -178,7 +179,7 @@ pub struct TransactionExpansion {
     pub blob_data: bool,
 }
 
-impl TransactionExpansion {
+impl GetTransactionQuery {
     /// Build a `TransactionExpansion` that includes everything.
     pub const fn all() -> Self {
         Self { block: true, blob: true, blob_data: true }
@@ -187,6 +188,18 @@ impl TransactionExpansion {
     /// Build a `TransactionExpansion` that excludes everything.
     pub const fn none() -> Self {
         Self { block: false, blob: false, blob_data: false }
+    }
+
+    /// Returns the query string for the transaction expansion.
+    pub fn query_string(self) -> String {
+        let Self { block, blob, blob_data } = self;
+        block
+            .then_some("block")
+            .into_iter()
+            .chain(blob.then_some("blob"))
+            .chain(blob_data.then_some("blob_data"))
+            .collect::<Vec<_>>()
+            .join(",")
     }
 
     /// Exclude the blob data from the response
@@ -205,8 +218,22 @@ impl TransactionExpansion {
     }
 }
 
-impl Default for TransactionExpansion {
+impl Default for GetTransactionQuery {
     fn default() -> Self {
         Self::all()
+    }
+}
+
+impl Serialize for GetTransactionQuery {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut s = serializer.serialize_struct("GetTransactionQuery", 1)?;
+        let expand = self.query_string();
+        if !expand.is_empty() {
+            s.serialize_field("expand", &expand)?;
+        }
+        s.end()
     }
 }
