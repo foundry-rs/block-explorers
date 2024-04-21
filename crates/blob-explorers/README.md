@@ -2,7 +2,7 @@
 
 Bindings for [blobscan.com](https://blobscan.com/) and other blob explorer APIs.
 
-See also https://github.com/Blobscan/blobscan
+See also <https://github.com/Blobscan/blobscan>
 
 [![Build Status][actions-badge]][actions-url]
 [![Telegram chat][telegram-badge]][telegram-url]
