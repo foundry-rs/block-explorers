@@ -148,6 +148,20 @@ impl Client {
     /// This
     ///
     /// Sends a `GET` request to `/transactions/{hash}`
+    /// ### Example
+    ///
+    /// ```no_run
+    /// use alloy_primitives::b256;
+    /// use foundry_blob_explorers::Client;
+    /// # async fn demo() {
+    /// let client = Client::holesky();
+    /// let tx = client
+    ///     .transaction(b256!("d4f136048a56b9b62c9cdca0ce0dbb224295fd0e0170dbbc78891d132f639d60"))
+    ///     .await
+    ///     .unwrap();
+    /// println!("[{}] blob: {:?}", tx.hash, tx.blob_sidecar());
+    /// # }
+    /// ```
     pub async fn transaction(&self, tx_hash: B256) -> reqwest::Result<TransactionDetails> {
         self.get_transaction(tx_hash, Default::default()).await
     }
@@ -183,6 +197,24 @@ impl Client {
     /// This
     ///
     /// Sends a `GET` request to `/blocks/{id}`
+    ///
+    /// ### Example
+    ///
+    /// ```no_run
+    /// use foundry_blob_explorers::Client;
+    /// # async fn demo() {
+    /// let client = Client::holesky();
+    /// let block = client
+    ///     .block(
+    ///         "0xc3a0113f60107614d1bba950799903dadbc2116256a40b1fefb37e9d409f1866".parse().unwrap(),
+    ///     )
+    ///     .await
+    ///     .unwrap();
+    /// for (tx, sidecar) in block.blob_sidecars() {
+    ///     println!("[{}] blob: {:?}", tx, sidecar);
+    /// }
+    /// # }
+    /// ```
     pub async fn block(
         &self,
         block: BlockHashOrNumber,
@@ -213,6 +245,7 @@ mod tests {
         let client = Client::holesky();
 
         let _block = client.block(block.parse().unwrap()).await.unwrap();
+        for (_tx, _sidecar) in _block.blob_sidecars() {}
     }
 
     #[tokio::test]
@@ -221,6 +254,7 @@ mod tests {
         let tx = "0xd4f136048a56b9b62c9cdca0ce0dbb224295fd0e0170dbbc78891d132f639d60";
         let client = Client::holesky();
 
-        let _tx = client.transaction(tx.parse().unwrap()).await.unwrap();
+        let tx = client.transaction(tx.parse().unwrap()).await.unwrap();
+        let _sidecar = tx.blob_sidecar();
     }
 }
