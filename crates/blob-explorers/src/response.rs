@@ -3,6 +3,7 @@
 
 use alloy_eips::eip4844::Blob;
 use alloy_primitives::{Address, FixedBytes, B256};
+use alloy_rpc_types::BlobTransactionSidecar;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
@@ -30,6 +31,13 @@ pub struct BlockResponse<T = FullTransactionDetails> {
     pub transactions: Vec<T>,
 }
 
+impl BlockResponse {
+    /// Returns an iterator over all blob sidecars in the block with their tx hash.
+    pub fn blob_sidecars(&self) -> impl Iterator<Item = (B256, BlobTransactionSidecar)> + '_ {
+        self.transactions.iter().map(|tx| (tx.hash, tx.blob_sidecar()))
+    }
+}
+
 /// The transaction object with __all__ requested data.
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -55,6 +63,17 @@ pub struct FullTransactionDetails {
     pub blob_gas_max_fee: u128,
     #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
     pub blob_gas_used: u128,
+}
+
+impl FullTransactionDetails {
+    /// Returns the sidecar for the transaction.
+    pub fn blob_sidecar(&self) -> BlobTransactionSidecar {
+        BlobTransactionSidecar {
+            blobs: self.blobs.iter().map(|blob| *blob.data.clone()).collect(),
+            commitments: self.blobs.iter().map(|blob| blob.commitment).collect(),
+            proofs: self.blobs.iter().map(|blob| blob.proof).collect(),
+        }
+    }
 }
 
 /// The block response with selected data.

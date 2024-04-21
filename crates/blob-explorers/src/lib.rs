@@ -207,6 +207,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
+    #[ignore]
     async fn get_block_by_id() {
         let block = "0xc3a0113f60107614d1bba950799903dadbc2116256a40b1fefb37e9d409f1866";
         let client = Client::holesky();
@@ -215,11 +216,11 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn get_single_transaction() {
         let tx = "0xd4f136048a56b9b62c9cdca0ce0dbb224295fd0e0170dbbc78891d132f639d60";
         let client = Client::holesky();
 
-        let tx = client.transaction(tx.parse().unwrap()).await.unwrap();
-        dbg!(&tx);
+        let _tx = client.transaction(tx.parse().unwrap()).await.unwrap();
     }
 }
