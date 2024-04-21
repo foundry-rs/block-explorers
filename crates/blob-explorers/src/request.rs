@@ -120,10 +120,10 @@ impl BlockExpansion {
     pub fn query_string(self) -> String {
         let Self { transaction, blob, blob_data } = self;
         transaction
-            .then(|| "transaction")
+            .then_some("transaction")
             .into_iter()
-            .chain(blob.then(|| "blob").into_iter())
-            .chain(blob_data.then(|| "blob_data").into_iter())
+            .chain(blob.then_some("blob"))
+            .chain(blob_data.then_some("blob_data"))
             .collect::<Vec<_>>()
             .join(",")
     }

@@ -76,33 +76,33 @@ impl Client {
     }
 
     /// Creates a new client instance for the Ethereum Mainnet with the correct endpoint: <https://api.blobscan.com/>
-    pub fn mainnet() -> Option<Self> {
-        Self::new_chain(Chain::mainnet())
+    pub fn mainnet() -> Self {
+        Self::new_chain(Chain::mainnet()).unwrap()
     }
 
     /// Creates a new client instance for the sepolia Testnet with the correct endpoint: <https://api.sepolia.blobscan.com/>
-    pub fn sepolia() -> Option<Self> {
-        Self::new_chain(Chain::sepolia())
+    pub fn sepolia() -> Self {
+        Self::new_chain(Chain::sepolia()).unwrap()
     }
 
     /// Creates a new client instance for the holesky Testnet with the correct endpoint: <https://api.holesky.blobscan.com/>
-    pub fn holesky() -> Option<Self> {
-        Self::new_chain(Chain::holesky())
+    pub fn holesky() -> Self {
+        Self::new_chain(Chain::holesky()).unwrap()
     }
 
     /// Creates a new client instance for the Ethereum Mainnet with the given [reqwest::Client] and  the correct endpoint: <https://api.blobscan.com/>
-    pub fn mainnet_with_client(client: reqwest::Client) -> Option<Self> {
-        Self::new_chain_with_client(Chain::mainnet(), client)
+    pub fn mainnet_with_client(client: reqwest::Client) -> Self {
+        Self::new_chain_with_client(Chain::mainnet(), client).unwrap()
     }
 
     /// Creates a new client instance for the sepolia Testnet with the given [reqwest::Client] and  the correct endpoint: <https://api.sepolia.blobscan.com/>
-    pub fn sepolia_with_client(client: reqwest::Client) -> Option<Self> {
-        Self::new_chain_with_client(Chain::sepolia(), client)
+    pub fn sepolia_with_client(client: reqwest::Client) -> Self {
+        Self::new_chain_with_client(Chain::sepolia(), client).unwrap()
     }
 
     /// Creates a new client instance for the holesky Testnet with the given [reqwest::Client] and the correct endpoint: <https://api.holesky.blobscan.com/>
-    pub fn holesky_with_client(client: reqwest::Client) -> Option<Self> {
-        Self::new_chain_with_client(Chain::holesky(), client)
+    pub fn holesky_with_client(client: reqwest::Client) -> Self {
+        Self::new_chain_with_client(Chain::holesky(), client).unwrap()
     }
 
     /// Construct a new client with an existing [reqwest::Client] allowing more control over its
@@ -110,7 +110,11 @@ impl Client {
     ///
     /// `baseurl` is the base URL provided to the internal
     pub fn new_with_client(baseurl: impl Into<String>, client: reqwest::Client) -> Self {
-        Self { baseurl: baseurl.into(), client }
+        let mut baseurl = baseurl.into();
+        if !baseurl.ends_with('/') {
+            baseurl.push('/');
+        }
+        Self { baseurl, client }
     }
 
     /// Get the base URL to which requests are made.
@@ -129,7 +133,8 @@ impl Client {
         query: GetBlockQuery,
     ) -> reqwest::Result<T> {
         self.client
-            .get(&format!("{}/{}", self.baseurl, block))
+            .get(&format!("{}blocks/{}", self.baseurl, block))
+            .header(reqwest::header::ACCEPT, "application/json")
             .query(&query)
             .send()
             .await?
@@ -166,5 +171,10 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn get_block_by_id() {}
+    async fn get_block_by_id() {
+        let block = "0xc3a0113f60107614d1bba950799903dadbc2116256a40b1fefb37e9d409f1866";
+        let client = Client::holesky();
+
+        let _block = client.block(block.parse().unwrap()).await.unwrap();
+    }
 }

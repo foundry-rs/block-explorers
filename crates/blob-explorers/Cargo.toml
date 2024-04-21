@@ -14,11 +14,16 @@ alloy-primitives = { workspace = true, default-features = false, features = ["st
 
 alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
 alloy-serde = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
-alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564", features = ["kzg"] }
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", rev = "eb0d564" }
 
 reqwest = { workspace = true, features = ["json"] }
 serde = { workspace = true, features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
+
+[features]
+default = ["rustls"]
+rustls = ["reqwest/rustls-tls"]
+openssl = ["reqwest/native-tls"]
 
 [dev-dependencies]
 serde_json.workspace = true
