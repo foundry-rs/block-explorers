@@ -20,7 +20,7 @@ impl GetBlockQuery {
         Self { expand, kind: BlockKind::Canonical }
     }
 
-    /// Request transaction,blob and blob_data in the response.
+    /// Request transaction, blob and blob data in the response.
     pub const fn with_all(self) -> Self {
         Self { expand: BlockExpansion::all(), ..self }
     }
