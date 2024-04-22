@@ -25,7 +25,7 @@ impl GetBlockQuery {
         Self { expand: BlockExpansion::all(), ..self }
     }
 
-    /// Exclude transactions,blob and blob_data in the response.
+    /// Exclude transactions, blob and blob data in the response.
     pub const fn with_none(self) -> Self {
         Self { expand: BlockExpansion::none(), ..self }
     }
