@@ -8,7 +8,6 @@ use serde::{ser::SerializeStruct, Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct GetBlockQuery {
     /// What kind of block to fetch.
-    // TODO flatten this into fields
     pub expand: BlockExpansion,
     /// What kind of block to fetch.
     pub kind: BlockKind,
