@@ -52,7 +52,7 @@ jobs:
         with:
           cache-on-failure: true
       - name: check
-        run: cargo check --workspace --target wasm32-unknown-unknown
+        run: cargo check -p foundry-block-explorers --target wasm32-unknown-unknown
 
   feature-checks:
     runs-on: ubuntu-latest

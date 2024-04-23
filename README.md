@@ -15,6 +15,7 @@ Crates for interacting with explorer APIS.
 This repository contains the following crates:
 
 - [`foundry-block-explorers`]: Bindings for etherscan.io API.
+- [`foundry-blob-explorers`]: Bindings for blobscan.com API.
 
 
 ## Supported Rust Versions
