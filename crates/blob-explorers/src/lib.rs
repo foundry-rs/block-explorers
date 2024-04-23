@@ -145,9 +145,8 @@ impl Client {
 
     /// Retrieves the __full__ transaction details for given block transaction hash.
     ///
-    /// This
-    ///
     /// Sends a `GET` request to `/transactions/{hash}`
+
     /// ### Example
     ///
     /// ```no_run
@@ -193,8 +192,6 @@ impl Client {
     }
 
     /// Retrieves the __full__ block details for given block number or hash.
-    ///
-    /// This
     ///
     /// Sends a `GET` request to `/blocks/{id}`
     ///
