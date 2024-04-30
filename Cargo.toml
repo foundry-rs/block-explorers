@@ -16,3 +16,6 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
 tokio = { version = "1.37" }
+
+[patch.crates-io]
+foundry-compilers = { git = "https://github.com/foundry-rs/compilers", rev = "a424a9b" }

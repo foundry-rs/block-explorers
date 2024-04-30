@@ -14,7 +14,10 @@ async fn can_flatten_and_verify_contract() {
         .sources(root)
         .build()
         .expect("failed to resolve project paths");
-    let project = Project::builder().paths(paths).build().expect("failed to build the project");
+    let project = Project::builder()
+        .paths(paths)
+        .build(Default::default())
+        .expect("failed to build the project");
 
     let address = "0x9e744c9115b74834c0f33f4097f40c02a9ac5c33".parse().unwrap();
     let compiler_version = "v0.5.17+commit.d19bba13";
