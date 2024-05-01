@@ -19,13 +19,13 @@ pub struct BlockResponse<T = FullTransactionDetails> {
     pub timestamp: chrono::DateTime<chrono::offset::Utc>,
     /// The block slot.
     pub slot: u64,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_price: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub excess_blob_gas: u128,
     /// Blob transactions in the blob
     pub transactions: Vec<T>,
@@ -51,17 +51,17 @@ pub struct FullTransactionDetails {
     /// Receiver address,
     pub to: Address,
     /// The max fee per blob gas for EIP-4844 blob transactions.
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub max_fee_per_blob_gas: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_base_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_max_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_used: u128,
 }
 
@@ -134,17 +134,17 @@ pub struct TransactionDetails {
     /// Receiver address,
     pub to: Address,
     /// The max fee per blob gas for EIP-4844 blob transactions.
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub max_fee_per_blob_gas: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_base_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_max_fee: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_used: u128,
 }
 
@@ -169,13 +169,13 @@ pub struct BlockInfo {
     pub timestamp: chrono::DateTime<chrono::offset::Utc>,
     /// The block slot.
     pub slot: u64,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_as_calldata_gas_used: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub blob_gas_price: u128,
-    #[serde(with = "alloy_serde::num::u128_hex_or_decimal")]
+    #[serde(with = "alloy_serde::num::u128_via_ruint")]
     pub excess_blob_gas: u128,
 }
 
