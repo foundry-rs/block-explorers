@@ -263,7 +263,7 @@ impl Metadata {
     pub fn project_builder(&self) -> Result<ProjectBuilder> {
         let solc_config = SolcConfig::builder().settings(self.settings()?).build();
 
-        Ok(Project::builder().solc_config(solc_config))
+        Ok(Project::builder().settings(solc_config.settings))
     }
 
     /// Parses the EVM version.
@@ -271,7 +271,7 @@ impl Metadata {
     pub fn evm_version(&self) -> Result<Option<EvmVersion>> {
         match self.evm_version.as_str() {
             "" | "Default" => {
-                Ok(EvmVersion::default().normalize_version(&self.compiler_version()?))
+                Ok(EvmVersion::default().normalize_version_solc(&self.compiler_version()?))
             }
             _ => {
                 let evm_version = self
