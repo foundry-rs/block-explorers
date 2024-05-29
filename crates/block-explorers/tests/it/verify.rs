@@ -3,7 +3,7 @@
 use crate::run_with_client;
 use alloy_chains::Chain;
 use foundry_block_explorers::verify::VerifyContract;
-use foundry_compilers::{Project, ProjectPathsConfig};
+use foundry_compilers::{compilers::solc::SolcCompiler, ProjectBuilder, ProjectPathsConfig};
 use serial_test::serial;
 use std::path::Path;
 
@@ -16,7 +16,7 @@ async fn can_flatten_and_verify_contract() {
         .sources(root)
         .build()
         .expect("failed to resolve project paths");
-    let project = Project::builder()
+    let project = ProjectBuilder::<SolcCompiler>::new(Default::default())
         .paths(paths)
         .build(Default::default())
         .expect("failed to build the project");
