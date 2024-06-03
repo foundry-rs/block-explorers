@@ -24,8 +24,10 @@ async fn can_flatten_and_verify_contract() {
     let address = "0x9e744c9115b74834c0f33f4097f40c02a9ac5c33".parse().unwrap();
     let compiler_version = "v0.5.17+commit.d19bba13";
     let constructor_args = "0x000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000005f5e1000000000000000000000000000000000000000000000000000000000000000007596179537761700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000035941590000000000000000000000000000000000000000000000000000000000";
-    let contract =
-        project.flatten(&root.join("UniswapExchange.sol")).expect("failed to flatten contract");
+    let contract = project
+        .paths
+        .flatten(&root.join("UniswapExchange.sol"))
+        .expect("failed to flatten contract");
     let contract_name = "UniswapExchange".to_owned();
     let contract =
         VerifyContract::new(address, contract_name, contract, compiler_version.to_string())
