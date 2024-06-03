@@ -31,7 +31,7 @@ thiserror = "1.0"
 tracing = "0.1.37"
 semver = "1.0"
 
-foundry-compilers = { version = "0.5", optional = true }
+foundry-compilers = { version = "0.6", optional = true }
 
 [dev-dependencies]
 tempfile = "3.8"
