@@ -11,7 +11,9 @@ use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
 
 #[cfg(feature = "foundry-compilers")]
-use foundry_compilers::{artifacts::Settings, EvmVersion, Project, ProjectBuilder, SolcConfig};
+use foundry_compilers::{
+    artifacts::Settings, compilers::solc::SolcCompiler, EvmVersion, ProjectBuilder, SolcConfig,
+};
 
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize)]
 pub enum SourceCodeLanguage {
@@ -260,10 +262,10 @@ impl Metadata {
 
     /// Creates a Solc [ProjectBuilder] with this contract's settings.
     #[cfg(feature = "foundry-compilers")]
-    pub fn project_builder(&self) -> Result<ProjectBuilder> {
+    pub fn project_builder(&self) -> Result<ProjectBuilder<SolcCompiler>> {
         let solc_config = SolcConfig::builder().settings(self.settings()?).build();
 
-        Ok(Project::builder().settings(solc_config.settings))
+        Ok(ProjectBuilder::new(Default::default()).settings(solc_config.settings))
     }
 
     /// Parses the EVM version.
