@@ -5,11 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.3.0) - 2024-06-03
+## [0.4.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.4.0) - 2024-06-11
+
+### Dependencies
+
+- [deps] Bump compilers ([#48](https://github.com/foundry-rs/block-explorers/issues/48))
+
+### Miscellaneous Tasks
+
+- Sync cliff.toml
+
+## [foundry-block-explorers-v0.3.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.3.0) - 2024-06-03
 
 ### Dependencies
 
 - Bump compilers ([#47](https://github.com/foundry-rs/block-explorers/issues/47))
+
+### Miscellaneous Tasks
+
+- Release 0.3.0
 
 ## [foundry-block-explorers-v0.2.8](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.2.8) - 2024-05-21
 
@@ -132,6 +146,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Bug Fixes
 
 - Dont force trailing url slash ([#25](https://github.com/foundry-rs/block-explorers/issues/25))
+- Fix deserialization error resulting from Blockscout omitting "OptimizationRuns" field when optimization was not used ([#23](https://github.com/foundry-rs/block-explorers/issues/23))
+- Fix deserialization failure when fetching contract source_code from blockscout ([#22](https://github.com/foundry-rs/block-explorers/issues/22))
 
 ### Miscellaneous Tasks
 
@@ -140,8 +156,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Other
 
 - Add `getcontractcreation` binding ([#24](https://github.com/foundry-rs/block-explorers/issues/24))
-- Fix deserialization error resulting from Blockscout omitting "OptimizationRuns" field when optimization was not used ([#23](https://github.com/foundry-rs/block-explorers/issues/23))
-- Fix deserialization failure when fetching contract source_code from blockscout ([#22](https://github.com/foundry-rs/block-explorers/issues/22))
 
 ## [0.1.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.1.2) - 2023-12-08
 
