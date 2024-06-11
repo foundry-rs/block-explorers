@@ -30,7 +30,8 @@ allow = [
     "LicenseRef-ring",
     # https://github.com/briansmith/webpki/issues/148
     "LicenseRef-webpki",
-    "BSL-1.0"
+    "BSL-1.0",
+    "Unicode-3.0",
 ]
 
 exceptions = [
