@@ -12,7 +12,9 @@ use std::{collections::HashMap, path::Path};
 
 #[cfg(feature = "foundry-compilers")]
 use foundry_compilers::{
-    artifacts::Settings, compilers::solc::SolcCompiler, EvmVersion, ProjectBuilder, SolcConfig,
+    artifacts::{EvmVersion, Settings},
+    compilers::solc::SolcCompiler,
+    ProjectBuilder, SolcConfig,
 };
 
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize)]
