@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.4.0) - 2024-06-11
+## [0.4.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.4.1) - 2024-06-17
+
+### Dependencies
+
+- Bump compilers ([#49](https://github.com/foundry-rs/block-explorers/issues/49))
+
+### Miscellaneous Tasks
+
+- Use crates alloy ([#50](https://github.com/foundry-rs/block-explorers/issues/50))
+
+## [foundry-block-explorers-v0.4.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.4.0) - 2024-06-11
 
 ### Dependencies
 
@@ -13,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.4.0
 - Sync cliff.toml
 
 ## [foundry-block-explorers-v0.3.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.3.0) - 2024-06-03
