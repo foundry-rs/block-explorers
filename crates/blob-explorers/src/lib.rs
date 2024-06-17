@@ -12,7 +12,7 @@
 
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use alloy_primitives::B256;
-use alloy_rpc_types::BlockHashOrNumber;
+use alloy_rpc_types_eth::BlockHashOrNumber;
 pub use request::*;
 pub use response::*;
 use serde::de::DeserializeOwned;
