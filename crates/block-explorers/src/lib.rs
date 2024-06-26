@@ -438,7 +438,13 @@ impl Cache {
     }
 
     fn set<T: Serialize>(&self, prefix: &str, address: Address, item: T) {
-        let path = self.root.join(prefix).join(format!("{address:?}.json"));
+        // Create the cache directory if it does not exist.
+        let path = self.root.join(prefix);
+        if std::fs::create_dir_all(&path).is_err() {
+            return;
+        }
+
+        let path = path.join(format!("{address:?}.json"));
         let writer = std::fs::File::create(path).ok().map(std::io::BufWriter::new);
         if let Some(mut writer) = writer {
             let _ = serde_json::to_writer(
