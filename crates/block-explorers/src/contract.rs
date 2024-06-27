@@ -273,8 +273,8 @@ impl Metadata {
     /// Parses the EVM version.
     #[cfg(feature = "foundry-compilers")]
     pub fn evm_version(&self) -> Result<Option<EvmVersion>> {
-        match self.evm_version.as_str() {
-            "" | "Default" => {
+        match self.evm_version.to_lowercase().as_str() {
+            "" | "default" => {
                 Ok(EvmVersion::default().normalize_version_solc(&self.compiler_version()?))
             }
             _ => {
