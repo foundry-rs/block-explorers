@@ -1,16 +1,16 @@
 [package]
 name = "foundry-block-explorers"
-version = "0.4.1"
-edition = "2021"
-rust-version = "1.65"
-authors = ["Foundry Contributors"]
-license = "MIT OR Apache-2.0"
 description = "Bindings for Etherscan.io and other block explorer APIs"
 keywords = ["crypto", "ethers", "ethereum", "web3", "etherscan"]
-homepage = "https://github.com/foundry-rs/block-explorers"
-repository = "https://github.com/foundry-rs/block-explorers"
-exclude = [".github/", "scripts/", "test-data/"]
-readme = "README.md"
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+exclude.workspace = true
 
 [package.metadata.docs.rs]
 all-features = true

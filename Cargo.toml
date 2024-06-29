@@ -1,15 +1,27 @@
 [workspace]
-members = [
-    "crates/*"
-]
+members = ["crates/*"]
 
 # Explicitly set the resolver to version 2, which is the default for packages with edition >= 2021
 # https://doc.rust-lang.org/edition-guide/rust-2021/default-cargo-resolver.html
 resolver = "2"
 
+[workspace.package]
+authors = ["Foundry Maintainers"]
+version = "0.5.0"
+rust-version = "1.70"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/foundry-rs/block-explorers"
+homepage = "https://github.com/foundry-rs/block-explorers"
+edition = "2021"
+exclude = [".github/", "scripts/", "test-data/"]
+
 [workspace.dependencies]
 alloy-chains = "0.1"
-alloy-primitives = { version = "0.7", default-features = false, features = ["std", "serde"] }
+alloy-primitives = { version = "0.7", default-features = false, features = [
+    "std",
+    "serde",
+] }
 alloy-rpc-types-eth = "0.1"
 alloy-eips = "0.1"
 alloy-serde = "0.1"

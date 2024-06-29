@@ -1,16 +1,23 @@
 [package]
 name = "foundry-blob-explorers"
-version = "0.1.0"
-edition = "2021"
-authors = ["Foundry & Alloy Contributors"]
-license = "MIT OR Apache-2.0"
 description = "Bindings for blobscan.com and other blob explorer APIs"
 keywords = ["ethereum", "blobscan"]
-readme = "README.md"
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+exclude.workspace = true
 
 [dependencies]
 alloy-chains.workspace = true
-alloy-primitives = { workspace = true, default-features = false, features = ["std", "serde"] }
+alloy-primitives = { workspace = true, default-features = false, features = [
+    "std",
+    "serde",
+] }
 
 alloy-rpc-types-eth.workspace = true
 alloy-serde.workspace = true
