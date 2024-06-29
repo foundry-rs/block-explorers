@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.4.1) - 2024-06-17
+## [0.5.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.5.0) - 2024-06-29
+
+### Dependencies
+
+- [deps] Bump compilers 0.9 ([#54](https://github.com/foundry-rs/block-explorers/issues/54))
+
+### Miscellaneous Tasks
+
+- Fix up manifests
+- [meta] Update CODEOWNERS
+
+### Other
+
+- The EVM version returned by Blockscout is "default"  ([#53](https://github.com/foundry-rs/block-explorers/issues/53))
+- Create cache directory if needed ([#52](https://github.com/foundry-rs/block-explorers/issues/52))
+
+## [foundry-block-explorers-v0.4.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.4.1) - 2024-06-17
 
 ### Dependencies
 
@@ -13,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.4.1
 - Use crates alloy ([#50](https://github.com/foundry-rs/block-explorers/issues/50))
 
 ## [foundry-block-explorers-v0.4.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.4.0) - 2024-06-11
