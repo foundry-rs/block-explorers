@@ -134,7 +134,7 @@ impl Client {
         query: GetTransactionQuery,
     ) -> reqwest::Result<T> {
         self.client
-            .get(&format!("{}transactions/{}", self.baseurl, hash))
+            .get(format!("{}transactions/{}", self.baseurl, hash))
             .header(reqwest::header::ACCEPT, "application/json")
             .query(&query)
             .send()
@@ -182,7 +182,7 @@ impl Client {
         query: GetBlockQuery,
     ) -> reqwest::Result<T> {
         self.client
-            .get(&format!("{}blocks/{}", self.baseurl, block))
+            .get(format!("{}blocks/{}", self.baseurl, block))
             .header(reqwest::header::ACCEPT, "application/json")
             .query(&query)
             .send()
