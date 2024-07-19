@@ -14,6 +14,7 @@ use std::{collections::HashMap, path::Path};
 use foundry_compilers::{
     artifacts::{EvmVersion, Settings},
     compilers::solc::SolcCompiler,
+    solc::SolcSettings,
     ProjectBuilder, SolcConfig,
 };
 
@@ -267,7 +268,8 @@ impl Metadata {
     pub fn project_builder(&self) -> Result<ProjectBuilder<SolcCompiler>> {
         let solc_config = SolcConfig::builder().settings(self.settings()?).build();
 
-        Ok(ProjectBuilder::new(Default::default()).settings(solc_config.settings))
+        Ok(ProjectBuilder::new(Default::default())
+            .settings(SolcSettings { settings: solc_config.settings, ..Default::default() }))
     }
 
     /// Parses the EVM version.
