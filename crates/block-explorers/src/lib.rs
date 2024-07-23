@@ -245,7 +245,8 @@ impl Client {
                 if let Some(ref result) = result {
                     if result.starts_with("Max rate limit reached") {
                         return Err(EtherscanError::RateLimitExceeded);
-                    } else if result.to_lowercase() == "invalid api key" {
+                    }
+                    if result.to_lowercase().contains("invalid api key") {
                         return Err(EtherscanError::InvalidApiKey);
                     }
                 }
