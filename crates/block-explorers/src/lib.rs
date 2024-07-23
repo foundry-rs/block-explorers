@@ -241,17 +241,20 @@ impl Client {
         })?;
 
         match res {
-            ResponseData::Error { result, message, status } => {
+            ResponseData::Error { message, result } => {
                 if let Some(ref result) = result {
                     if result.starts_with("Max rate limit reached") {
                         return Err(EtherscanError::RateLimitExceeded);
-                    } else if result.to_lowercase() == "invalid api key" {
+                    }
+                    if result.to_lowercase().contains("invalid api key") {
                         return Err(EtherscanError::InvalidApiKey);
                     }
                 }
-                Err(EtherscanError::ErrorResponse { status, message, result })
+                Err(EtherscanError::ErrorResponse { status: "0".to_string(), message, result })
             }
-            ResponseData::Success(res) => Ok(res),
+            ResponseData::Success { message, result } => {
+                Ok(Response { status: "1".to_string(), message, result })
+            }
         }
     }
 
@@ -495,11 +498,13 @@ pub struct Response<T> {
     pub result: T,
 }
 
-#[derive(Deserialize, Debug, Clone)]
-#[serde(untagged)]
+#[derive(Debug, Clone, Deserialize)]
+#[serde(tag = "status")]
 pub enum ResponseData<T> {
-    Success(Response<T>),
-    Error { status: String, message: String, result: Option<String> },
+    #[serde(rename = "1")]
+    Success { message: String, result: T },
+    #[serde(rename = "0")]
+    Error { message: String, result: Option<String> },
 }
 
 /// The type that gets serialized as query
@@ -527,12 +532,24 @@ mod tests {
     use crate::{Client, EtherscanError, ResponseData};
     use alloy_chains::Chain;
     use alloy_primitives::{Address, B256};
+    use serde_json::json;
 
     // <https://github.com/foundry-rs/foundry/issues/4406>
     #[test]
     fn can_parse_block_scout_err() {
         let err = "{\"message\":\"Something went wrong.\",\"result\":null,\"status\":\"0\"}";
         let resp: ResponseData<Address> = serde_json::from_str(err).unwrap();
+        assert!(matches!(resp, ResponseData::Error { .. }));
+    }
+
+    #[test]
+    fn can_parse_etherscan_mainnet_invalid_api_key() {
+        let err = json!({
+            "status":"0",
+            "message":"NOTOK",
+            "result":"Missing/Invalid API Key"
+        });
+        let resp: ResponseData<Address> = serde_json::from_value(err).unwrap();
         assert!(matches!(resp, ResponseData::Error { .. }));
     }
 
