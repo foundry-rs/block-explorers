@@ -379,6 +379,10 @@ impl Client {
             }
         };
 
+        if resp.status == "0" && result.to_lowercase().contains("invalid api key") {
+            return Err(EtherscanError::InvalidApiKey);
+        }
+
         if result.starts_with("Max rate limit reached") {
             return Err(EtherscanError::RateLimitExceeded);
         }
