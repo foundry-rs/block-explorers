@@ -581,4 +581,15 @@ mod tests {
         let err = Client::new_from_env(Chain::dev()).unwrap_err();
         assert!(matches!(err, EtherscanError::LocalNetworksNotSupported));
     }
+
+    #[test]
+    fn can_parse_etherscan_mainnet_invalid_api_key() {
+        let err = serde_json::json!({
+            "status":"0",
+            "message":"NOTOK",
+            "result":"Missing/Invalid API Key"
+        });
+        let resp: ResponseData<Address> = serde_json::from_value(err).unwrap();
+        assert!(matches!(resp, ResponseData::Error { .. }));
+    }
 }
