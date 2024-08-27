@@ -276,9 +276,7 @@ impl Metadata {
     #[cfg(feature = "foundry-compilers")]
     pub fn evm_version(&self) -> Result<Option<EvmVersion>> {
         match self.evm_version.to_lowercase().as_str() {
-            "" | "default" => {
-                Ok(EvmVersion::default().normalize_version_solc(&self.compiler_version()?))
-            }
+            "" | "default" => Ok(EvmVersion::default_version_solc(&self.compiler_version()?)),
             _ => {
                 let evm_version = self
                     .evm_version
