@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.5.1) - 2024-07-19
+## [0.5.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.5.2) - 2024-08-27
+
+### Bug Fixes
+
+- Fix bugs about the default EVM version in Solc ([#59](https://github.com/foundry-rs/block-explorers/issues/59))
+
+### Miscellaneous Tasks
+
+- Improve invalid key checks ([#58](https://github.com/foundry-rs/block-explorers/issues/58))
+
+### Testing
+
+- Add invalid api key response test ([#57](https://github.com/foundry-rs/block-explorers/issues/57))
+
+## [foundry-block-explorers-v0.5.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.1) - 2024-07-19
 
 ### Dependencies
 
 - Bump compilers ([#55](https://github.com/foundry-rs/block-explorers/issues/55))
+
+### Miscellaneous Tasks
+
+- Release 0.5.1
 
 ## [foundry-block-explorers-v0.5.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.0) - 2024-06-29
 
