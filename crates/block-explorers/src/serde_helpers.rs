@@ -52,6 +52,7 @@ enum BoolOrU64 {
 }
 
 /// Supports parsing either a u64 or a boolean (which will then be converted to u64)
+///
 /// Implemented to binary fields such as "OptimizationUsed" which are formatted either as 0/1 or
 /// "true/"false" by different block explorers (e.g. etherscan vs blockscout)
 pub fn deserialize_stringified_bool_or_u64<'de, D>(deserializer: D) -> Result<u64, D::Error>
