@@ -269,7 +269,7 @@ impl Metadata {
         let solc_config = SolcConfig::builder().settings(self.settings()?).build();
 
         Ok(ProjectBuilder::new(Default::default())
-            .settings(SolcSettings { settings: solc_config.settings, ..Default::default() }))
+            .settings(SolcSettings { settings: solc_config, ..Default::default() }))
     }
 
     /// Parses the EVM version.
