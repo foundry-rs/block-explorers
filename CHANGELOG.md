@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.3](https://github.com/foundry-rs/block-explorers/releases/tag/v0.7.3) - 2024-09-19
+## [0.8.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.8.0) - 2024-09-30
+
+### Miscellaneous Tasks
+
+- Alloy 0.4 ([#65](https://github.com/foundry-rs/block-explorers/issues/65))
+
+## [foundry-block-explorers-v0.7.3](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.7.3) - 2024-09-19
 
 ### Bug Fixes
 
@@ -13,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.7.3
 - Release 0.7.2
 
 ## [foundry-block-explorers-v0.7.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.7.1) - 2024-09-03
