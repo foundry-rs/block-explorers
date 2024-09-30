@@ -146,7 +146,7 @@ impl Client {
     /// Retrieves the __full__ transaction details for given block transaction hash.
     ///
     /// Sends a `GET` request to `/transactions/{hash}`
-
+    ///
     /// ### Example
     ///
     /// ```no_run
@@ -242,7 +242,9 @@ mod tests {
         let client = Client::holesky();
 
         let _block = client.block(block.parse().unwrap()).await.unwrap();
-        for (_tx, _sidecar) in _block.blob_sidecars() {}
+        for (_tx, _sidecar) in _block.blob_sidecars() {
+            // iter
+        }
     }
 
     #[tokio::test]
