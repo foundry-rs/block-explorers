@@ -111,10 +111,13 @@ pub struct BlobInfo {
 /// Where the blob data is stored
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(default)]
 pub struct DataStorageReference {
     /// The storage provider
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub blob_storage: Option<String>,
     /// data location
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data_reference: Option<String>,
 }
 
