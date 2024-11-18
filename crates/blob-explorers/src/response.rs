@@ -110,8 +110,7 @@ pub struct BlobInfo {
 
 /// Where the blob data is stored
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-#[serde(default)]
+#[serde(rename_all = "camelCase", default)]
 pub struct DataStorageReference {
     /// The storage provider
     #[serde(skip_serializing_if = "Option::is_none")]
