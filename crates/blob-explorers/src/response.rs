@@ -113,9 +113,9 @@ pub struct BlobInfo {
 #[serde(rename_all = "camelCase")]
 pub struct DataStorageReference {
     /// The storage provider
-    pub blob_storage: String,
+    pub blob_storage: Option<String>,
     /// data location
-    pub data_reference: String,
+    pub data_reference: Option<String>,
 }
 
 /// Response for a transaction.
