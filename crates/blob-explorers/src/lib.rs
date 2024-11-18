@@ -236,10 +236,9 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    #[ignore]
     async fn get_block_by_id() {
-        let block = "0xc3a0113f60107614d1bba950799903dadbc2116256a40b1fefb37e9d409f1866";
-        let client = Client::holesky();
+        let block = "0xb8f7550185a9194ecfe581045c906682a8da6a528a23127e3a5a2abb50b706bf";
+        let client = Client::mainnet();
 
         let _block = client.block(block.parse().unwrap()).await.unwrap();
         for (_tx, _sidecar) in _block.blob_sidecars() {

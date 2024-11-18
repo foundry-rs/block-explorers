@@ -96,6 +96,7 @@ pub struct BlobInfo {
     /// The versioned hash of the blob
     pub versioned_hash: B256,
     /// Storage info
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub data_storage_references: Vec<DataStorageReference>,
     /// The blob data
     #[serde(deserialize_with = "deserialize_blob")]
@@ -113,9 +114,9 @@ pub struct BlobInfo {
 #[serde(rename_all = "camelCase")]
 pub struct DataStorageReference {
     /// The storage provider
-    pub blob_storage: String,
+    pub blob_storage: Option<String>,
     /// data location
-    pub data_reference: String,
+    pub data_reference: Option<String>,
 }
 
 /// Response for a transaction.
