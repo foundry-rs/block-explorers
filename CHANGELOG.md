@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump alloy 0.7 ([#69](https://github.com/foundry-rs/block-explorers/issues/69))
 
+### Miscellaneous Tasks
+
+- Release 0.10.0
+
 ### Styling
 
 - [`blob-explorers`] Accomodate new blobscan API changes ([#68](https://github.com/foundry-rs/block-explorers/issues/68))
