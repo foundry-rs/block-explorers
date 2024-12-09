@@ -51,8 +51,10 @@ pub struct FullTransactionDetails {
     /// Receiver address,
     pub to: Address,
     /// The category of this tx, if any.
-    pub cateogory: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub category: Option<String>,
     /// The rollup this tx corresponds to, if any.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rollup: Option<String>,
     /// The max fee per blob gas for EIP-4844 blob transactions.
     #[serde(with = "alloy_serde::quantity")]
@@ -132,8 +134,10 @@ pub struct TransactionDetails {
     /// The hash of the block this tx is contained in.
     pub block_hash: B256,
     /// The category of this tx, if any
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub category: Option<String>,
     /// The rollup this tx corresponds to, if any
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rollup: Option<String>,
     /// The info about the blobs in this tx.
     pub blobs: Vec<BlobInfo>,
