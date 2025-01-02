@@ -5,9 +5,7 @@
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use foundry_block_explorers::{errors::EtherscanError, Client};
 use std::{
-    future::Future,
-    path::PathBuf,
-    time::{Duration, Instant},
+    env, future::Future, path::PathBuf, time::{Duration, Instant}
 };
 
 mod account;
@@ -47,6 +45,7 @@ where
         .chain(chain)
         .unwrap()
         .with_cache(Some(cache_path), Duration::from_secs(24 * 60 * 60))
+        .with_api_key(env::var("ETHERSCAN_API_KEY").unwrap())
         .build()
     {
         Ok(c) => (c, rate_limit(chain, true)),

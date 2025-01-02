@@ -3,20 +3,21 @@
 use crate::run_with_client;
 use alloy_chains::Chain;
 use foundry_block_explorers::verify::VerifyContract;
-use foundry_compilers::{compilers::solc::SolcCompiler, ProjectBuilder, ProjectPathsConfig};
+use foundry_compilers::{compilers::solc::{SolcCompiler, SolcLanguage}, Project, ProjectPathsConfig};
 use serial_test::serial;
 use std::path::Path;
 
+// #[ignore]
+
 #[tokio::test]
 #[serial]
-#[ignore]
 async fn can_flatten_and_verify_contract() {
     let root = Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../tests/testdata/uniswap"));
     let paths = ProjectPathsConfig::builder()
         .sources(root)
         .build()
         .expect("failed to resolve project paths");
-    let project = ProjectBuilder::<SolcCompiler>::new(Default::default())
+    let project = Project::builder()
         .paths(paths)
         .build(Default::default())
         .expect("failed to build the project");
@@ -26,7 +27,8 @@ async fn can_flatten_and_verify_contract() {
     let constructor_args = "0x000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000005f5e1000000000000000000000000000000000000000000000000000000000000000007596179537761700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000035941590000000000000000000000000000000000000000000000000000000000";
     let contract = project
         .paths
-        .flatten(&root.join("UniswapExchange.sol"))
+        .clone()
+        .with_language::<SolcLanguage>().flatten(&root.join("UniswapExchange.sol"))
         .expect("failed to flatten contract");
     let contract_name = "UniswapExchange".to_owned();
     let contract =
