@@ -5,7 +5,10 @@
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use foundry_block_explorers::{errors::EtherscanError, Client};
 use std::{
-    env, future::Future, path::PathBuf, time::{Duration, Instant}
+    env,
+    future::Future,
+    path::PathBuf,
+    time::{Duration, Instant},
 };
 
 mod account;
@@ -42,9 +45,15 @@ where
     init_tracing();
     let (client, duration) = match Client::new_v2_from_env(chain) {
         Ok(c) => (c, rate_limit(chain, true)),
-        Err(_) => {
-            (Client::builder().with_api_version(foundry_block_explorers::EtherscanApiVersion::V2).chain(chain).unwrap().build().unwrap(), rate_limit(chain, false))
-        }
+        Err(_) => (
+            Client::builder()
+                .with_api_version(foundry_block_explorers::EtherscanApiVersion::V2)
+                .chain(chain)
+                .unwrap()
+                .build()
+                .unwrap(),
+            rate_limit(chain, false),
+        ),
     };
     run_at_least_duration(duration, f(client)).await
 }
