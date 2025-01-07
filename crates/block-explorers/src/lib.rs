@@ -232,7 +232,6 @@ impl Client {
     /// Execute a POST request with a form, without sanity checking the response.
     async fn post<F: Serialize>(&self, form: &F) -> Result<String> {
         trace!(target: "etherscan", "POST {}", self.etherscan_api_url);
-        println!("POST {}", self.etherscan_api_url);
         let response = self
             .client
             .post(self.etherscan_api_url.clone())
@@ -247,7 +246,6 @@ impl Client {
     /// Perform sanity checks on a response and deserialize it into a [Response].
     fn sanitize_response<T: DeserializeOwned>(&self, res: impl AsRef<str>) -> Result<Response<T>> {
         let res = res.as_ref();
-
         let res: ResponseData<T> = serde_json::from_str(res).map_err(|error| {
             error!(target: "etherscan", ?res, "Failed to deserialize response: {}", error);
             if res == "Page not found" {
@@ -423,7 +421,6 @@ impl ClientBuilder {
             cache,
             chain_id,
         };
-        println!("BUIDLING CLIENT {:?} {:?}", etherscan_api_url.clone(), etherscan_api_version);
         Ok(client)
     }
 }

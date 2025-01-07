@@ -196,3 +196,66 @@ async fn can_verify_contract_json_multi_file_v2_fails_base() {
     })
     .await
 }
+
+
+#[tokio::test]
+#[serial]
+async fn can_verify_contract_sol_flatten_v2_fails_base() {
+    let compiler_version = "v0.8.17+commit.8df45f5f";
+
+    let root = Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/test-data/rewards"));
+
+    let paths = ProjectPathsConfig::builder()
+        .sources(root)
+        .build()
+        .expect("failed to resolve project paths");
+
+    let mut project = Project::builder()
+        .paths(paths)
+        .build(Default::default())
+        .expect("failed to build the project");
+
+    // This is an unknown address so we can check the verify failure message.
+    let address = "0x7ffDf45de9023AdC014009470941bCD965bf31b9".parse().unwrap();
+
+    let contract_flattened = project
+        .clone()
+        .paths
+        .with_language::<SolcLanguage>().flatten(&root.join("ProtocolRewards.sol"))
+        .expect("failed to flatten contract");
+
+    let contract_name = "ProtocolRewards".to_owned();
+
+    trace!("{:?}", contract_flattened.clone());
+
+    let contract =
+        VerifyContract::new(address, contract_name, contract_flattened, compiler_version.to_string())
+            .code_format(CodeFormat::SingleFile) 
+            .optimization(true)
+            .runs(500000);
+
+    run_with_client_v2(Chain::base_mainnet(), |client| async move {
+        let resp = client
+            .submit_contract_verification(&contract)
+            .await
+            .expect("failed to send the request");
+
+        // The new API returns this error when a contract source is already verified.
+        assert_eq!(resp.message, "OK", "{resp:?}");
+
+        let result = &resp.result.clone();
+
+        // Attempt 5 times
+        for _ in 1..5 {
+            sleep(Duration::from_millis(5000)).await;
+            let check = client.check_contract_verification_status(result).await.expect("failed to send the check");
+            if check.result == "Pending in queue" {
+                continue;
+            }
+            assert_eq!(check.message, "NOTOK", "{check:?}");
+            assert_eq!(check.result, "Fail - Unable to verify. Compiled contract deployment bytecode does NOT match the transaction deployment bytecode.");
+            break;
+        }
+    })
+    .await
+}
