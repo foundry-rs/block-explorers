@@ -33,6 +33,22 @@ where
     run_at_least_duration(duration, f(client)).await
 }
 
+/// Calls the function with a new Etherscan Client.
+pub async fn run_with_client_v2<F, Fut, T>(chain: Chain, f: F) -> T
+where
+    F: FnOnce(Client) -> Fut,
+    Fut: Future<Output = T>,
+{
+    init_tracing();
+    let (client, duration) = match Client::new_v2_from_env(chain) {
+        Ok(c) => (c, rate_limit(chain, true)),
+        Err(_) => {
+            (Client::builder().with_api_version(foundry_block_explorers::EtherscanApiVersion::V2).chain(chain).unwrap().build().unwrap(), rate_limit(chain, false))
+        }
+    };
+    run_at_least_duration(duration, f(client)).await
+}
+
 /// Calls the function with a new cached Etherscan Client.
 pub async fn run_with_client_cached<F, Fut, T>(chain: Chain, f: F) -> T
 where
