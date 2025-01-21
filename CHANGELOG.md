@@ -5,15 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.10.0) - 2024-12-09
+## [0.11.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.11.0) - 2025-01-21
 
 ### Dependencies
 
+- Bump compilers ([#74](https://github.com/foundry-rs/block-explorers/issues/74))
 - Bump alloy 0.7 ([#69](https://github.com/foundry-rs/block-explorers/issues/69))
 
 ### Miscellaneous Tasks
 
+- Update deny.toml ([#71](https://github.com/foundry-rs/block-explorers/issues/71))
 - Release 0.10.0
+- Release 0.10.0
+
+### Other
+
+- Move deny to ci ([#70](https://github.com/foundry-rs/block-explorers/issues/70))
 
 ### Styling
 
@@ -21,133 +28,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [foundry-block-explorers-v0.9.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.9.0) - 2024-11-18
 
-### Miscellaneous Tasks
+### Bug Fixes
 
-- Release 0.9.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.8.0...HEAD)
+- Solc_config settings ([#63](https://github.com/foundry-rs/block-explorers/issues/63))
+- Fix bugs about the default EVM version in Solc ([#59](https://github.com/foundry-rs/block-explorers/issues/59))
 
 ### Dependencies
 
 - Bump compilers ([#67](https://github.com/foundry-rs/block-explorers/issues/67))
-
-## [foundry-block-explorers-v0.8.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.8.0) - 2024-09-30
+- [deps] Bump compilers ([#62](https://github.com/foundry-rs/block-explorers/issues/62))
+- Updated alloy-core and alloy dependencies ([#61](https://github.com/foundry-rs/block-explorers/issues/61))
+- Bump compilers ([#55](https://github.com/foundry-rs/block-explorers/issues/55))
+- [deps] Bump compilers 0.9 ([#54](https://github.com/foundry-rs/block-explorers/issues/54))
+- Bump compilers ([#49](https://github.com/foundry-rs/block-explorers/issues/49))
+- [deps] Bump compilers ([#48](https://github.com/foundry-rs/block-explorers/issues/48))
 
 ### Miscellaneous Tasks
 
+- Release 0.9.0
 - Release 0.8.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.7.3...HEAD)
-
-### Miscellaneous Tasks
-
 - Alloy 0.4 ([#65](https://github.com/foundry-rs/block-explorers/issues/65))
-
-## [foundry-block-explorers-v0.7.3](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.7.3) - 2024-09-19
-
-### Bug Fixes
-
-- Solc_config settings ([#63](https://github.com/foundry-rs/block-explorers/issues/63))
-
-### Miscellaneous Tasks
-
 - Release 0.7.3
 - Release 0.7.2
-
-## [foundry-block-explorers-v0.7.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.7.1) - 2024-09-03
-
-### Dependencies
-
-- [deps] Bump compilers ([#62](https://github.com/foundry-rs/block-explorers/issues/62))
-
-### Miscellaneous Tasks
-
 - Release 0.7.1
-
-## [foundry-blob-explorers-v0.7.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-blob-explorers-v0.7.0) - 2024-08-28
-
-### Miscellaneous Tasks
-
 - Release 0.7.0
-
-## [foundry-block-explorers-v0.6.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.6.0) - 2024-08-28
-
-### Dependencies
-
-- Updated alloy-core and alloy dependencies ([#61](https://github.com/foundry-rs/block-explorers/issues/61))
-
-### Miscellaneous Tasks
-
 - Release 0.6.0
-
-## [foundry-block-explorers-v0.5.2](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.2) - 2024-08-27
-
-### Bug Fixes
-
-- Fix bugs about the default EVM version in Solc ([#59](https://github.com/foundry-rs/block-explorers/issues/59))
-
-### Miscellaneous Tasks
-
 - Release 0.5.2
 - Improve invalid key checks ([#58](https://github.com/foundry-rs/block-explorers/issues/58))
-
-### Testing
-
-- Add invalid api key response test ([#57](https://github.com/foundry-rs/block-explorers/issues/57))
-
-## [foundry-block-explorers-v0.5.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.1) - 2024-07-19
-
-### Dependencies
-
-- Bump compilers ([#55](https://github.com/foundry-rs/block-explorers/issues/55))
-
-### Miscellaneous Tasks
-
 - Release 0.5.1
-
-## [foundry-block-explorers-v0.5.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.0) - 2024-06-29
-
-### Miscellaneous Tasks
-
 - Release 0.5.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.4.1...HEAD)
-
-### Dependencies
-
-- [deps] Bump compilers 0.9 ([#54](https://github.com/foundry-rs/block-explorers/issues/54))
-
-### Miscellaneous Tasks
-
 - Fix up manifests
 - [meta] Update CODEOWNERS
+- Release 0.4.1
+- Use crates alloy ([#50](https://github.com/foundry-rs/block-explorers/issues/50))
+- Release 0.4.0
+- Sync cliff.toml
 
 ### Other
 
 - The EVM version returned by Blockscout is "default"  ([#53](https://github.com/foundry-rs/block-explorers/issues/53))
 - Create cache directory if needed ([#52](https://github.com/foundry-rs/block-explorers/issues/52))
 
-## [foundry-block-explorers-v0.4.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.4.1) - 2024-06-17
+### Testing
 
-### Dependencies
-
-- Bump compilers ([#49](https://github.com/foundry-rs/block-explorers/issues/49))
-
-### Miscellaneous Tasks
-
-- Release 0.4.1
-- Use crates alloy ([#50](https://github.com/foundry-rs/block-explorers/issues/50))
-
-## [foundry-block-explorers-v0.4.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.4.0) - 2024-06-11
-
-### Dependencies
-
-- [deps] Bump compilers ([#48](https://github.com/foundry-rs/block-explorers/issues/48))
-
-### Miscellaneous Tasks
-
-- Release 0.4.0
-- Sync cliff.toml
+- Add invalid api key response test ([#57](https://github.com/foundry-rs/block-explorers/issues/57))
 
 ## [foundry-block-explorers-v0.3.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.3.0) - 2024-06-03
 
