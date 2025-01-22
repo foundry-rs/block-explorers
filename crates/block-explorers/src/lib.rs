@@ -44,10 +44,18 @@ pub mod verify;
 
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
+/// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain verifier
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum EtherscanApiVersion {
     V1,
     V2,
+}
+
+/// Default implementation for EtherscanApi V1
+impl Default for EtherscanApiVersion {
+    fn default() -> Self {
+        EtherscanApiVersion::V1
+    }
 }
 
 /// The Etherscan.io API client.
@@ -107,6 +115,7 @@ impl Client {
         Client::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
+    /// Create a new client with the correct endpoint with the chain and chosen API v2 version
     pub fn new_v2_from_env(chain: Chain) -> Result<Self> {
         let api_key = std::env::var("ETHERSCAN_API_KEY")?;
         Client::builder()
@@ -300,8 +309,8 @@ pub struct ClientBuilder {
     api_key: Option<String>,
     /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
     etherscan_api_url: Option<Url>,
-    /// Etherscan API version (v2 is new verifier version)
-    etherscan_api_version: Option<EtherscanApiVersion>,
+    /// Etherscan API version (v2 is new verifier version, v1 is the default)
+    etherscan_api_version: EtherscanApiVersion,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Option<Url>,
     /// Path to where ABI files should be cached
@@ -334,7 +343,7 @@ impl ClientBuilder {
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
 
         // V2 etherscan default API urls are different – this handles that case.
-        let etherscan_api_url = if self.etherscan_api_version == Some(EtherscanApiVersion::V2) {
+        let etherscan_api_url = if self.etherscan_api_version == EtherscanApiVersion::V2 {
             let chain_id = chain.id();
             Url::parse(&format!("https://api.etherscan.io/v2/api?chainid={}", chain_id))
                 .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?
@@ -347,7 +356,7 @@ impl ClientBuilder {
 
     /// Configures the etherscan api version
     pub fn with_api_version(mut self, api_version: EtherscanApiVersion) -> Self {
-        self.etherscan_api_version = Some(api_version);
+        self.etherscan_api_version = api_version;
         self
     }
 
@@ -425,7 +434,7 @@ impl ClientBuilder {
                 .clone()
                 .ok_or_else(|| EtherscanError::Builder("etherscan api url".to_string()))?,
             // Set default API version to V1 if missing
-            etherscan_api_version: etherscan_api_version.unwrap_or(EtherscanApiVersion::V1),
+            etherscan_api_version: etherscan_api_version,
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,
