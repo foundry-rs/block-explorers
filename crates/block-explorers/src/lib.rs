@@ -45,17 +45,11 @@ pub mod verify;
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
 /// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain verifier
-#[derive(Clone, Debug, PartialEq, Copy)]
+#[derive(Clone, Default, Debug, PartialEq, Copy)]
 pub enum EtherscanApiVersion {
+    #[default]
     V1,
     V2,
-}
-
-/// Default implementation for EtherscanApi V1
-impl Default for EtherscanApiVersion {
-    fn default() -> Self {
-        EtherscanApiVersion::V1
-    }
 }
 
 /// The Etherscan.io API client.
