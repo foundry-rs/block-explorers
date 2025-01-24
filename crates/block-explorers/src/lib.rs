@@ -428,7 +428,7 @@ impl ClientBuilder {
                 .clone()
                 .ok_or_else(|| EtherscanError::Builder("etherscan api url".to_string()))?,
             // Set default API version to V1 if missing
-            etherscan_api_version: etherscan_api_version,
+            etherscan_api_version,
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,
