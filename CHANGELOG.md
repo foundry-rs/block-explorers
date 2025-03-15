@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.11.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.11.1) - 2025-03-15
+## [0.11.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.11.2) - 2025-03-15
+
+### Other
+
+- Add v2 verify routes ([#73](https://github.com/foundry-rs/block-explorers/issues/73))
+
+## [foundry-block-explorers-v0.11.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.11.1) - 2025-03-15
+
+### Miscellaneous Tasks
+
+- Release 0.11.1
+
+## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.11.0...HEAD)
 
 ### Bug Fixes
 
