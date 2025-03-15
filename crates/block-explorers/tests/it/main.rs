@@ -66,7 +66,41 @@ where
 {
     init_tracing();
     let cache_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test-data/cache");
+
+    let api_key = match chain.kind() {
+        ChainKind::Named(named) => match named {
+            // Extra aliases
+            NamedChain::Fantom | NamedChain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
+                .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
+                .map_err(Into::into),
+
+            // Backwards compatibility, ideally these should return an error.
+            NamedChain::Gnosis
+            | NamedChain::Chiado
+            | NamedChain::Sepolia
+            | NamedChain::Rsk
+            | NamedChain::Sokol
+            | NamedChain::Poa
+            | NamedChain::Oasis
+            | NamedChain::Emerald
+            | NamedChain::EmeraldTestnet
+            | NamedChain::Evmos
+            | NamedChain::EvmosTestnet => Ok(String::new()),
+            NamedChain::AnvilHardhat | NamedChain::Dev => {
+                Err(EtherscanError::LocalNetworksNotSupported)
+            }
+
+            _ => named
+                .etherscan_api_key_name()
+                .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
+                .and_then(|key_name| std::env::var(key_name).map_err(Into::into)),
+        },
+        ChainKind::Id(_) => Err(EtherscanError::ChainNotSupported(chain)),
+    }
+    .unwrap();
+
     let (client, duration) = match Client::builder()
+        .with_api_key(api_key)
         .chain(chain)
         .unwrap()
         .with_cache(Some(cache_path), Duration::from_secs(24 * 60 * 60))

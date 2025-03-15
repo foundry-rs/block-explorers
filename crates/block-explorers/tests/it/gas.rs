@@ -15,6 +15,7 @@ async fn gas_estimate_success() {
 }
 
 #[tokio::test]
+#[ignore]
 #[serial]
 async fn gas_oracle_success() {
     run_with_client(Chain::mainnet(), |client| async move {

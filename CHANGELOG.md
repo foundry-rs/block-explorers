@@ -5,7 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.10.0) - 2024-12-09
+## [0.11.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.11.1) - 2025-03-15
+
+### Bug Fixes
+
+- Fix tests ([#77](https://github.com/foundry-rs/block-explorers/issues/77))
+
+### Dependencies
+
+- Bump alloy 0.12 ([#79](https://github.com/foundry-rs/block-explorers/issues/79))
+- Bump alloy 0.11 ([#76](https://github.com/foundry-rs/block-explorers/issues/76))
+
+### Miscellaneous Tasks
+
+- Allow paste ([#78](https://github.com/foundry-rs/block-explorers/issues/78))
+
+## [foundry-block-explorers-v0.11.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.11.0) - 2025-01-21
+
+### Miscellaneous Tasks
+
+- Release 0.11.0
+
+## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-blob-explorers-v0.10.0...HEAD)
+
+### Dependencies
+
+- Bump compilers ([#74](https://github.com/foundry-rs/block-explorers/issues/74))
+
+### Miscellaneous Tasks
+
+- Update deny.toml ([#71](https://github.com/foundry-rs/block-explorers/issues/71))
+
+### Other
+
+- Move deny to ci ([#70](https://github.com/foundry-rs/block-explorers/issues/70))
+
+## [foundry-blob-explorers-v0.10.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-blob-explorers-v0.10.0) - 2024-12-09
 
 ### Dependencies
 
@@ -13,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.10.0
 - Release 0.10.0
 
 ### Styling
