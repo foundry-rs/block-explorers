@@ -44,7 +44,11 @@ pub mod verify;
 
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
-/// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain verifier
+/// The URL for the etherscan V2 API without the chainid param set.
+pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api?chainid=";
+
+/// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain
+/// verifier
 #[derive(Clone, Default, Debug, PartialEq, Copy)]
 pub enum EtherscanApiVersion {
     #[default]
@@ -340,7 +344,7 @@ impl ClientBuilder {
         // V2 etherscan default API urls are different – this handles that case.
         let etherscan_api_url = if self.etherscan_api_version == EtherscanApiVersion::V2 {
             let chain_id = chain.id();
-            Url::parse(&format!("https://api.etherscan.io/v2/api?chainid={}", chain_id))
+            Url::parse(&format!("{ETHERSCAN_V2_API_BASE_URL}{chain_id}"))
                 .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?
         } else {
             default_etherscan_api_url?
