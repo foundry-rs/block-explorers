@@ -175,6 +175,7 @@ impl Client {
         self
     }
 
+    /// Returns the configured etherscan api version.
     pub fn etherscan_api_version(&self) -> &EtherscanApiVersion {
         &self.etherscan_api_version
     }
