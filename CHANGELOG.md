@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.12.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.12.0) - 2025-04-02
+## [0.13.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.0) - 2025-04-07
+
+### Dependencies
+
+- Bump compilers to v0.14 ([#81](https://github.com/foundry-rs/block-explorers/issues/81))
+
+## [foundry-block-explorers-v0.12.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.12.0) - 2025-04-02
+
+### Miscellaneous Tasks
+
+- Release 0.12.0
+
+## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.11.2...HEAD)
 
 ### Dependencies
 
