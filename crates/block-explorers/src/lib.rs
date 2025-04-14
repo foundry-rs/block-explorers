@@ -24,6 +24,7 @@ use reqwest::{header, IntoUrl, Url};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::{
     borrow::Cow,
+    collections::HashMap,
     io::Write,
     path::PathBuf,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -45,7 +46,7 @@ pub mod verify;
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
 /// The URL for the etherscan V2 API without the chainid param set.
-pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api?chainid=";
+pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
 
 /// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain
 /// verifier
@@ -242,10 +243,19 @@ impl Client {
     /// Execute a POST request with a form, without sanity checking the response.
     async fn post<F: Serialize>(&self, form: &F) -> Result<String> {
         trace!(target: "etherscan", "POST {}", self.etherscan_api_url);
+
+        let post_query = match self.chain_id {
+            Some(chain_id) if self.etherscan_api_version == EtherscanApiVersion::V2 => {
+                HashMap::from([("chainid", chain_id)])
+            }
+            _ => HashMap::new(),
+        };
+
         let response = self
             .client
             .post(self.etherscan_api_url.clone())
             .form(form)
+            .query(&post_query)
             .send()
             .await?
             .text()
@@ -343,8 +353,7 @@ impl ClientBuilder {
 
         // V2 etherscan default API urls are different – this handles that case.
         let etherscan_api_url = if self.etherscan_api_version == EtherscanApiVersion::V2 {
-            let chain_id = chain.id();
-            Url::parse(&format!("{ETHERSCAN_V2_API_BASE_URL}{chain_id}"))
+            Url::parse(ETHERSCAN_V2_API_BASE_URL)
                 .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?
         } else {
             default_etherscan_api_url?
