@@ -50,12 +50,36 @@ pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
 
 /// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain
 /// verifier
-#[derive(Clone, Default, Debug, PartialEq, Copy)]
+#[derive(Clone, Default, Debug, PartialEq, Copy, Eq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum EtherscanApiVersion {
-    #[default]
     V1,
+    #[default]
     V2,
 }
+
+impl std::fmt::Display for EtherscanApiVersion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EtherscanApiVersion::V1 => write!(f, "v1"),
+            EtherscanApiVersion::V2 => write!(f, "v2"),
+        }
+    }
+}
+
+impl TryFrom<String> for EtherscanApiVersion {
+    type Error = EtherscanError;
+
+    #[inline]
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.as_str() {
+            "v1" => Ok(EtherscanApiVersion::V1),
+            "v2" => Ok(EtherscanApiVersion::V2),
+            _    => Err(EtherscanError::InvalidApiVersion),
+        }
+    }
+}
+
 
 /// The Etherscan.io API client.
 #[derive(Clone, Debug)]
