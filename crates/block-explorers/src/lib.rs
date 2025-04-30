@@ -75,11 +75,10 @@ impl TryFrom<String> for EtherscanApiVersion {
         match value.as_str() {
             "v1" => Ok(EtherscanApiVersion::V1),
             "v2" => Ok(EtherscanApiVersion::V2),
-            _    => Err(EtherscanError::InvalidApiVersion),
+            _ => Err(EtherscanError::InvalidApiVersion),
         }
     }
 }
-
 
 /// The Etherscan.io API client.
 #[derive(Clone, Debug)]
@@ -138,11 +137,19 @@ impl Client {
         Client::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
-    /// Create a new client with the correct endpoint with the chain and chosen API v2 version
-    pub fn new_v2_from_env(chain: Chain) -> Result<Self> {
+    pub fn new_with_api_version(
+        chain: Chain,
+        api_key: impl Into<String>,
+        api_version: EtherscanApiVersion,
+    ) -> Result<Self> {
+        Client::builder().with_api_key(api_key).with_api_version(api_version).chain(chain)?.build()
+    }
+
+    /// Create a new client with the correct endpoint with the chain and chosen API v1 version
+    pub fn new_v1_from_env(chain: Chain) -> Result<Self> {
         let api_key = std::env::var("ETHERSCAN_API_KEY")?;
         Client::builder()
-            .with_api_version(EtherscanApiVersion::V2)
+            .with_api_version(EtherscanApiVersion::V1)
             .with_api_key(api_key)
             .chain(chain)?
             .build()
@@ -613,7 +620,7 @@ fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Client, EtherscanError, ResponseData};
+    use crate::{Client, EtherscanApiVersion, EtherscanError, ResponseData};
     use alloy_chains::Chain;
     use alloy_primitives::{Address, B256};
 
@@ -626,9 +633,19 @@ mod tests {
     }
 
     #[test]
-    fn test_api_paths() {
-        let client = Client::new(Chain::goerli(), "").unwrap();
+    fn test_api_paths_v1() {
+        let client =
+            Client::new_with_api_version(Chain::goerli(), "", EtherscanApiVersion::V1).unwrap();
         assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api");
+
+        assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
+    }
+
+    #[test]
+    fn test_api_paths_v2() {
+        let client =
+            Client::new_with_api_version(Chain::goerli(), "", EtherscanApiVersion::V2).unwrap();
+        assert_eq!(client.etherscan_api_url.as_str(), "https://api.etherscan.io/v2/api");
 
         assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
     }
@@ -680,5 +697,20 @@ mod tests {
         });
         let resp: ResponseData<Address> = serde_json::from_value(err).unwrap();
         assert!(matches!(resp, ResponseData::Error { .. }));
+    }
+
+    #[test]
+    fn can_parse_api_version() {
+        assert_eq!(
+            EtherscanApiVersion::try_from("v1".to_string()).unwrap(),
+            EtherscanApiVersion::V1
+        );
+        assert_eq!(
+            EtherscanApiVersion::try_from("v2".to_string()).unwrap(),
+            EtherscanApiVersion::V2
+        );
+
+        let parse_err = EtherscanApiVersion::try_from("fail".to_string()).unwrap_err();
+        assert!(matches!(parse_err, EtherscanError::InvalidApiVersion));
     }
 }
