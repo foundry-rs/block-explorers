@@ -190,7 +190,7 @@ async fn get_etherscan_polygon_key_v1() {
 #[tokio::test]
 #[serial]
 async fn get_etherscan_polygon_key_v2() {
-    // This requires the etherscan api key to be set – expected for this test suite. 
+    // This requires the etherscan api key to be set – expected for this test suite.
     let etherscan_test_api_key = env::var("ETHERSCAN_API_KEY").unwrap();
     env::set_var("POLYGONSCAN_API_KEY", "POLYGONSCAN1");
 
