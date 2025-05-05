@@ -197,7 +197,7 @@ impl Client {
     pub fn etherscan_url(&self) -> &Url {
         &self.etherscan_url
     }
-    
+
     /// Returns the configured API key, if any
     pub fn api_key(&self) -> Option<&str> {
         self.api_key.as_deref()
