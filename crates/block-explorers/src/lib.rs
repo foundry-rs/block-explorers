@@ -99,50 +99,6 @@ pub struct Client {
     chain_id: Option<u64>,
 }
 
-fn get_api_key_from_chain(
-    chain: Chain,
-    api_version: EtherscanApiVersion,
-) -> Result<String, EtherscanError> {
-    match chain.kind() {
-        ChainKind::Named(named) => match named {
-            // Fantom is special and doesn't support etherscan api v2
-            NamedChain::Fantom | NamedChain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
-                .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
-                .map_err(Into::into),
-
-            // Backwards compatibility, ideally these should return an error.
-            NamedChain::Gnosis
-            | NamedChain::Chiado
-            | NamedChain::Sepolia
-            | NamedChain::Rsk
-            | NamedChain::Sokol
-            | NamedChain::Poa
-            | NamedChain::Oasis
-            | NamedChain::Emerald
-            | NamedChain::EmeraldTestnet
-            | NamedChain::Evmos
-            | NamedChain::EvmosTestnet => Ok(String::new()),
-            NamedChain::AnvilHardhat | NamedChain::Dev => {
-                Err(EtherscanError::LocalNetworksNotSupported)
-            }
-
-            // Rather than get special ENV vars here, normal case is to pull overall
-            // ETHERSCAN_API_KEY
-            _ => {
-                if api_version == EtherscanApiVersion::V1 {
-                    named
-                        .etherscan_api_key_name()
-                        .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
-                        .and_then(|key_name| std::env::var(key_name).map_err(Into::into))
-                } else {
-                    std::env::var("ETHERSCAN_API_KEY").map_err(Into::into)
-                }
-            }
-        },
-        ChainKind::Id(_) => Err(EtherscanError::ChainNotSupported(chain)),
-    }
-}
-
 impl Client {
     /// Creates a `ClientBuilder` to configure a `Client`.
     ///
@@ -181,6 +137,7 @@ impl Client {
         Client::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
+    /// Create a new client for the given [`EtherscanApiVersion`].
     pub fn new_with_api_version(
         chain: Chain,
         api_key: impl Into<String>,
@@ -240,9 +197,10 @@ impl Client {
     pub fn etherscan_url(&self) -> &Url {
         &self.etherscan_url
     }
-
-    pub fn api_key(&self) -> &Option<String> {
-        &self.api_key
+    
+    /// Returns the configured API key, if any
+    pub fn api_key(&self) -> Option<&str> {
+        self.api_key.as_deref()
     }
 
     /// Return the URL for the given block number
@@ -637,6 +595,50 @@ struct Query<'a, T: Serialize> {
 #[inline]
 fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
     url.into_url()
+}
+
+fn get_api_key_from_chain(
+    chain: Chain,
+    api_version: EtherscanApiVersion,
+) -> Result<String, EtherscanError> {
+    match chain.kind() {
+        ChainKind::Named(named) => match named {
+            // Fantom is special and doesn't support etherscan api v2
+            NamedChain::Fantom | NamedChain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
+                .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
+                .map_err(Into::into),
+
+            // Backwards compatibility, ideally these should return an error.
+            NamedChain::Gnosis
+            | NamedChain::Chiado
+            | NamedChain::Sepolia
+            | NamedChain::Rsk
+            | NamedChain::Sokol
+            | NamedChain::Poa
+            | NamedChain::Oasis
+            | NamedChain::Emerald
+            | NamedChain::EmeraldTestnet
+            | NamedChain::Evmos
+            | NamedChain::EvmosTestnet => Ok(String::new()),
+            NamedChain::AnvilHardhat | NamedChain::Dev => {
+                Err(EtherscanError::LocalNetworksNotSupported)
+            }
+
+            // Rather than get special ENV vars here, normal case is to pull overall
+            // ETHERSCAN_API_KEY
+            _ => {
+                if api_version == EtherscanApiVersion::V1 {
+                    named
+                        .etherscan_api_key_name()
+                        .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
+                        .and_then(|key_name| std::env::var(key_name).map_err(Into::into))
+                } else {
+                    std::env::var("ETHERSCAN_API_KEY").map_err(Into::into)
+                }
+            }
+        },
+        ChainKind::Id(_) => Err(EtherscanError::ChainNotSupported(chain)),
+    }
 }
 
 #[cfg(test)]
