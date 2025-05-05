@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.13.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.1) - 2025-04-15
+## [0.13.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.2) - 2025-05-05
+
+### Miscellaneous Tasks
+
+- Allow CDLA-Permissive-2.0 ([#84](https://github.com/foundry-rs/block-explorers/issues/84))
+
+### Other
+
+- Handle parsing and serialization of etherscan api version ([#83](https://github.com/foundry-rs/block-explorers/issues/83))
+
+## [foundry-block-explorers-v0.13.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.13.1) - 2025-04-15
+
+### Miscellaneous Tasks
+
+- Release 0.13.1
+
+## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.13.0...HEAD)
 
 ### Other
 
