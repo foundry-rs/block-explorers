@@ -21,7 +21,7 @@ all-features = true
 
 [dependencies]
 alloy-chains.workspace = true
-alloy-json-abi = { version = "0.8", default-features = false, features = [
+alloy-json-abi = { workspace = true, default-features = false, features = [
     "std",
     "serde_json",
 ] }
