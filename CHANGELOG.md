@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.13.3](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.3) - 2025-05-07
+## [0.14.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.14.0) - 2025-05-07
+
+### Dependencies
+
+- [deps] Bump alloy-core 1.0 + alloy 0.15 ([#86](https://github.com/foundry-rs/block-explorers/issues/86))
+
+## [foundry-block-explorers-v0.13.3](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.13.3) - 2025-05-07
 
 ### Miscellaneous Tasks
 
+- Release 0.13.3
 - FromStr for EtherscanApiVersion ([#85](https://github.com/foundry-rs/block-explorers/issues/85))
 
 ## [foundry-block-explorers-v0.13.2](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.13.2) - 2025-05-05
