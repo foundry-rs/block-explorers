@@ -5,10 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.13.2](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.2) - 2025-05-05
+## [0.13.3](https://github.com/foundry-rs/block-explorers/releases/tag/v0.13.3) - 2025-05-07
 
 ### Miscellaneous Tasks
 
+- FromStr for EtherscanApiVersion ([#85](https://github.com/foundry-rs/block-explorers/issues/85))
+
+## [foundry-block-explorers-v0.13.2](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.13.2) - 2025-05-05
+
+### Miscellaneous Tasks
+
+- Release 0.13.2
 - Allow CDLA-Permissive-2.0 ([#84](https://github.com/foundry-rs/block-explorers/issues/84))
 
 ### Other
@@ -21,35 +28,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release 0.13.1
 
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.13.0...HEAD)
-
 ### Other
 
 - Update etherscan lib to handle both GET and POST parameters for chainid ([#82](https://github.com/foundry-rs/block-explorers/issues/82))
 
 ## [foundry-block-explorers-v0.13.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.13.0) - 2025-04-07
 
-### Miscellaneous Tasks
-
-- Release 0.13.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.12.0...HEAD)
-
 ### Dependencies
 
 - Bump compilers to v0.14 ([#81](https://github.com/foundry-rs/block-explorers/issues/81))
 
-## [foundry-block-explorers-v0.12.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.12.0) - 2025-04-02
-
 ### Miscellaneous Tasks
 
-- Release 0.12.0
+- Release 0.13.0
 
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.11.2...HEAD)
+## [foundry-block-explorers-v0.12.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.12.0) - 2025-04-02
 
 ### Dependencies
 
 - Bump alloy 0.13 ([#80](https://github.com/foundry-rs/block-explorers/issues/80))
+
+### Miscellaneous Tasks
+
+- Release 0.12.0
 
 ## [foundry-block-explorers-v0.11.2](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.11.2) - 2025-03-15
 
@@ -57,19 +58,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release 0.11.2
 
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.11.1...HEAD)
-
 ### Other
 
 - Add v2 verify routes ([#73](https://github.com/foundry-rs/block-explorers/issues/73))
 
 ## [foundry-block-explorers-v0.11.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.11.1) - 2025-03-15
-
-### Miscellaneous Tasks
-
-- Release 0.11.1
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.11.0...HEAD)
 
 ### Bug Fixes
 
@@ -82,15 +75,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.11.1
 - Allow paste ([#78](https://github.com/foundry-rs/block-explorers/issues/78))
 
 ## [foundry-block-explorers-v0.11.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.11.0) - 2025-01-21
-
-### Miscellaneous Tasks
-
-- Release 0.11.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-blob-explorers-v0.10.0...HEAD)
 
 ### Dependencies
 
@@ -98,6 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.11.0
 - Update deny.toml ([#71](https://github.com/foundry-rs/block-explorers/issues/71))
 
 ### Other
@@ -121,26 +110,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [foundry-block-explorers-v0.9.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.9.0) - 2024-11-18
 
-### Miscellaneous Tasks
-
-- Release 0.9.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.8.0...HEAD)
-
 ### Dependencies
 
 - Bump compilers ([#67](https://github.com/foundry-rs/block-explorers/issues/67))
+
+### Miscellaneous Tasks
+
+- Release 0.9.0
 
 ## [foundry-block-explorers-v0.8.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.8.0) - 2024-09-30
 
 ### Miscellaneous Tasks
 
 - Release 0.8.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.7.3...HEAD)
-
-### Miscellaneous Tasks
-
 - Alloy 0.4 ([#65](https://github.com/foundry-rs/block-explorers/issues/65))
 
 ## [foundry-block-explorers-v0.7.3](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.7.3) - 2024-09-19
@@ -207,18 +189,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [foundry-block-explorers-v0.5.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.5.0) - 2024-06-29
 
-### Miscellaneous Tasks
-
-- Release 0.5.0
-
-## [Unreleased](https://github.com/foundry-rs/block-explorers/compare/foundry-block-explorers-v0.4.1...HEAD)
-
 ### Dependencies
 
 - [deps] Bump compilers 0.9 ([#54](https://github.com/foundry-rs/block-explorers/issues/54))
 
 ### Miscellaneous Tasks
 
+- Release 0.5.0
 - Fix up manifests
 - [meta] Update CODEOWNERS
 
