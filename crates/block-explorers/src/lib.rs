@@ -81,8 +81,8 @@ impl FromStr for EtherscanApiVersion {
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
-            "v1" => Ok(EtherscanApiVersion::V1),
-            "v2" => Ok(EtherscanApiVersion::V2),
+            "v1" | "V1" => Ok(EtherscanApiVersion::V1),
+            "v2" | "V2" => Ok(EtherscanApiVersion::V2),
             _ => Err(EtherscanError::InvalidApiVersion),
         }
     }
