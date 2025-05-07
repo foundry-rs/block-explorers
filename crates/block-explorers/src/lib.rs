@@ -27,6 +27,7 @@ use std::{
     collections::HashMap,
     io::Write,
     path::PathBuf,
+    str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -70,9 +71,16 @@ impl std::fmt::Display for EtherscanApiVersion {
 impl TryFrom<String> for EtherscanApiVersion {
     type Error = EtherscanError;
 
-    #[inline]
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        match value.as_str() {
+        Self::from_str(value.as_str())
+    }
+}
+
+impl FromStr for EtherscanApiVersion {
+    type Err = EtherscanError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
             "v1" => Ok(EtherscanApiVersion::V1),
             "v2" => Ok(EtherscanApiVersion::V2),
             _ => Err(EtherscanError::InvalidApiVersion),
