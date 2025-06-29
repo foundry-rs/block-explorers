@@ -169,7 +169,6 @@ impl Client {
         contract: &VerifyContract,
     ) -> Result<Response<String>> {
         let body = self.create_query("contract", "verifysourcecode", contract);
-        println!("Body: {:?}", body);
         self.post_form(&body).await
     }
 
