@@ -269,7 +269,6 @@ impl Client {
             _ => HashMap::new(),
         };
 
-
         let response = self
             .client
             .post(self.etherscan_api_url.clone())
