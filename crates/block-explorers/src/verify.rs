@@ -147,6 +147,9 @@ pub enum CodeFormat {
     #[default]
     #[serde(rename = "solidity-standard-json-input")]
     StandardJsonInput,
+
+    #[serde(rename = "vyper-json")]
+    VyperJson,
 }
 
 impl AsRef<str> for CodeFormat {
@@ -154,6 +157,7 @@ impl AsRef<str> for CodeFormat {
         match self {
             CodeFormat::SingleFile => "solidity-single-file",
             CodeFormat::StandardJsonInput => "solidity-standard-json-input",
+            CodeFormat::VyperJson => "vyper-json",
         }
     }
 }
