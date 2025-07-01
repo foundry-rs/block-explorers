@@ -360,9 +360,13 @@ impl Client {
                 };
             }
         }
+        trace!(target: "etherscan", ?address, "GET contract abi");
 
         let query = self.create_query("contract", "getabi", HashMap::from([("address", address)]));
-        let resp: Response<Option<String>> = self.get_json(&query).await?;
+
+        let resp: Response<Option<String>> = self.get_json(&query).await.inspect_err(|err| {
+            error!(target: "etherscan", ?err, "Failed to deserialize ABI response");
+        })?;
 
         let result = match resp.result {
             Some(result) => result,
