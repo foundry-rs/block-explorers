@@ -198,7 +198,6 @@ impl Client {
         &self.etherscan_api_version
     }
 
-    /// Returns the configured etherscan api url.
     pub fn etherscan_api_url(&self) -> &Url {
         &self.etherscan_api_url
     }
@@ -245,8 +244,8 @@ impl Client {
         let response = self
             .client
             .get(self.etherscan_api_url.clone())
-            .query(query)
             .header(header::ACCEPT, "application/json")
+            .query(query)
             .send()
             .await?
             .text()
