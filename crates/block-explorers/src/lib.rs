@@ -343,7 +343,6 @@ impl Client {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),
             action: Cow::Borrowed(action),
-            chain_id: self.chain_id,
             other,
         }
     }
@@ -613,8 +612,6 @@ struct Query<'a, T: Serialize> {
     apikey: Option<Cow<'a, str>>,
     module: Cow<'a, str>,
     action: Cow<'a, str>,
-    #[serde(rename = "chainid", skip_serializing_if = "Option::is_none")]
-    chain_id: Option<u64>,
     #[serde(flatten)]
     other: T,
 }
