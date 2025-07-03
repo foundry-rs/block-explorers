@@ -259,6 +259,8 @@ impl Client {
             (k, val)
         }));
 
+        println!("Etherscan API URL: {}", url);
+
         let response = self
             .client
             .get(url)
