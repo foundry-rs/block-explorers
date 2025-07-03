@@ -240,7 +240,6 @@ impl Client {
     /// Execute a GET request with parameters, without sanity checking the response.
     async fn get<Q: Serialize>(&self, query: &Q) -> Result<String> {
         trace!(target: "etherscan", "GET {}", self.etherscan_api_url);
-
         let response = self
             .client
             .get(self.etherscan_api_url.clone())
@@ -250,7 +249,6 @@ impl Client {
             .await?
             .text()
             .await?;
-
         Ok(response)
     }
 
