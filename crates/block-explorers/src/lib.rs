@@ -613,7 +613,7 @@ struct Query<'a, T: Serialize> {
     apikey: Option<Cow<'a, str>>,
     module: Cow<'a, str>,
     action: Cow<'a, str>,
-    #[serde(rename = "chainId", skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "chainid", skip_serializing_if = "Option::is_none")]
     chain_id: Option<u64>,
     #[serde(flatten)]
     other: T,
