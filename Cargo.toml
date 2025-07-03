@@ -17,7 +17,7 @@ edition = "2021"
 exclude = [".github/", "scripts/", "test-data/"]
 
 [workspace.dependencies]
-alloy-chains = "0.2"
+alloy-chains = "=0.2.4"
 alloy-primitives = { version = "1.0", default-features = false, features = [
     "std",
     "serde",
