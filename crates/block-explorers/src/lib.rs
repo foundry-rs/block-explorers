@@ -331,7 +331,7 @@ impl Client {
     }
 
     fn url_contains_chainid(&self) -> bool {
-        self.etherscan_api_url.query_pairs().any(|(key, _)| key == "chainid")
+        self.etherscan_api_url.query_pairs().any(|(key, _)| key.eq_ignore_ascii_case("chainid"))
     }
 }
 
