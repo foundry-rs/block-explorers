@@ -97,7 +97,7 @@ pub struct Client {
     api_key: Option<String>,
     /// Etherscan API version
     etherscan_api_version: EtherscanApiVersion,
-    /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
+    /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Url,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Url,
@@ -262,12 +262,14 @@ impl Client {
     async fn post<F: Serialize>(&self, form: &F) -> Result<String> {
         trace!(target: "etherscan", "POST {}", self.etherscan_api_url);
 
-        let post_query = match self.chain_id {
-            Some(chain_id) if self.etherscan_api_version == EtherscanApiVersion::V2 => {
-                HashMap::from([("chainid", chain_id)])
-            }
-            _ => HashMap::new(),
-        };
+        let mut post_query = HashMap::new();
+
+        if self.etherscan_api_version == EtherscanApiVersion::V2
+            && self.chain_id.is_some()
+            && !self.url_contains_chainid()
+        {
+            post_query.insert("chainid", self.chain_id.unwrap());
+        }
 
         let response = self
             .client
@@ -278,6 +280,7 @@ impl Client {
             .await?
             .text()
             .await?;
+
         Ok(response)
     }
 
@@ -322,9 +325,13 @@ impl Client {
             apikey: self.api_key.as_deref().map(Cow::Borrowed),
             module: Cow::Borrowed(module),
             action: Cow::Borrowed(action),
-            chain_id: self.chain_id,
+            chain_id: if self.url_contains_chainid() { None } else { self.chain_id },
             other,
         }
+    }
+
+    fn url_contains_chainid(&self) -> bool {
+        self.etherscan_api_url.query_pairs().any(|(key, _)| key.eq_ignore_ascii_case("chainid"))
     }
 }
 
@@ -334,7 +341,7 @@ pub struct ClientBuilder {
     client: Option<reqwest::Client>,
     /// Etherscan API key
     api_key: Option<String>,
-    /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
+    /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Option<Url>,
     /// Etherscan API version (v2 is new verifier version, v1 is the default)
     etherscan_api_version: EtherscanApiVersion,
