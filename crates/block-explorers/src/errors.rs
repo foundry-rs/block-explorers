@@ -40,6 +40,8 @@ pub enum EtherscanError {
     Unknown(String),
     #[error("Missing field: {0}")]
     Builder(String),
+    #[error("Failed to serialize query parameters: {0}")]
+    QuerySerializationFailed(String),
     #[error("Missing solc version: {0}")]
     MissingSolcVersion(String),
     #[error("Invalid API Key")]

@@ -97,7 +97,7 @@ pub struct Client {
     api_key: Option<String>,
     /// Etherscan API version
     etherscan_api_version: EtherscanApiVersion,
-    /// Etherscan API endpoint like <https://api(-chain).etherscan.io/api>
+    /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Url,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Url,
@@ -198,6 +198,7 @@ impl Client {
         &self.etherscan_api_version
     }
 
+    /// Returns the configured etherscan api url.
     pub fn etherscan_api_url(&self) -> &Url {
         &self.etherscan_api_url
     }
@@ -240,15 +241,33 @@ impl Client {
     /// Execute a GET request with parameters, without sanity checking the response.
     async fn get<Q: Serialize>(&self, query: &Q) -> Result<String> {
         trace!(target: "etherscan", "GET {}", self.etherscan_api_url);
+
+        let mut url = self.etherscan_api_url.clone();
+
+        let query_obj = serde_json::to_value(query)
+            .map_err(|e| EtherscanError::QuerySerializationFailed(e.to_string()))?
+            .as_object()
+            .cloned()
+            .ok_or_else(|| {
+                EtherscanError::QuerySerializationFailed(
+                    "expected query to serialize to an object".into(),
+                )
+            })?;
+
+        url.query_pairs_mut().extend_pairs(query_obj.into_iter().map(|(k, v)| {
+            let val = v.as_str().map(str::to_string).unwrap_or_else(|| v.to_string());
+            (k, val)
+        }));
+
         let response = self
             .client
-            .get(self.etherscan_api_url.clone())
+            .get(url)
             .header(header::ACCEPT, "application/json")
-            .query(query)
             .send()
             .await?
             .text()
             .await?;
+
         Ok(response)
     }
 
