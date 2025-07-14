@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.19.1](https://github.com/foundry-rs/block-explorers/releases/tag/v0.19.1) - 2025-07-03
+## [0.20.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.20.0) - 2025-07-14
+
+### Dependencies
+
+- Bump solar + MSRV ([#96](https://github.com/foundry-rs/block-explorers/issues/96))
+
+### Miscellaneous Tasks
+
+- Add trace for getabi ([#92](https://github.com/foundry-rs/block-explorers/issues/92))
+- Update CI flow, add workflow_dispatch, remove unused GOERLI_PRIVATE_KEY ([#95](https://github.com/foundry-rs/block-explorers/issues/95))
+
+## [foundry-block-explorers-v0.19.1](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.19.1) - 2025-07-03
 
 ### Bug Fixes
 
 - Etherscan V2 API URLs from `alloy-chains` already contain `chainid` ([#93](https://github.com/foundry-rs/block-explorers/issues/93))
+
+### Miscellaneous Tasks
+
+- Release 0.19.1
 
 ## [foundry-block-explorers-v0.19.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.19.0) - 2025-06-30
 

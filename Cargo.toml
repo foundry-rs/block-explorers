@@ -7,7 +7,7 @@ resolver = "2"
 
 [workspace.package]
 authors = ["Foundry Maintainers"]
-version = "0.19.1"
+version = "0.20.0"
 rust-version = "1.76"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
