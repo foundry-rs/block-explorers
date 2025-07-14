@@ -26,18 +26,18 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest"]
-        rust: ["stable", "1.65"] # MSRV
+        rust: ["stable", "1.76"] # MSRV
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       # Only run tests on latest stable and above
       - name: build
-        if: ${{ matrix.rust == '1.65' }} # MSRV
+        if: ${{ matrix.rust == '1.76' }} # MSRV
         run: cargo build --workspace
       # Don't use cargo-nextest since all the tests have to be run sequentially
       - name: test
-        if: ${{ matrix.rust != '1.65' }} # MSRV
+        if: ${{ matrix.rust != '1.76' }} # MSRV
         run: cargo test --workspace
 
   wasm:
