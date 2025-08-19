@@ -27,7 +27,6 @@ use std::{
     collections::HashMap,
     io::Write,
     path::PathBuf,
-    str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -49,41 +48,6 @@ pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 /// The URL for the Etherscan V2 API without the chainid param set.
 pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
 
-/// The Etherscan.io API version verifier
-#[derive(Clone, Default, Debug, PartialEq, Copy, Eq, Deserialize, Serialize)]
-#[serde(rename_all = "lowercase")]
-pub enum EtherscanApiVersion {
-    #[default]
-    V2,
-}
-
-impl std::fmt::Display for EtherscanApiVersion {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            EtherscanApiVersion::V2 => write!(f, "v2"),
-        }
-    }
-}
-
-impl TryFrom<String> for EtherscanApiVersion {
-    type Error = EtherscanError;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        Self::from_str(value.as_str())
-    }
-}
-
-impl FromStr for EtherscanApiVersion {
-    type Err = EtherscanError;
-
-    fn from_str(value: &str) -> Result<Self, Self::Err> {
-        match value {
-            "v2" | "V2" => Ok(EtherscanApiVersion::V2),
-            _ => Err(EtherscanError::InvalidApiVersion),
-        }
-    }
-}
-
 /// The Etherscan.io API client.
 #[derive(Clone, Debug)]
 pub struct Client {
@@ -91,8 +55,6 @@ pub struct Client {
     client: reqwest::Client,
     /// Etherscan API key
     api_key: Option<String>,
-    /// Etherscan API version
-    etherscan_api_version: EtherscanApiVersion,
     /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Url,
     /// Etherscan base endpoint like <https://etherscan.io>
@@ -141,18 +103,9 @@ impl Client {
         Client::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
-    /// Create a new client for the given [`EtherscanApiVersion`].
-    pub fn new_with_api_version(
-        chain: Chain,
-        api_key: impl Into<String>,
-        api_version: EtherscanApiVersion,
-    ) -> Result<Self> {
-        Client::builder().with_api_key(api_key).with_api_version(api_version).chain(chain)?.build()
-    }
-
     /// Create a new client with the correct endpoint with the chain
     pub fn new_from_env(chain: Chain) -> Result<Self> {
-        Self::new_with_api_version(chain, get_api_key_from_chain(chain)?, EtherscanApiVersion::V2)
+        Client::builder().with_api_key(get_api_key_from_chain(chain)?).chain(chain)?.build()
     }
 
     /// Create a new client with the correct endpoints based on the chain and API key
@@ -173,11 +126,6 @@ impl Client {
     pub fn set_cache(&mut self, root: impl Into<PathBuf>, ttl: Duration) -> &mut Self {
         self.cache = Some(Cache { root: root.into(), ttl });
         self
-    }
-
-    /// Returns the configured Etherscan api version.
-    pub fn etherscan_api_version(&self) -> &EtherscanApiVersion {
-        &self.etherscan_api_version
     }
 
     pub fn etherscan_api_url(&self) -> &Url {
@@ -322,8 +270,6 @@ pub struct ClientBuilder {
     api_key: Option<String>,
     /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Option<Url>,
-    /// Etherscan API version
-    etherscan_api_version: EtherscanApiVersion,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Option<Url>,
     /// Path to where ABI files should be cached
@@ -359,12 +305,6 @@ impl ClientBuilder {
             .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?;
 
         self.with_chain_id(chain).with_api_url(etherscan_api_url)?.with_url(etherscan_url?)
-    }
-
-    /// Configures the Etherscan api version
-    pub fn with_api_version(mut self, api_version: EtherscanApiVersion) -> Self {
-        self.etherscan_api_version = api_version;
-        self
     }
 
     /// Configures the Etherscan url
@@ -424,15 +364,8 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder {
-            client,
-            api_key,
-            etherscan_api_version,
-            etherscan_api_url,
-            etherscan_url,
-            cache,
-            chain_id,
-        } = self;
+        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache, chain_id } =
+            self;
 
         let client = Client {
             client: client.unwrap_or_default(),
@@ -440,8 +373,6 @@ impl ClientBuilder {
             etherscan_api_url: etherscan_api_url
                 .clone()
                 .ok_or_else(|| EtherscanError::Builder("etherscan api url".to_string()))?,
-            // Set default API version to V1 if missing
-            etherscan_api_version,
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,
             cache,
@@ -620,7 +551,7 @@ fn get_api_key_from_chain(chain: Chain) -> Result<String, EtherscanError> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Client, EtherscanApiVersion, EtherscanError, ResponseData};
+    use crate::{Client, EtherscanError, ResponseData};
     use alloy_chains::Chain;
     use alloy_primitives::{Address, B256};
 
@@ -634,10 +565,8 @@ mod tests {
 
     #[test]
     fn test_api_paths() {
-        let client =
-            Client::new_with_api_version(Chain::goerli(), "", EtherscanApiVersion::V2).unwrap();
+        let client = Client::new(Chain::goerli(), "").unwrap();
         assert_eq!(client.etherscan_api_url.as_str(), "https://api.etherscan.io/v2/api");
-
         assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
     }
 
@@ -688,16 +617,5 @@ mod tests {
         });
         let resp: ResponseData<Address> = serde_json::from_value(err).unwrap();
         assert!(matches!(resp, ResponseData::Error { .. }));
-    }
-
-    #[test]
-    fn can_parse_api_version() {
-        assert_eq!(
-            EtherscanApiVersion::try_from("v2".to_string()).unwrap(),
-            EtherscanApiVersion::V2
-        );
-
-        let parse_err = EtherscanApiVersion::try_from("fail".to_string()).unwrap_err();
-        assert!(matches!(parse_err, EtherscanError::InvalidApiVersion));
     }
 }
