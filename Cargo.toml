@@ -18,17 +18,17 @@ exclude = [".github/", "scripts/", "test-data/"]
 
 [workspace.dependencies]
 alloy-chains = "0.2"
-alloy-primitives = { version = "1.0", default-features = false, features = [
+alloy-primitives = { version = "1.3", default-features = false, features = [
     "std",
     "serde",
 ] }
-alloy-json-abi = { version = "1.0", default-features = false }
-alloy-rpc-types-eth = "1.0.3"
-alloy-eips = "1.0.3"
-alloy-serde = "1.0.3"
+alloy-json-abi = { version = "1.3", default-features = false }
+alloy-rpc-types-eth = "1.0"
+alloy-eips = "1.0"
+alloy-serde = "1.0"
 
 reqwest = { version = "0.12", default-features = false, features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
-tokio = { version = "1.37" }
+tokio = { version = "1.47" }

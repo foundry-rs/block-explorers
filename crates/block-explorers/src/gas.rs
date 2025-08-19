@@ -137,7 +137,7 @@ mod tests {
         assert_eq!(gas_oracle.message, "OK");
         assert_eq!(
             gas_oracle.result.propose_gas_price,
-            parse_units("141.9", "gwei").unwrap().into()
+            Into::<U256>::into(parse_units("141.9", "gwei").unwrap())
         );
 
         let v = r#"{
@@ -154,7 +154,10 @@ mod tests {
         }"#;
         let gas_oracle: Response<GasOracle> = serde_json::from_str(v).unwrap();
         assert_eq!(gas_oracle.message, "OK");
-        assert_eq!(gas_oracle.result.propose_gas_price, parse_units(22, "gwei").unwrap().into());
+        assert_eq!(
+            gas_oracle.result.propose_gas_price,
+            Into::<U256>::into(parse_units(22, "gwei").unwrap())
+        );
 
         // remove quotes around integers
         let v = r#"{
@@ -171,6 +174,9 @@ mod tests {
         }"#;
         let gas_oracle: Response<GasOracle> = serde_json::from_str(v).unwrap();
         assert_eq!(gas_oracle.message, "OK");
-        assert_eq!(gas_oracle.result.propose_gas_price, parse_units(22, "gwei").unwrap().into());
+        assert_eq!(
+            gas_oracle.result.propose_gas_price,
+            Into::<U256>::into(parse_units(22, "gwei").unwrap())
+        );
     }
 }
