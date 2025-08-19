@@ -46,15 +46,13 @@ pub mod verify;
 
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
-/// The URL for the etherscan V2 API without the chainid param set.
+/// The URL for the Etherscan V2 API without the chainid param set.
 pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
 
-/// The Etherscan.io API version 1 - classic verifier, one API per chain, 2 - new multichain
-/// verifier
+/// The Etherscan.io API version verifier
 #[derive(Clone, Default, Debug, PartialEq, Copy, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum EtherscanApiVersion {
-    V1,
     #[default]
     V2,
 }
@@ -62,7 +60,6 @@ pub enum EtherscanApiVersion {
 impl std::fmt::Display for EtherscanApiVersion {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            EtherscanApiVersion::V1 => write!(f, "v1"),
             EtherscanApiVersion::V2 => write!(f, "v2"),
         }
     }
@@ -81,7 +78,6 @@ impl FromStr for EtherscanApiVersion {
 
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
-            "v1" | "V1" => Ok(EtherscanApiVersion::V1),
             "v2" | "V2" => Ok(EtherscanApiVersion::V2),
             _ => Err(EtherscanError::InvalidApiVersion),
         }
@@ -156,21 +152,7 @@ impl Client {
 
     /// Create a new client with the correct endpoint with the chain
     pub fn new_from_env(chain: Chain) -> Result<Self> {
-        Self::new_with_api_version(
-            chain,
-            get_api_key_from_chain(chain, EtherscanApiVersion::V2)?,
-            EtherscanApiVersion::V2,
-        )
-    }
-
-    /// Create a new client with the correct endpoints based on the chain and API key
-    /// from the default environment variable defined in [`Chain`].
-    pub fn new_v1_from_env(chain: Chain) -> Result<Self> {
-        Self::new_with_api_version(
-            chain,
-            get_api_key_from_chain(chain, EtherscanApiVersion::V1)?,
-            EtherscanApiVersion::V1,
-        )
+        Self::new_with_api_version(chain, get_api_key_from_chain(chain)?, EtherscanApiVersion::V2)
     }
 
     /// Create a new client with the correct endpoints based on the chain and API key
@@ -612,10 +594,7 @@ fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
     url.into_url()
 }
 
-fn get_api_key_from_chain(
-    chain: Chain,
-    api_version: EtherscanApiVersion,
-) -> Result<String, EtherscanError> {
+fn get_api_key_from_chain(chain: Chain) -> Result<String, EtherscanError> {
     match chain.kind() {
         ChainKind::Named(named) => match named {
             // Fantom is special and doesn't support etherscan api v2
@@ -641,16 +620,7 @@ fn get_api_key_from_chain(
 
             // Rather than get special ENV vars here, normal case is to pull overall
             // ETHERSCAN_API_KEY
-            _ => {
-                if api_version == EtherscanApiVersion::V1 {
-                    named
-                        .etherscan_api_key_name()
-                        .ok_or_else(|| EtherscanError::ChainNotSupported(chain))
-                        .and_then(|key_name| std::env::var(key_name).map_err(Into::into))
-                } else {
-                    std::env::var("ETHERSCAN_API_KEY").map_err(Into::into)
-                }
-            }
+            _ => std::env::var("ETHERSCAN_API_KEY").map_err(Into::into),
         },
         ChainKind::Id(_) => Err(EtherscanError::ChainNotSupported(chain)),
     }
@@ -671,16 +641,7 @@ mod tests {
     }
 
     #[test]
-    fn test_api_paths_v1() {
-        let client =
-            Client::new_with_api_version(Chain::goerli(), "", EtherscanApiVersion::V1).unwrap();
-        assert_eq!(client.etherscan_api_url.as_str(), "https://api-goerli.etherscan.io/api");
-
-        assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
-    }
-
-    #[test]
-    fn test_api_paths_v2() {
+    fn test_api_paths() {
         let client =
             Client::new_with_api_version(Chain::goerli(), "", EtherscanApiVersion::V2).unwrap();
         assert_eq!(client.etherscan_api_url.as_str(), "https://api.etherscan.io/v2/api");
@@ -739,10 +700,6 @@ mod tests {
 
     #[test]
     fn can_parse_api_version() {
-        assert_eq!(
-            EtherscanApiVersion::try_from("v1".to_string()).unwrap(),
-            EtherscanApiVersion::V1
-        );
         assert_eq!(
             EtherscanApiVersion::try_from("v2".to_string()).unwrap(),
             EtherscanApiVersion::V2
