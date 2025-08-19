@@ -175,7 +175,7 @@ impl Client {
         self
     }
 
-    /// Returns the configured etherscan api version.
+    /// Returns the configured Etherscan api version.
     pub fn etherscan_api_version(&self) -> &EtherscanApiVersion {
         &self.etherscan_api_version
     }
@@ -246,10 +246,7 @@ impl Client {
 
         let mut post_query = HashMap::new();
 
-        if self.etherscan_api_version == EtherscanApiVersion::V2
-            && self.chain_id.is_some()
-            && !self.url_contains_chainid()
-        {
+        if self.chain_id.is_some() && !self.url_contains_chainid() {
             post_query.insert("chainid", self.chain_id.unwrap());
         }
 
@@ -325,7 +322,7 @@ pub struct ClientBuilder {
     api_key: Option<String>,
     /// Etherscan API endpoint like <https://api.etherscan.io/v2/api?chainid=(chain_id)>
     etherscan_api_url: Option<Url>,
-    /// Etherscan API version (v2 is new verifier version, v1 is the default)
+    /// Etherscan API version
     etherscan_api_version: EtherscanApiVersion,
     /// Etherscan base endpoint like <https://etherscan.io>
     etherscan_url: Option<Url>,
@@ -338,44 +335,39 @@ pub struct ClientBuilder {
 // === impl ClientBuilder ===
 
 impl ClientBuilder {
-    /// Configures the etherscan url and api url for the given chain
+    /// Configures the Etherscan url and api url for the given chain
     ///
-    /// Note: This method also sets the chain_id for etherscan multichain verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
+    /// Note: This method also sets the chain_id for Etherscan multichain verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
     ///
     /// # Errors
     ///
-    /// Fails if the chain is not supported by etherscan
+    /// Fails if the chain is not supported by Etherscan
     pub fn chain(self, chain: Chain) -> Result<Self> {
         fn urls(
             (api, url): (impl IntoUrl, impl IntoUrl),
         ) -> (reqwest::Result<Url>, reqwest::Result<Url>) {
             (api.into_url(), url.into_url())
         }
-        let (default_etherscan_api_url, etherscan_url) = chain
+        let (_, etherscan_url) = chain
             .named()
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?
             .etherscan_urls()
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
 
-        // V2 etherscan default API urls are different – this handles that case.
-        let etherscan_api_url = if self.etherscan_api_version == EtherscanApiVersion::V2 {
-            Url::parse(ETHERSCAN_V2_API_BASE_URL)
-                .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?
-        } else {
-            default_etherscan_api_url?
-        };
+        let etherscan_api_url = Url::parse(ETHERSCAN_V2_API_BASE_URL)
+            .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?;
 
         self.with_chain_id(chain).with_api_url(etherscan_api_url)?.with_url(etherscan_url?)
     }
 
-    /// Configures the etherscan api version
+    /// Configures the Etherscan api version
     pub fn with_api_version(mut self, api_version: EtherscanApiVersion) -> Self {
         self.etherscan_api_version = api_version;
         self
     }
 
-    /// Configures the etherscan url
+    /// Configures the Etherscan url
     ///
     /// # Errors
     ///
@@ -391,7 +383,7 @@ impl ClientBuilder {
         self
     }
 
-    /// Configures the etherscan api url
+    /// Configures the Etherscan api url
     ///
     /// # Errors
     ///
@@ -401,19 +393,19 @@ impl ClientBuilder {
         Ok(self)
     }
 
-    /// Configures the etherscan api key
+    /// Configures the Etherscan api key
     pub fn with_api_key(mut self, api_key: impl Into<String>) -> Self {
         self.api_key = Some(api_key.into()).filter(|s| !s.is_empty());
         self
     }
 
-    /// Configures cache for etherscan request
+    /// Configures cache for Etherscan request
     pub fn with_cache(mut self, cache_root: Option<PathBuf>, cache_ttl: Duration) -> Self {
         self.cache = cache_root.map(|root| Cache::new(root, cache_ttl));
         self
     }
 
-    /// Configures the chain id for etherscan verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
+    /// Configures the chain id for Etherscan verification: <https://docs.etherscan.io/contract-verification/multichain-verification>
     pub fn with_chain_id(mut self, chain: Chain) -> Self {
         self.chain_id = Some(chain.id());
         self
