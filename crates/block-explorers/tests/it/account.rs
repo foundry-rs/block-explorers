@@ -1,6 +1,6 @@
 use std::env;
 
-use crate::{run_with_client, run_with_client_v1};
+use crate::run_with_client;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::{U256, U64};
 use foundry_block_explorers::{
@@ -170,19 +170,6 @@ async fn get_avalanche_transactions() {
             .get_transactions(&"0x1549ea9b546ba9ffb306d78a1e1f304760cc4abf".parse().unwrap(), None)
             .await;
         txs.unwrap();
-    })
-    .await
-}
-
-#[tokio::test]
-#[serial]
-async fn get_etherscan_polygon_key_v1() {
-    env::set_var("POLYGONSCAN_API_KEY", "POLYGONSCAN1");
-
-    run_with_client_v1(Chain::from_named(NamedChain::Polygon), |client| async move {
-        assert_eq!(client.api_key().unwrap(), "POLYGONSCAN1");
-
-        env::set_var("POLYGONSCAN_API_KEY", "");
     })
     .await
 }

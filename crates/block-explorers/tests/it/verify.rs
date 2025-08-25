@@ -1,6 +1,6 @@
 #![cfg(feature = "compilers-full")]
 
-use crate::{run_with_client, run_with_client_v1};
+use crate::run_with_client;
 use alloy_chains::Chain;
 use foundry_block_explorers::verify::{CodeFormat, VerifyContract};
 use foundry_compilers::{solc::SolcLanguage, Project, ProjectPathsConfig};
@@ -11,7 +11,7 @@ use tracing::trace;
 
 #[tokio::test]
 #[serial]
-async fn test_can_flatten_and_verify_contract_single_file_v1() {
+async fn test_can_flatten_and_verify_contract_single_file_mainnet() {
     let root = Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/test-data/rewards"));
     let paths = ProjectPathsConfig::builder()
         .sources(root)
@@ -37,7 +37,7 @@ async fn test_can_flatten_and_verify_contract_single_file_v1() {
             .optimization(true)
             .runs(500000);
 
-    run_with_client_v1(Chain::mainnet(), |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let resp = client
             .submit_contract_verification(&contract)
             .await
@@ -51,7 +51,7 @@ async fn test_can_flatten_and_verify_contract_single_file_v1() {
 
 #[tokio::test]
 #[serial]
-async fn can_verify_contract_json_multi_file_v1() {
+async fn can_verify_contract_json_multi_file_mainnet() {
     let root = Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/test-data/rewards"));
 
     let paths = ProjectPathsConfig::builder()
@@ -87,7 +87,7 @@ async fn can_verify_contract_json_multi_file_v1() {
     .optimization(true)
     .runs(500000);
 
-    run_with_client_v1(Chain::mainnet(), |client| async move {
+    run_with_client(Chain::mainnet(), |client| async move {
         let resp = client
             .submit_contract_verification(&contract)
             .await
