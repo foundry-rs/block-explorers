@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.20.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.20.0) - 2025-07-14
+## [0.21.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.21.0) - 2025-08-25
+
+### Bug Fixes
+
+- [serde] Support 0x-prefixed hex in deserialize_stringified_block_number ([#100](https://github.com/foundry-rs/block-explorers/issues/100))
+- [tests] Disambiguate `Into` target for `parse_units` in `gas.rs` ([#98](https://github.com/foundry-rs/block-explorers/issues/98))
+- `dependencies.yml` is unused ([#104](https://github.com/foundry-rs/block-explorers/issues/104))
+
+### Dependencies
+
+- [deps] Bump compilers 0.19.0 ([#107](https://github.com/foundry-rs/block-explorers/issues/107))
+- [deps] Add dependencies ci workflow + update deps + fix clippy ([#102](https://github.com/foundry-rs/block-explorers/issues/102))
+
+### Miscellaneous Tasks
+
+- Add @0xrusowsky to `CODEOWNERS` ([#105](https://github.com/foundry-rs/block-explorers/issues/105))
+- Update `CODEOWNERS` to improve visibility ([#103](https://github.com/foundry-rs/block-explorers/issues/103))
+
+## [foundry-block-explorers-v0.20.0](https://github.com/foundry-rs/block-explorers/releases/tag/vfoundry-block-explorers-v0.20.0) - 2025-07-14
 
 ### Dependencies
 
@@ -13,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.20.0
 - Add trace for getabi ([#92](https://github.com/foundry-rs/block-explorers/issues/92))
 - Update CI flow, add workflow_dispatch, remove unused GOERLI_PRIVATE_KEY ([#95](https://github.com/foundry-rs/block-explorers/issues/95))
 
