@@ -300,17 +300,14 @@ impl ClientBuilder {
         ) -> (reqwest::Result<Url>, reqwest::Result<Url>) {
             (api.into_url(), url.into_url())
         }
-        let (_, etherscan_url) = chain
+        let (etherscan_api_url, etherscan_url) = chain
             .named()
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?
             .etherscan_urls()
             .map(urls)
             .ok_or_else(|| EtherscanError::ChainNotSupported(chain))?;
 
-        let etherscan_api_url = Url::parse(ETHERSCAN_V2_API_BASE_URL)
-            .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?;
-
-        self.with_chain_id(chain).with_api_url(etherscan_api_url)?.with_url(etherscan_url?)
+        self.with_chain_id(chain).with_api_url(etherscan_api_url?)?.with_url(etherscan_url?)
     }
 
     /// Configures the Etherscan url
