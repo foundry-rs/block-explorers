@@ -197,7 +197,7 @@ impl Client {
         if self.is_etherscan() && self.chain_id.is_some() && !self.url_contains_chainid() {
             post_query.insert("chainid", self.chain_id.unwrap());
 
-            trace!(target: "etherscan", "QUERY {:?}", post_query);
+            trace!(target: "etherscan", "POST QUERY {:?}", post_query);
         }
 
         let response = self
@@ -260,10 +260,7 @@ impl Client {
     }
 
     fn is_etherscan(&self) -> bool {
-        Url::parse(ETHERSCAN_V2_API_BASE_URL)
-            .ok()
-            .map(|url| self.etherscan_api_url == url)
-            .unwrap_or(false)
+        self.etherscan_api_url.as_str().contains(ETHERSCAN_V2_API_BASE_URL)
     }
 
     fn url_contains_chainid(&self) -> bool {
