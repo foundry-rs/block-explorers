@@ -192,15 +192,9 @@ impl Client {
     async fn post<F: Serialize>(&self, form: &F) -> Result<String> {
         trace!(target: "etherscan", "POST {}", self.etherscan_api_url);
 
-        let is_etherscan = Url::parse(ETHERSCAN_V2_API_BASE_URL)
-            .map_err(|_| EtherscanError::Builder("Bad URL Parse".into()))?;
-
         let mut post_query = HashMap::new();
 
-        if self.etherscan_api_url == is_etherscan
-            && self.chain_id.is_some()
-            && !self.url_contains_chainid()
-        {
+        if self.is_etherscan() && self.chain_id.is_some() && !self.url_contains_chainid() {
             post_query.insert("chainid", self.chain_id.unwrap());
 
             trace!(target: "etherscan", "QUERY {:?}", post_query);
@@ -263,6 +257,10 @@ impl Client {
             chain_id: if self.url_contains_chainid() { None } else { self.chain_id },
             other,
         }
+    }
+
+    fn is_etherscan(&self) -> bool {
+        self.etherscan_api_url == Url::parse(ETHERSCAN_V2_API_BASE_URL).unwrap()
     }
 
     fn url_contains_chainid(&self) -> bool {
