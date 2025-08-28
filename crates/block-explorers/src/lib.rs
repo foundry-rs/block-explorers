@@ -196,6 +196,8 @@ impl Client {
 
         if self.chain_id.is_some() && !self.url_contains_chainid() {
             post_query.insert("chainid", self.chain_id.unwrap());
+
+            trace!(target: "etherscan", "QUERY {:?}", post_query);
         }
 
         let response = self
