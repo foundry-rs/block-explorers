@@ -138,12 +138,15 @@ impl TryFrom<StringifiedBlockNumber> for BlockNumber {
 
     fn try_from(value: StringifiedBlockNumber) -> Result<Self, Self::Error> {
         match value {
-            StringifiedBlockNumber::Numeric(num) => {
-                let num = U256::try_from(num)
-                    .and_then(|num| u64::try_from(num).map_err(|e| e.to_string()))?;
-                Ok(BlockNumber::Number(U64::from(num)))
-            }
             StringifiedBlockNumber::BlockNumber(b) => Ok(b),
+            StringifiedBlockNumber::Numeric(num) => match num {
+                StringifiedNumeric::String(s) => BlockNumber::from_str(&s),
+                other => {
+                    let u256 = U256::try_from(other)?;
+                    let n = u64::try_from(u256).map_err(|e| e.to_string())?;
+                    Ok(BlockNumber::Number(U64::from(n)))
+                }
+            },
         }
     }
 }
@@ -159,4 +162,51 @@ where
 {
     let num = StringifiedBlockNumber::deserialize(deserializer)?;
     num.try_into().map_err(serde::de::Error::custom)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+    struct Txn {
+        #[serde(deserialize_with = "deserialize_stringified_block_number")]
+        bn: BlockNumber,
+    }
+
+    #[test]
+    fn deserializes_hex_with_0x_prefix() {
+        let json = r#"{ "bn": "0x1" }"#;
+        let tx: Txn = serde_json::from_str(json).unwrap();
+        assert_eq!(tx.bn, BlockNumber::Number(U64::from(1)));
+    }
+
+    #[test]
+    fn deserializes_decimal_string() {
+        let json = r#"{ "bn": "42" }"#;
+        let tx: Txn = serde_json::from_str(json).unwrap();
+        assert_eq!(tx.bn, BlockNumber::Number(U64::from(42)));
+    }
+
+    #[test]
+    fn deserializes_tag_latest() {
+        let json = r#"{ "bn": "latest" }"#;
+        let tx: Txn = serde_json::from_str(json).unwrap();
+        assert_eq!(tx.bn, BlockNumber::Latest);
+    }
+    #[test]
+    fn deserializes_large_hex_u64_max() {
+        let json = r#"{ "bn": "0xffffffffffffffff" }"#;
+        let tx: Txn = serde_json::from_str(json).unwrap();
+        assert_eq!(tx.bn, BlockNumber::Number(U64::MAX));
+    }
+
+    #[test]
+    fn roundtrip_serialized_hex_still_deserializes() {
+        let tx = Txn { bn: BlockNumber::Number(U64::from(42)) };
+        let s = serde_json::to_string(&tx).unwrap();
+        let de: Txn = serde_json::from_str(&s).unwrap();
+        assert_eq!(de, tx);
+    }
 }
