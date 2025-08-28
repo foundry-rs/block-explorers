@@ -260,7 +260,10 @@ impl Client {
     }
 
     fn is_etherscan(&self) -> bool {
-        self.etherscan_api_url == Url::parse(ETHERSCAN_V2_API_BASE_URL).unwrap()
+        Url::parse(ETHERSCAN_V2_API_BASE_URL)
+            .ok()
+            .map(|url| self.etherscan_api_url == url)
+            .unwrap_or(false)
     }
 
     fn url_contains_chainid(&self) -> bool {
