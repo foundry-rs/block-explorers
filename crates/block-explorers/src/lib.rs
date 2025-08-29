@@ -530,9 +530,12 @@ mod tests {
 
     #[test]
     fn test_api_paths() {
-        let client = Client::new(Chain::goerli(), "").unwrap();
-        assert_eq!(client.etherscan_api_url.as_str(), "https://api.etherscan.io/v2/api");
-        assert_eq!(client.block_url(100), "https://goerli.etherscan.io/block/100");
+        let client = Client::new(Chain::sepolia(), "").unwrap();
+        assert_eq!(
+            client.etherscan_api_url.as_str(),
+            "https://api.etherscan.io/v2/api?chainid=11155111"
+        );
+        assert_eq!(client.block_url(100), "https://sepolia.etherscan.io/block/100");
     }
 
     #[test]
