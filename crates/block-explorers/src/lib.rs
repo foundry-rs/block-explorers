@@ -44,9 +44,6 @@ pub mod verify;
 
 pub(crate) type Result<T, E = EtherscanError> = std::result::Result<T, E>;
 
-/// The URL for the Etherscan V2 API without the chainid param set.
-pub const ETHERSCAN_V2_API_BASE_URL: &str = "https://api.etherscan.io/v2/api";
-
 /// The Etherscan.io API client.
 #[derive(Clone, Debug)]
 pub struct Client {
