@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.22.0
 - Deprecate Etherscan V1 ([#101](https://github.com/foundry-rs/block-explorers/issues/101))
 - Release 0.21.0 ([#108](https://github.com/foundry-rs/block-explorers/issues/108))
 - Add @0xrusowsky to `CODEOWNERS` ([#105](https://github.com/foundry-rs/block-explorers/issues/105))
