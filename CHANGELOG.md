@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.21.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.21.0) - 2025-08-25
+## [0.22.0](https://github.com/foundry-rs/block-explorers/releases/tag/v0.22.0) - 2025-09-01
 
 ### Bug Fixes
 
@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Deprecate Etherscan V1 ([#101](https://github.com/foundry-rs/block-explorers/issues/101))
+- Release 0.21.0 ([#108](https://github.com/foundry-rs/block-explorers/issues/108))
 - Add @0xrusowsky to `CODEOWNERS` ([#105](https://github.com/foundry-rs/block-explorers/issues/105))
 - Update `CODEOWNERS` to improve visibility ([#103](https://github.com/foundry-rs/block-explorers/issues/103))
 
