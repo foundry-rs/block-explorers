@@ -214,3 +214,68 @@ async fn get_fantom_key_fantomscan() {
     })
     .await
 }
+
+#[cfg(test)]
+mod internal_transaction_tests {
+    use alloy_primitives::{Address, B256, U256};
+    use foundry_block_explorers::{
+        account::{GenesisOption, InternalTransaction},
+        block_number::BlockNumber,
+    };
+
+    #[test]
+    fn test_internal_transaction_serialization_deserialization() {
+        let contract_addr: Address = "0x0a36f9565c6fb862509ad8d148941968344a55d8".parse().unwrap();
+        let from_addr: Address = "0x4dadacd4aaa54c68c715f70c05a8e873ef9bb0a8".parse().unwrap();
+        let hash: B256 =
+            "0xb349ce8f75676f186eb5e6427b72b74da55d5b70b70e5fee5b3a804a302796cc".parse().unwrap();
+
+        let internal_tx = InternalTransaction {
+            block_number: BlockNumber::Pending,
+            time_stamp: "0".to_string(),
+            hash,
+            from: from_addr,
+            to: GenesisOption::None,
+            value: U256::ZERO,
+            contract_address: GenesisOption::Some(contract_addr),
+            input: GenesisOption::None,
+            result_type: "create".to_string(),
+            gas: U256::from(4438777u64),
+            gas_used: U256::from(3209972u64),
+            trace_id: "0_1_1".to_string(),
+            is_error: "0".to_string(),
+            err_code: "".to_string(),
+        };
+
+        // Serialize to JSON
+        let json = serde_json::to_string(&internal_tx).expect("Failed to serialize");
+
+        // Check that the JSON does NOT contain escaped quotes (the bug symptom)
+        assert!(
+            !json.contains("\\\""),
+            "JSON contains escaped quotes, indicating double serialization bug still exists"
+        );
+
+        // The contract address should appear in the JSON as a proper address, not as an escaped
+        // string
+        assert!(
+            json.contains("0x0a36f9565c6fb862509ad8d148941968344a55d8"),
+            "Contract address not found in JSON"
+        );
+
+        // Deserialize from JSON - this should work without panicking
+        let deserialized: InternalTransaction =
+            serde_json::from_str(&json).expect("Failed to deserialize - the fix didn't work");
+
+        // Verify the round-trip worked correctly
+        match (&internal_tx.contract_address, &deserialized.contract_address) {
+            (GenesisOption::Some(original), GenesisOption::Some(deserialized)) => {
+                assert_eq!(original, deserialized);
+            }
+            (a, b) => panic!("Contract address mismatch: {:?} != {:?}", a, b),
+        }
+        assert_eq!(internal_tx.hash, deserialized.hash);
+        assert_eq!(internal_tx.from, deserialized.from);
+        assert_eq!(internal_tx.gas, deserialized.gas);
+    }
+}
