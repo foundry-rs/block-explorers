@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [main]
@@ -23,7 +26,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     permissions:
-      contents: read
       actions: write
     strategy:
       fail-fast: false
@@ -49,7 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
       actions: write
     steps:
       - uses: actions/checkout@v5
@@ -68,7 +69,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
       actions: write
     steps:
       - uses: actions/checkout@v5
@@ -86,7 +86,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
       actions: write
     steps:
       - uses: actions/checkout@v5
@@ -104,7 +103,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
       actions: write
     steps:
       - uses: actions/checkout@v5
@@ -121,8 +119,6 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -134,8 +130,6 @@ jobs:
 
   deny:
     uses: ithacaxyz/ci/.github/workflows/deny.yml@main
-    permissions:
-      contents: read
 
   ci-success:
     runs-on: ubuntu-latest
