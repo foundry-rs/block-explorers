@@ -119,7 +119,7 @@ jobs:
       - run: cargo fmt --all --check
 
   deny:
-    uses: ithacaxyz/ci/.github/workflows/deny.yml@main
+    uses: ithacaxyz/ci/.github/workflows/deny.yml@9c8d0dc20e7ad02455d3fdab2378a05f29907630 # main
 
   ci-success:
     runs-on: ubuntu-latest
