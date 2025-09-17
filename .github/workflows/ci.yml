@@ -1,7 +1,6 @@
 name: CI
 
-permissions:
-  contents: read
+permissions: {}
 
 on:
   push:
@@ -25,6 +24,8 @@ jobs:
     name: test (${{ matrix.os }}) (${{ matrix.rust }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -50,6 +51,8 @@ jobs:
   wasm:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -67,6 +70,8 @@ jobs:
   feature-checks:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -86,6 +91,8 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -104,6 +111,8 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -121,6 +130,8 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v5
         with:
@@ -133,11 +144,12 @@ jobs:
 
   deny:
     uses: ithacaxyz/ci/.github/workflows/deny.yml@9c8d0dc20e7ad02455d3fdab2378a05f29907630 # main
+    permissions:
+      contents: read
 
   ci-success:
     runs-on: ubuntu-latest
     if: always()
-    permissions: {}
     needs:
       - test
       - wasm
