@@ -191,26 +191,12 @@ async fn get_etherscan_polygon_key_v2() {
 
 #[tokio::test]
 #[serial]
-async fn get_fantom_key_ftmscan() {
-    env::set_var("FMTSCAN_API_KEY", "FANTOMSCAN1");
-
-    run_with_client(Chain::from_named(NamedChain::Fantom), |client| async move {
-        assert_eq!(client.api_key().unwrap(), "FANTOMSCAN1");
-
-        env::set_var("FMTSCAN_API_KEY", "");
-    })
-    .await
-}
-
-#[tokio::test]
-#[serial]
-async fn get_fantom_key_fantomscan() {
-    env::set_var("FANTOMSCAN_API_KEY", "FANTOMSCAN2");
-
-    run_with_client(Chain::from_named(NamedChain::Fantom), |client| async move {
-        assert_eq!(client.api_key().unwrap(), "FANTOMSCAN2");
-
-        env::set_var("FANTOMSCAN_API_KEY", "");
+async fn get_sonic_transactions() {
+    run_with_client(Chain::from_named(NamedChain::Sonic), |client| async move {
+        let txs = client
+            .get_transactions(&"0x1549ea9b546ba9ffb306d78a1e1f304760cc4abf".parse().unwrap(), None)
+            .await;
+        txs.unwrap();
     })
     .await
 }
