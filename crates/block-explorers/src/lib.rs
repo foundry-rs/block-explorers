@@ -482,11 +482,6 @@ fn into_url(url: impl IntoUrl) -> std::result::Result<Url, reqwest::Error> {
 fn get_api_key_from_chain(chain: Chain) -> Result<String, EtherscanError> {
     match chain.kind() {
         ChainKind::Named(named) => match named {
-            // Fantom is special and doesn't support etherscan api v2
-            NamedChain::Fantom | NamedChain::FantomTestnet => std::env::var("FMTSCAN_API_KEY")
-                .or_else(|_| std::env::var("FANTOMSCAN_API_KEY"))
-                .map_err(Into::into),
-
             // Backwards compatibility, ideally these should return an error.
             NamedChain::Gnosis
             | NamedChain::Chiado
