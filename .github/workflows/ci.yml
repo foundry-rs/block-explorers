@@ -38,7 +38,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # master
         with:
           toolchain: stable
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2
+      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
       # Only run tests on latest stable and above
       - name: build
         if: ${{ matrix.rust == '1.76' }} # MSRV
@@ -61,7 +61,7 @@ jobs:
         with:
           toolchain: stable
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2
+      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           cache-on-failure: true
       - name: check
@@ -82,7 +82,7 @@ jobs:
       - uses: taiki-e/install-action@3575e532701a5fc614b0c842e4119af4cc5fd16d # v2
         with:
           tool: cargo-hack
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2
+      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           cache-on-failure: true
       - name: cargo hack
@@ -101,7 +101,7 @@ jobs:
         with:
           toolchain: nightly
           components: clippy
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2
+      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           cache-on-failure: true
       - run: cargo clippy --workspace --all-targets --all-features
@@ -120,7 +120,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # master
         with:
           toolchain: nightly
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2
+      - uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           cache-on-failure: true
       - run: cargo doc --workspace --all-features --no-deps --document-private-items
