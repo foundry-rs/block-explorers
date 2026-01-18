@@ -26,7 +26,6 @@ mod genesis_string {
     use super::*;
     use serde::{
         de::{DeserializeOwned, Error as _},
-        ser::Error as _,
         Deserializer, Serializer,
     };
 
@@ -38,14 +37,11 @@ mod genesis_string {
         T: Serialize,
         S: Serializer,
     {
-        let json = match value {
-            GenesisOption::None => Cow::from(""),
-            GenesisOption::Genesis => Cow::from("GENESIS"),
-            GenesisOption::Some(value) => {
-                serde_json::to_string(value).map_err(S::Error::custom)?.into()
-            }
-        };
-        serializer.serialize_str(&json)
+        match value {
+            GenesisOption::None => serializer.serialize_str(""),
+            GenesisOption::Genesis => serializer.serialize_str("GENESIS"),
+            GenesisOption::Some(value) => value.serialize(serializer),
+        }
     }
 
     pub(crate) fn deserialize<'de, T, D>(
@@ -57,7 +53,8 @@ mod genesis_string {
     {
         let json = Cow::<'de, str>::deserialize(deserializer)?;
         if !json.is_empty() && !json.starts_with("GENESIS") {
-            serde_json::from_str(&format!("\"{}\"", &json))
+            //wrapping it in quotes to make it valid JSON before parsing
+            serde_json::from_str(&format!("\"{}\"", json))
                 .map(GenesisOption::Some)
                 .map_err(D::Error::custom)
         } else if json.starts_with("GENESIS") {

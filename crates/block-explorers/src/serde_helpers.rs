@@ -25,7 +25,10 @@ impl TryFrom<StringifiedNumeric> for U256 {
                 if let Ok(val) = s.parse::<u128>() {
                     Ok(U256::from(val))
                 } else if s.starts_with("0x") {
-                    U256::from_str_radix(&s, 16).map_err(|err| err.to_string())
+                    // from_str_radix expects ONLY hex digits (0-9, A-F)
+                    // E.g from_str_radix("0xff", 16) will fail because 'x' is not a hex digit
+                    U256::from_str_radix(s.strip_prefix("0x").unwrap(), 16)
+                        .map_err(|err| err.to_string())
                 } else {
                     U256::from_str(&s).map_err(|err| err.to_string())
                 }
