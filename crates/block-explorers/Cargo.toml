@@ -47,7 +47,7 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter", "fmt"] }
 
 [features]
 default = ["rustls"]
-rustls = ["reqwest/rustls-tls"]
+rustls = ["reqwest/rustls"]
 openssl = ["reqwest/native-tls"]
 
 foundry-compilers = ["dep:foundry-compilers"]
