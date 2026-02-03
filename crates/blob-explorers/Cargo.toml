@@ -29,7 +29,7 @@ chrono = { version = "0.4", features = ["serde"] }
 
 [features]
 default = ["rustls"]
-rustls = ["reqwest/rustls-tls"]
+rustls = ["reqwest/rustls"]
 openssl = ["reqwest/native-tls"]
 
 [dev-dependencies]
