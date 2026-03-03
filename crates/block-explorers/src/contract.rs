@@ -442,6 +442,15 @@ impl Client {
             }
             return Err(EtherscanError::ContractCodeNotVerified(address));
         }
+        // Some Blockscout-compatible explorers return Address-only payloads for
+        // non-contract addresses. Treat those as "not verified" instead of
+        // surfacing a deserialization error.
+        if is_address_only_source_code_response(&response) {
+            if let Some(ref cache) = self.cache {
+                cache.set_source(address, None);
+            }
+            return Err(EtherscanError::ContractCodeNotVerified(address));
+        }
 
         let response: Response<ContractMetadata> = self.sanitize_response(response)?;
         let result = response.result;
@@ -488,5 +497,38 @@ impl Client {
         })?;
 
         Ok(*data)
+    }
+}
+
+fn is_address_only_source_code_response(response: &str) -> bool {
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(response) else {
+        return false;
+    };
+    let Some(result) = value.get("result").and_then(|v| v.as_array()) else {
+        return false;
+    };
+    !result.is_empty()
+        && result.iter().all(|entry| {
+            let Some(obj) = entry.as_object() else {
+                return false;
+            };
+            obj.len() == 1 && obj.contains_key("Address")
+        })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::is_address_only_source_code_response;
+
+    #[test]
+    fn detects_address_only_result_shape() {
+        let response = r#"{"message":"OK","result":[{"Address":"0x0000000000000000000000000000000000000000"}],"status":"1"}"#;
+        assert!(is_address_only_source_code_response(response));
+    }
+
+    #[test]
+    fn ignores_valid_contract_metadata_shape() {
+        let response = r#"{"message":"OK","result":[{"ABI":"[]","ContractName":"C","CompilerVersion":"v0.8.26+commit.8a97fa7a","OptimizationUsed":"0","OptimizationRuns":"0","SourceCode":"","EVMVersion":"Default","IsProxy":"0","ConstructorArguments":""}],"status":"1"}"#;
+        assert!(!is_address_only_source_code_response(response));
     }
 }
