@@ -32,7 +32,7 @@ impl TryFrom<u32> for Units {
     type Error = ConversionError;
 
     fn try_from(value: u32) -> Result<Self, Self::Error> {
-        Ok(Units::Other(value))
+        Ok(Self::Other(value))
     }
 }
 
@@ -40,7 +40,7 @@ impl TryFrom<i32> for Units {
     type Error = ConversionError;
 
     fn try_from(value: i32) -> Result<Self, Self::Error> {
-        Ok(Units::Other(value as u32))
+        Ok(Self::Other(value as u32))
     }
 }
 
@@ -48,7 +48,7 @@ impl TryFrom<usize> for Units {
     type Error = ConversionError;
 
     fn try_from(value: usize) -> Result<Self, Self::Error> {
-        Ok(Units::Other(value as u32))
+        Ok(Self::Other(value as u32))
     }
 }
 
@@ -81,13 +81,13 @@ impl FromStr for Units {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         Ok(match s.to_lowercase().as_str() {
-            "eth" | "ether" => Units::Ether,
-            "pwei" | "milli" | "milliether" | "finney" => Units::Pwei,
-            "twei" | "micro" | "microether" | "szabo" => Units::Twei,
-            "gwei" | "nano" | "nanoether" | "shannon" => Units::Gwei,
-            "mwei" | "pico" | "picoether" | "lovelace" => Units::Mwei,
-            "kwei" | "femto" | "femtoether" | "babbage" => Units::Kwei,
-            "wei" => Units::Wei,
+            "eth" | "ether" => Self::Ether,
+            "pwei" | "milli" | "milliether" | "finney" => Self::Pwei,
+            "twei" | "micro" | "microether" | "szabo" => Self::Twei,
+            "gwei" | "nano" | "nanoether" | "shannon" => Self::Gwei,
+            "mwei" | "pico" | "picoether" | "lovelace" => Self::Mwei,
+            "kwei" | "femto" | "femtoether" | "babbage" => Self::Kwei,
+            "wei" => Self::Wei,
             _ => return Err(ConversionError::UnrecognizedUnits(s.to_string())),
         })
     }
@@ -101,27 +101,27 @@ impl From<Units> for u32 {
 
 impl From<Units> for i32 {
     fn from(units: Units) -> Self {
-        units.as_num() as i32
+        units.as_num() as Self
     }
 }
 
 impl From<Units> for usize {
     fn from(units: Units) -> Self {
-        units.as_num() as usize
+        units.as_num() as Self
     }
 }
 
 impl Units {
     pub fn as_num(&self) -> u32 {
         match self {
-            Units::Wei => 0,
-            Units::Kwei => 3,
-            Units::Mwei => 6,
-            Units::Gwei => 9,
-            Units::Twei => 12,
-            Units::Pwei => 15,
-            Units::Ether => 18,
-            Units::Other(inner) => *inner,
+            Self::Wei => 0,
+            Self::Kwei => 3,
+            Self::Mwei => 6,
+            Self::Gwei => 9,
+            Self::Twei => 12,
+            Self::Pwei => 15,
+            Self::Ether => 18,
+            Self::Other(inner) => *inner,
         }
     }
 }

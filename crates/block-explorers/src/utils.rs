@@ -90,7 +90,7 @@ impl From<ParseUnits> for I256 {
     fn from(n: ParseUnits) -> Self {
         match n {
             ParseUnits::I256(n) => n,
-            ParseUnits::U256(n) => I256::from_raw(n),
+            ParseUnits::U256(n) => Self::from_raw(n),
         }
     }
 }
@@ -104,8 +104,8 @@ impl From<alloy_primitives::Signed<256, 4>> for ParseUnits {
 impl fmt::Display for ParseUnits {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ParseUnits::U256(val) => val.fmt(f),
-            ParseUnits::I256(val) => val.fmt(f),
+            Self::U256(val) => val.fmt(f),
+            Self::I256(val) => val.fmt(f),
         }
     }
 }

@@ -19,18 +19,18 @@ impl TryFrom<StringifiedNumeric> for U256 {
         match value {
             StringifiedNumeric::U256(n) => Ok(n),
             StringifiedNumeric::Num(n) => {
-                Ok(U256::from_str(&n.to_string()).map_err(|err| err.to_string())?)
+                Ok(Self::from_str(&n.to_string()).map_err(|err| err.to_string())?)
             }
             StringifiedNumeric::String(s) => {
                 if let Ok(val) = s.parse::<u128>() {
-                    Ok(U256::from(val))
+                    Ok(Self::from(val))
                 } else if s.starts_with("0x") {
                     // from_str_radix expects ONLY hex digits (0-9, A-F)
                     // E.g from_str_radix("0xff", 16) will fail because 'x' is not a hex digit
-                    U256::from_str_radix(s.strip_prefix("0x").unwrap(), 16)
+                    Self::from_str_radix(s.strip_prefix("0x").unwrap(), 16)
                         .map_err(|err| err.to_string())
                 } else {
-                    U256::from_str(&s).map_err(|err| err.to_string())
+                    Self::from_str(&s).map_err(|err| err.to_string())
                 }
             }
         }
@@ -42,7 +42,7 @@ impl TryFrom<StringifiedNumeric> for U64 {
 
     fn try_from(value: StringifiedNumeric) -> Result<Self, Self::Error> {
         let value = U256::try_from(value)?;
-        Ok(value.wrapping_to::<U64>())
+        Ok(value.wrapping_to::<Self>())
     }
 }
 
@@ -143,11 +143,11 @@ impl TryFrom<StringifiedBlockNumber> for BlockNumber {
         match value {
             StringifiedBlockNumber::BlockNumber(b) => Ok(b),
             StringifiedBlockNumber::Numeric(num) => match num {
-                StringifiedNumeric::String(s) => BlockNumber::from_str(&s),
+                StringifiedNumeric::String(s) => Self::from_str(&s),
                 other => {
                     let u256 = U256::try_from(other)?;
                     let n = u64::try_from(u256).map_err(|e| e.to_string())?;
-                    Ok(BlockNumber::Number(U64::from(n)))
+                    Ok(Self::Number(U64::from(n)))
                 }
             },
         }

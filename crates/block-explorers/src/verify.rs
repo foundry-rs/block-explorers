@@ -151,9 +151,9 @@ pub enum CodeFormat {
 impl AsRef<str> for CodeFormat {
     fn as_ref(&self) -> &str {
         match self {
-            CodeFormat::SingleFile => "solidity-single-file",
-            CodeFormat::StandardJsonInput => "solidity-standard-json-input",
-            CodeFormat::VyperJson => "vyper-json",
+            Self::SingleFile => "solidity-single-file",
+            Self::StandardJsonInput => "solidity-standard-json-input",
+            Self::VyperJson => "vyper-json",
         }
     }
 }

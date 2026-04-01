@@ -232,7 +232,7 @@ mod internal_transaction_tests {
             gas_used: U256::from(3209972u64),
             trace_id: "0_1_1".to_string(),
             is_error: "0".to_string(),
-            err_code: "".to_string(),
+            err_code: String::new(),
         };
 
         // Serialize to JSON
@@ -260,7 +260,7 @@ mod internal_transaction_tests {
             (GenesisOption::Some(original), GenesisOption::Some(deserialized)) => {
                 assert_eq!(original, deserialized);
             }
-            (a, b) => panic!("Contract address mismatch: {:?} != {:?}", a, b),
+            (a, b) => panic!("Contract address mismatch: {a:?} != {b:?}"),
         }
         assert_eq!(internal_tx.hash, deserialized.hash);
         assert_eq!(internal_tx.from, deserialized.from);
