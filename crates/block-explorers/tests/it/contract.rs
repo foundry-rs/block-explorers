@@ -22,7 +22,7 @@ async fn can_fetch_ftm_contract_abi() {
 
 #[tokio::test]
 #[serial]
-async fn can_fetch_contract_abi() {
+async fn flaky_can_fetch_contract_abi() {
     run_with_client(Chain::mainnet(), |client| async move {
         let abi = client
             .contract_abi("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
@@ -156,7 +156,7 @@ async fn can_get_error_on_unverified_contract() {
 /// Query a contract that has a single string source entry instead of underlying JSON metadata.
 #[tokio::test]
 #[serial]
-async fn can_fetch_contract_source_tree_for_singleton_contract() {
+async fn flaky_can_fetch_contract_source_tree_for_singleton_contract() {
     run_with_client(Chain::mainnet(), |client| async move {
         let meta = client
             .contract_source_code("0x00000000219ab540356cBB839Cbe05303d7705Fa".parse().unwrap())
@@ -208,7 +208,7 @@ async fn can_fetch_contract_source_tree_for_plain_source_code_mapping() {
 
 #[tokio::test]
 #[serial]
-async fn can_fetch_contract_creation_data() {
+async fn flaky_can_fetch_contract_creation_data() {
     run_with_client(Chain::mainnet(), |client| async move {
         client
             .contract_creation_data("0xdac17f958d2ee523a2206206994597c13d831ec7".parse().unwrap())

@@ -20,7 +20,7 @@ async fn check_contract_execution_status_success() {
 
 #[tokio::test]
 #[serial]
-async fn check_contract_execution_status_error() {
+async fn flaky_check_contract_execution_status_error() {
     run_with_client(Chain::mainnet(), |client| async move {
         let err = client
             .check_contract_execution_status(

@@ -164,7 +164,7 @@ async fn get_mined_blocks_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_avalanche_transactions() {
+async fn flaky_get_avalanche_transactions() {
     run_with_client(Chain::from_named(NamedChain::Avalanche), |client| async move {
         let txs = client
             .get_transactions(&"0x1549ea9b546ba9ffb306d78a1e1f304760cc4abf".parse().unwrap(), None)

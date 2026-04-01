@@ -44,9 +44,10 @@ jobs:
         if: ${{ matrix.rust == '1.76' }} # MSRV
         run: cargo build --workspace
       # Don't use cargo-nextest since all the tests have to be run sequentially
+      # Skip flaky tests that depend on external APIs (run separately in test-flaky.yml)
       - name: test
         if: ${{ matrix.rust != '1.76' }} # MSRV
-        run: cargo test --workspace
+        run: cargo test --workspace -- --skip flaky_
 
   wasm:
     runs-on: ubuntu-latest
