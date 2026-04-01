@@ -35,7 +35,7 @@ async fn flaky_can_fetch_contract_abi() {
 
 #[tokio::test]
 #[serial]
-async fn can_fetch_and_cache_contract_abi() {
+async fn flaky_can_fetch_and_cache_contract_abi() {
     async fn fetch_abi(client: &Client, addr: &str) {
         let abi = client.contract_abi(addr.parse().unwrap()).await.unwrap();
         assert_eq!(abi, serde_json::from_str(DEPOSIT_CONTRACT_ABI).unwrap());
@@ -143,7 +143,7 @@ async fn can_fetch_contract_source_code() {
 
 #[tokio::test]
 #[serial]
-async fn can_get_error_on_unverified_contract() {
+async fn flaky_can_get_error_on_unverified_contract() {
     init_tracing();
     run_with_client(Chain::mainnet(), |client| async move {
         let addr = "0xb5c31a0e22cae98ac08233e512bd627885aa24e5".parse().unwrap();
