@@ -1,13 +1,13 @@
 use crate::{
+    Client, EtherscanError, Query, Response, Result,
     block_number::BlockNumber,
     serde_helpers::{
         deserialize_stringified_block_number, deserialize_stringified_numeric,
         deserialize_stringified_numeric_opt, deserialize_stringified_u64,
         deserialize_stringified_u64_opt,
     },
-    Client, EtherscanError, Query, Response, Result,
 };
-use alloy_primitives::{Address, Bytes, B256, U256};
+use alloy_primitives::{Address, B256, Bytes, U256};
 use serde::{Deserialize, Serialize};
 use std::{
     borrow::Cow,
@@ -25,8 +25,8 @@ pub struct AccountBalance {
 mod genesis_string {
     use super::*;
     use serde::{
-        de::{DeserializeOwned, Error as _},
         Deserializer, Serializer,
+        de::{DeserializeOwned, Error as _},
     };
 
     pub(crate) fn serialize<T, S>(
@@ -54,7 +54,7 @@ mod genesis_string {
         let json = Cow::<'de, str>::deserialize(deserializer)?;
         if !json.is_empty() && !json.starts_with("GENESIS") {
             //wrapping it in quotes to make it valid JSON before parsing
-            serde_json::from_str(&format!("\"{}\"", json))
+            serde_json::from_str(&format!("\"{json}\""))
                 .map(GenesisOption::Some)
                 .map_err(D::Error::custom)
         } else if json.starts_with("GENESIS") {
@@ -68,9 +68,9 @@ mod genesis_string {
 mod json_string {
     use super::*;
     use serde::{
+        Deserializer, Serializer,
         de::{DeserializeOwned, Error as _},
         ser::Error as _,
-        Deserializer, Serializer,
     };
 
     pub(crate) fn serialize<T, S>(
@@ -128,12 +128,12 @@ impl<T> From<GenesisOption<T>> for Option<T> {
 
 impl<T> GenesisOption<T> {
     pub fn is_genesis(&self) -> bool {
-        matches!(self, GenesisOption::Genesis)
+        matches!(self, Self::Genesis)
     }
 
     pub fn value(&self) -> Option<&T> {
         match self {
-            GenesisOption::Some(value) => Some(value),
+            Self::Some(value) => Some(value),
             _ => None,
         }
     }
@@ -336,9 +336,9 @@ pub enum Tag {
 impl Display for Tag {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), Error> {
         match self {
-            Tag::Earliest => write!(f, "earliest"),
-            Tag::Pending => write!(f, "pending"),
-            Tag::Latest => write!(f, "latest"),
+            Self::Earliest => write!(f, "earliest"),
+            Self::Pending => write!(f, "pending"),
+            Self::Latest => write!(f, "latest"),
         }
     }
 }
@@ -353,8 +353,8 @@ pub enum Sort {
 impl Display for Sort {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), Error> {
         match self {
-            Sort::Asc => write!(f, "asc"),
-            Sort::Desc => write!(f, "desc"),
+            Self::Asc => write!(f, "asc"),
+            Self::Desc => write!(f, "desc"),
         }
     }
 }
@@ -415,15 +415,15 @@ impl TokenQueryOption {
     pub fn into_params(self, list_params: TxListParams) -> HashMap<&'static str, String> {
         let mut params: HashMap<&'static str, String> = list_params.into();
         match self {
-            TokenQueryOption::ByAddress(address) => {
+            Self::ByAddress(address) => {
                 params.insert("address", format!("{address:?}"));
                 params
             }
-            TokenQueryOption::ByContract(contract) => {
+            Self::ByContract(contract) => {
                 params.insert("contractaddress", format!("{contract:?}"));
                 params
             }
-            TokenQueryOption::ByAddressAndContract(address, contract) => {
+            Self::ByAddressAndContract(address, contract) => {
                 params.insert("address", format!("{address:?}"));
                 params.insert("contractaddress", format!("{contract:?}"));
                 params
@@ -443,8 +443,8 @@ pub enum BlockType {
 impl Display for BlockType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::result::Result<(), Error> {
         match self {
-            BlockType::CanonicalBlocks => write!(f, "blocks"),
-            BlockType::Uncles => write!(f, "uncles"),
+            Self::CanonicalBlocks => write!(f, "blocks"),
+            Self::Uncles => write!(f, "uncles"),
         }
     }
 }

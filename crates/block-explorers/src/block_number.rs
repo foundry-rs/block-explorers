@@ -24,45 +24,45 @@ impl BlockNumber {
     /// Returns the numeric block number if explicitly set
     pub fn as_number(&self) -> Option<U64> {
         match *self {
-            BlockNumber::Number(num) => Some(num),
+            Self::Number(num) => Some(num),
             _ => None,
         }
     }
 
     /// Returns `true` if a numeric block number is set
     pub fn is_number(&self) -> bool {
-        matches!(self, BlockNumber::Number(_))
+        matches!(self, Self::Number(_))
     }
 
     /// Returns `true` if it's "latest"
     pub fn is_latest(&self) -> bool {
-        matches!(self, BlockNumber::Latest)
+        matches!(self, Self::Latest)
     }
 
     /// Returns `true` if it's "finalized"
     pub fn is_finalized(&self) -> bool {
-        matches!(self, BlockNumber::Finalized)
+        matches!(self, Self::Finalized)
     }
 
     /// Returns `true` if it's "safe"
     pub fn is_safe(&self) -> bool {
-        matches!(self, BlockNumber::Safe)
+        matches!(self, Self::Safe)
     }
 
     /// Returns `true` if it's "pending"
     pub fn is_pending(&self) -> bool {
-        matches!(self, BlockNumber::Pending)
+        matches!(self, Self::Pending)
     }
 
     /// Returns `true` if it's "earliest"
     pub fn is_earliest(&self) -> bool {
-        matches!(self, BlockNumber::Earliest)
+        matches!(self, Self::Earliest)
     }
 }
 
 impl<T: Into<U64>> From<T> for BlockNumber {
     fn from(num: T) -> Self {
-        BlockNumber::Number(num.into())
+        Self::Number(num.into())
     }
 }
 
@@ -72,12 +72,12 @@ impl Serialize for BlockNumber {
         S: Serializer,
     {
         match *self {
-            BlockNumber::Number(ref x) => serializer.serialize_str(&format!("0x{x:x}")),
-            BlockNumber::Latest => serializer.serialize_str("latest"),
-            BlockNumber::Finalized => serializer.serialize_str("finalized"),
-            BlockNumber::Safe => serializer.serialize_str("safe"),
-            BlockNumber::Earliest => serializer.serialize_str("earliest"),
-            BlockNumber::Pending => serializer.serialize_str("pending"),
+            Self::Number(ref x) => serializer.serialize_str(&format!("0x{x:x}")),
+            Self::Latest => serializer.serialize_str("latest"),
+            Self::Finalized => serializer.serialize_str("finalized"),
+            Self::Safe => serializer.serialize_str("safe"),
+            Self::Earliest => serializer.serialize_str("earliest"),
+            Self::Pending => serializer.serialize_str("pending"),
         }
     }
 }
@@ -113,12 +113,12 @@ impl FromStr for BlockNumber {
 impl fmt::Display for BlockNumber {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BlockNumber::Number(ref x) => format!("0x{x:x}").fmt(f),
-            BlockNumber::Latest => f.write_str("latest"),
-            BlockNumber::Finalized => f.write_str("finalized"),
-            BlockNumber::Safe => f.write_str("safe"),
-            BlockNumber::Earliest => f.write_str("earliest"),
-            BlockNumber::Pending => f.write_str("pending"),
+            Self::Number(x) => format!("0x{x:x}").fmt(f),
+            Self::Latest => f.write_str("latest"),
+            Self::Finalized => f.write_str("finalized"),
+            Self::Safe => f.write_str("safe"),
+            Self::Earliest => f.write_str("earliest"),
+            Self::Pending => f.write_str("pending"),
         }
     }
 }

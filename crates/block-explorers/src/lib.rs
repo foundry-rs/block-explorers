@@ -20,8 +20,8 @@ use alloy_json_abi::JsonAbi;
 use alloy_primitives::{Address, B256};
 use contract::ContractMetadata;
 use errors::EtherscanError;
-use reqwest::{header, IntoUrl, Url};
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use reqwest::{IntoUrl, Url, header};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
     borrow::Cow,
     io::Write,
@@ -94,12 +94,12 @@ impl Client {
 
     /// Create a new client with the correct endpoints based on the chain and provided API key
     pub fn new(chain: Chain, api_key: impl Into<String>) -> Result<Self> {
-        Client::builder().with_api_key(api_key).chain(chain)?.build()
+        Self::builder().with_api_key(api_key).chain(chain)?.build()
     }
 
     /// Create a new client with the correct endpoint with the chain
     pub fn new_from_env(chain: Chain) -> Result<Self> {
-        Client::builder().with_api_key(get_api_key_from_chain(chain)?).chain(chain)?.build()
+        Self::builder().with_api_key(get_api_key_from_chain(chain)?).chain(chain)?.build()
     }
 
     /// Create a new client with the correct endpoints based on the chain and API key
@@ -330,13 +330,12 @@ impl ClientBuilder {
     ///   - `etherscan_api_url`
     ///   - `etherscan_url`
     pub fn build(self) -> Result<Client> {
-        let ClientBuilder { client, api_key, etherscan_api_url, etherscan_url, cache } = self;
+        let Self { client, api_key, etherscan_api_url, etherscan_url, cache } = self;
 
         let client = Client {
             client: client.unwrap_or_default(),
             api_key,
             etherscan_api_url: etherscan_api_url
-                .clone()
                 .ok_or_else(|| EtherscanError::Builder("etherscan api url".to_string()))?,
             etherscan_url: etherscan_url
                 .ok_or_else(|| EtherscanError::Builder("etherscan url".to_string()))?,

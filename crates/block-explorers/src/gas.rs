@@ -1,6 +1,6 @@
-use crate::{utils::parse_units, Client, EtherscanError, Response, Result};
+use crate::{Client, EtherscanError, Response, Result, utils::parse_units};
 use alloy_primitives::U256;
-use serde::{de, Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, de};
 use std::{collections::HashMap, str::FromStr};
 
 const WEI_PER_GWEI: u64 = 1_000_000_000;

@@ -1,20 +1,45 @@
 [workspace]
 members = ["crates/*"]
 
-# Explicitly set the resolver to version 2, which is the default for packages with edition >= 2021
-# https://doc.rust-lang.org/edition-guide/rust-2021/default-cargo-resolver.html
-resolver = "2"
+resolver = "3"
 
 [workspace.package]
 authors = ["Foundry Maintainers"]
 version = "0.22.0"
-rust-version = "1.76"
+rust-version = "1.93"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/foundry-rs/block-explorers"
 homepage = "https://github.com/foundry-rs/block-explorers"
-edition = "2021"
+edition = "2024"
 exclude = [".github/", "scripts/", "test-data/"]
+
+[workspace.lints.clippy]
+borrow_as_ptr = "warn"
+branches_sharing_code = "warn"
+clear_with_drain = "warn"
+cloned_instead_of_copied = "warn"
+collection_is_never_read = "warn"
+dbg-macro = "warn"
+explicit_iter_loop = "warn"
+manual-string-new = "warn"
+uninlined-format-args = "warn"
+use-self = "warn"
+redundant-clone = "warn"
+octal-escapes = "allow"
+# until <https://github.com/rust-lang/rust-clippy/issues/13885> is fixed
+literal-string-with-formatting-args = "allow"
+result_large_err = "allow"
+
+[workspace.lints.rust]
+redundant_imports = "warn"
+redundant-lifetimes = "warn"
+rust-2018-idioms = "warn"
+unused-must-use = "warn"
+# unreachable-pub = "warn"
+
+[workspace.lints.rustdoc]
+all = "warn"
 
 [workspace.dependencies]
 alloy-chains = "0.2"

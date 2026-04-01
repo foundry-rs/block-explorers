@@ -3,10 +3,10 @@
 use crate::run_with_client;
 use alloy_chains::Chain;
 use foundry_block_explorers::verify::{CodeFormat, VerifyContract};
-use foundry_compilers::{solc::SolcLanguage, Project, ProjectPathsConfig};
+use foundry_compilers::{Project, ProjectPathsConfig, solc::SolcLanguage};
 use serial_test::serial;
 use std::path::Path;
-use tokio::time::{sleep, Duration};
+use tokio::time::{Duration, sleep};
 use tracing::trace;
 
 #[tokio::test]
