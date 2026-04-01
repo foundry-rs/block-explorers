@@ -1,5 +1,5 @@
 use crate::block_number::BlockNumber;
-use alloy_primitives::{U256, U64};
+use alloy_primitives::{U64, U256};
 use serde::{Deserialize, Deserializer};
 use std::str::FromStr;
 

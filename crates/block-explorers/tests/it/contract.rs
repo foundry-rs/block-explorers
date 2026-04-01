@@ -1,6 +1,6 @@
 use crate::{init_tracing, run_with_client, run_with_client_cached};
 use alloy_chains::{Chain, NamedChain};
-use foundry_block_explorers::{contract::SourceCodeMetadata, errors::EtherscanError, Client};
+use foundry_block_explorers::{Client, contract::SourceCodeMetadata, errors::EtherscanError};
 use serial_test::serial;
 
 /// Abi of [0x00000000219ab540356cBB839Cbe05303d7705Fa](https://api.etherscan.io/api?module=contract&action=getsourcecode&address=0x00000000219ab540356cBB839Cbe05303d7705Fa).

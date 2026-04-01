@@ -79,11 +79,7 @@ impl VerifyContract {
     }
 
     pub fn optimization(self, optimization: bool) -> Self {
-        if optimization {
-            self.optimized()
-        } else {
-            self.not_optimized()
-        }
+        if optimization { self.optimized() } else { self.not_optimized() }
     }
 
     pub fn optimized(mut self) -> Self {

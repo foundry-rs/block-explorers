@@ -2,7 +2,7 @@
 #![allow(missing_docs)]
 
 use alloy_eips::eip4844::Blob;
-use alloy_primitives::{Address, FixedBytes, B256};
+use alloy_primitives::{Address, B256, FixedBytes};
 use alloy_rpc_types_eth::BlobTransactionSidecar;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;

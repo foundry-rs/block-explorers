@@ -1,13 +1,13 @@
 use crate::{
+    Client, EtherscanError, Query, Response, Result,
     block_number::BlockNumber,
     serde_helpers::{
         deserialize_stringified_block_number, deserialize_stringified_numeric,
         deserialize_stringified_numeric_opt, deserialize_stringified_u64,
         deserialize_stringified_u64_opt,
     },
-    Client, EtherscanError, Query, Response, Result,
 };
-use alloy_primitives::{Address, Bytes, B256, U256};
+use alloy_primitives::{Address, B256, Bytes, U256};
 use serde::{Deserialize, Serialize};
 use std::{
     borrow::Cow,
@@ -25,8 +25,8 @@ pub struct AccountBalance {
 mod genesis_string {
     use super::*;
     use serde::{
-        de::{DeserializeOwned, Error as _},
         Deserializer, Serializer,
+        de::{DeserializeOwned, Error as _},
     };
 
     pub(crate) fn serialize<T, S>(
@@ -68,9 +68,9 @@ mod genesis_string {
 mod json_string {
     use super::*;
     use serde::{
+        Deserializer, Serializer,
         de::{DeserializeOwned, Error as _},
         ser::Error as _,
-        Deserializer, Serializer,
     };
 
     pub(crate) fn serialize<T, S>(

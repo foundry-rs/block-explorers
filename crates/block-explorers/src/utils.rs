@@ -1,5 +1,5 @@
-use crate::{contract::SourceCodeMetadata, units::Units, EtherscanError, Result};
-use alloy_primitives::{Address, ParseSignedError, I256, U256};
+use crate::{EtherscanError, Result, contract::SourceCodeMetadata, units::Units};
+use alloy_primitives::{Address, I256, ParseSignedError, U256};
 use semver::Version;
 use serde::{Deserialize, Deserializer};
 use std::{fmt, str::FromStr};

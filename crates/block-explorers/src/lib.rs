@@ -20,8 +20,8 @@ use alloy_json_abi::JsonAbi;
 use alloy_primitives::{Address, B256};
 use contract::ContractMetadata;
 use errors::EtherscanError;
-use reqwest::{header, IntoUrl, Url};
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use reqwest::{IntoUrl, Url, header};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::{
     borrow::Cow,
     io::Write,

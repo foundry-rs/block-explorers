@@ -2,7 +2,7 @@ use std::env;
 
 use crate::run_with_client;
 use alloy_chains::{Chain, NamedChain};
-use alloy_primitives::{U256, U64};
+use alloy_primitives::{U64, U256};
 use foundry_block_explorers::{
     account::{InternalTxQueryOption, TokenQueryOption},
     block_number::BlockNumber,
@@ -179,12 +179,14 @@ async fn get_avalanche_transactions() {
 async fn get_etherscan_polygon_key_v2() {
     // This requires the etherscan api key to be set – expected for this test suite.
     let etherscan_test_api_key = env::var("ETHERSCAN_API_KEY").unwrap();
-    env::set_var("POLYGONSCAN_API_KEY", "POLYGONSCAN1");
+    // SAFETY: This test is run serially so no other threads are reading env vars.
+    unsafe { env::set_var("POLYGONSCAN_API_KEY", "POLYGONSCAN1") };
 
     run_with_client(Chain::from_named(NamedChain::Polygon), |client| async move {
         assert_eq!(client.api_key().unwrap(), etherscan_test_api_key);
 
-        env::set_var("POLYGONSCAN_API_KEY", "");
+        // SAFETY: This test is run serially so no other threads are reading env vars.
+        unsafe { env::set_var("POLYGONSCAN_API_KEY", "") };
     })
     .await
 }

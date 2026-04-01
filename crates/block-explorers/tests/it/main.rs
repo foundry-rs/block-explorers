@@ -3,7 +3,7 @@
 #![cfg(not(target_arch = "wasm32"))]
 
 use alloy_chains::{Chain, ChainKind, NamedChain};
-use foundry_block_explorers::{errors::EtherscanError, Client};
+use foundry_block_explorers::{Client, errors::EtherscanError};
 use std::{
     env,
     future::Future,

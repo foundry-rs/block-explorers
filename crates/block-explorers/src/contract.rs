@@ -1,21 +1,21 @@
 use crate::{
+    Client, EtherscanError, Response, Result,
     serde_helpers::{deserialize_stringified_bool_or_u64, deserialize_stringified_u64},
     source_tree::{SourceTree, SourceTreeEntry},
     utils::{deserialize_address_opt, deserialize_source_code},
-    Client, EtherscanError, Response, Result,
 };
 use alloy_json_abi::JsonAbi;
-use alloy_primitives::{Address, Bytes, B256};
+use alloy_primitives::{Address, B256, Bytes};
 use semver::Version;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::Path};
 
 #[cfg(feature = "foundry-compilers")]
 use foundry_compilers::{
+    ProjectBuilder, SolcConfig,
     artifacts::{EvmVersion, Settings},
     compilers::solc::SolcCompiler,
     solc::SolcSettings,
-    ProjectBuilder, SolcConfig,
 };
 
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize)]
@@ -187,11 +187,7 @@ impl Metadata {
     /// Returns the contract's programming language.
     pub fn language(&self) -> SourceCodeLanguage {
         self.source_code.language().unwrap_or_else(|| {
-            if self.is_vyper() {
-                SourceCodeLanguage::Vyper
-            } else {
-                SourceCodeLanguage::Solidity
-            }
+            if self.is_vyper() { SourceCodeLanguage::Vyper } else { SourceCodeLanguage::Solidity }
         })
     }
 

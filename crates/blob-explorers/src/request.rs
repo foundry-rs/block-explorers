@@ -1,6 +1,6 @@
 //! Request types for the Blobscan API.
 
-use serde::{ser::SerializeStruct, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, ser::SerializeStruct};
 
 /// Additional query parameters for the `blocks` endpoint.
 ///

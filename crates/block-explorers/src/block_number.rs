@@ -113,7 +113,7 @@ impl FromStr for BlockNumber {
 impl fmt::Display for BlockNumber {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            BlockNumber::Number(ref x) => format!("0x{x:x}").fmt(f),
+            BlockNumber::Number(x) => format!("0x{x:x}").fmt(f),
             BlockNumber::Latest => f.write_str("latest"),
             BlockNumber::Finalized => f.write_str("finalized"),
             BlockNumber::Safe => f.write_str("safe"),
