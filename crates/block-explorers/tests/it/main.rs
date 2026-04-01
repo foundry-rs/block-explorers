@@ -126,7 +126,7 @@ fn init_tracing() {
 }
 
 #[tokio::test]
-async fn check_wrong_etherscan_api_key() {
+async fn flaky_check_wrong_etherscan_api_key() {
     let client = Client::new(Chain::mainnet(), "ABCDEFG").unwrap();
     let resp = client
         .contract_source_code("0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413".parse().unwrap())

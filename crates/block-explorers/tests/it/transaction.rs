@@ -5,7 +5,7 @@ use serial_test::serial;
 
 #[tokio::test]
 #[serial]
-async fn check_contract_execution_status_success() {
+async fn flaky_check_contract_execution_status_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let status = client
             .check_contract_execution_status(
@@ -37,7 +37,7 @@ async fn flaky_check_contract_execution_status_error() {
 
 #[tokio::test]
 #[serial]
-async fn check_transaction_receipt_status_success() {
+async fn flaky_check_transaction_receipt_status_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let success = client
             .check_transaction_receipt_status(
@@ -52,7 +52,7 @@ async fn check_transaction_receipt_status_success() {
 
 #[tokio::test]
 #[serial]
-async fn check_transaction_receipt_status_failed() {
+async fn flaky_check_transaction_receipt_status_failed() {
     run_with_client(Chain::mainnet(), |client| async move {
         let err = client
             .check_transaction_receipt_status(

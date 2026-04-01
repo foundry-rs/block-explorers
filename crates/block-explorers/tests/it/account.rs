@@ -11,7 +11,7 @@ use serial_test::serial;
 
 #[tokio::test]
 #[serial]
-async fn get_ether_balance_single_success() {
+async fn flaky_get_ether_balance_single_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let balance = client
             .get_ether_balance_single(
@@ -26,7 +26,7 @@ async fn get_ether_balance_single_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_ether_balance_multi_success() {
+async fn flaky_get_ether_balance_multi_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let balances = client
             .get_ether_balance_multi(
@@ -43,7 +43,7 @@ async fn get_ether_balance_multi_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_transactions_success() {
+async fn flaky_get_transactions_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_transactions(&"0x4F26FfBe5F04ED43630fdC30A87638d53D0b0876".parse().unwrap(), None)
@@ -55,7 +55,7 @@ async fn get_transactions_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_internal_transactions_success() {
+async fn flaky_get_internal_transactions_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_internal_transactions(
@@ -72,7 +72,7 @@ async fn get_internal_transactions_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_internal_transactions_by_tx_hash_success() {
+async fn flaky_get_internal_transactions_by_tx_hash_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_internal_transactions(
@@ -91,7 +91,7 @@ async fn get_internal_transactions_by_tx_hash_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_erc20_transfer_events_success() {
+async fn flaky_get_erc20_transfer_events_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_erc20_token_transfer_events(
@@ -112,7 +112,7 @@ async fn get_erc20_transfer_events_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_erc721_transfer_events_success() {
+async fn flaky_get_erc721_transfer_events_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_erc721_token_transfer_events(
@@ -130,7 +130,7 @@ async fn get_erc721_transfer_events_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_erc1155_transfer_events_success() {
+async fn flaky_get_erc1155_transfer_events_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         let txs = client
             .get_erc1155_token_transfer_events(
@@ -148,7 +148,7 @@ async fn get_erc1155_transfer_events_success() {
 
 #[tokio::test]
 #[serial]
-async fn get_mined_blocks_success() {
+async fn flaky_get_mined_blocks_success() {
     run_with_client(Chain::mainnet(), |client| async move {
         client
             .get_mined_blocks(
@@ -176,7 +176,7 @@ async fn flaky_get_avalanche_transactions() {
 
 #[tokio::test]
 #[serial]
-async fn get_etherscan_polygon_key_v2() {
+async fn flaky_get_etherscan_polygon_key_v2() {
     // This requires the etherscan api key to be set – expected for this test suite.
     let etherscan_test_api_key = env::var("ETHERSCAN_API_KEY").unwrap();
     env::set_var("POLYGONSCAN_API_KEY", "POLYGONSCAN1");
@@ -191,7 +191,7 @@ async fn get_etherscan_polygon_key_v2() {
 
 #[tokio::test]
 #[serial]
-async fn get_sonic_transactions() {
+async fn flaky_get_sonic_transactions() {
     run_with_client(Chain::from_named(NamedChain::Sonic), |client| async move {
         let txs = client
             .get_transactions(&"0x1549ea9b546ba9ffb306d78a1e1f304760cc4abf".parse().unwrap(), None)
